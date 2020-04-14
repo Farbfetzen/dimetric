@@ -1,0 +1,35 @@
+Projektion: https://en.wikipedia.org/wiki/Isometric_video_game_graphics#Dimetric_projection
+Graphik: gimp, krita oder pyxeledit in wine?
+Musik: Chiptune wäre cool. Programme: "beepbox", "bosca ceoil", "lmms"
+Soundeffekte: "sfxr" oder "bfxr"
+Gifs und Videos: obs?
+
+Programme empfohlen von DaFluffyPotato: https://www.youtube.com/watch?v=ung_U17kxDI
+
+
+Koordinaten:
+world:
+(0, 0)(0, 1)
+(1, 0)(1, 1)
+screen:
+   (1, 0)
+(0, 0)(1, 1)
+   (0, 1)
+Heißt x wird nach oben rechts größer und y wird nach unten rechts größer.
+
+
+TODO:
+- Debug Info:
+    - FPS
+    - Mauskoordinaten in world und display
+- Türme in der richtigen Reihenfolge blitten. Die vorderen müssen die hinteren verdecken.
+- Tiles, über denen die Maus schwebt, hervorheben. Das testet, ob die Koordinaten richtig transformiert werden.
+- Objekte, die sich flüssig über die Karte bewegen, also nicht an das Gitter gebunden sind.
+- Die Karte mit Maus und Tastatur verschieben. Aber begrenzt, dass man die Karte nicht komplett aus der Ansicht schieben kann:
+    - WASD
+    - rechte Maustaste gedrückt halten und Mausbewegung
+    - Maus an den Bildschirmrand. Dazu die Maus an das Fenster begrenzen. Kann ich dann noch das X oben rechts klicken? Wenn nicht, ist auch nicht wild. In Menüs oder im pausierten Modus wird die Maus frei sein.
+- Karte zoomen:
+    - Maurad
+    - page up/down
+- Die Konturen durch leichte Überlappung dünner machen? Oder in den Tiles nur die rechten Konturen einzeichnen? Probiere es mit Paint aus und mache auch Screenshots des Programms.
