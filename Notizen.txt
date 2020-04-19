@@ -32,4 +32,3 @@ TODO:
 - Karte zoomen:
     - Maurad
     - page up/down
-- Die Konturen durch leichte Überlappung dünner machen? Oder in den Tiles nur die rechten Konturen einzeichnen? Probiere es mit Paint aus und mache auch Screenshots des Programms.
