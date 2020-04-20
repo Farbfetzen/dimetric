@@ -18,6 +18,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import pygame
 
 
+def rotate_clockwise(world):
+    world = list(zip(*world[::-1]))
+    world = [list(column) for column in world]
+    return world
+
+
+def rotate_counterclockwise(world):
+    world = list(zip(*world))[::-1]
+    world = [list(column) for column in world]
+    return world
+
+
 pygame.init()
 
 display = pygame.display.set_mode((640, 480))
@@ -31,7 +43,7 @@ for filename in ("green.png", "red.png"):
     tile.set_colorkey(COLORKEY)
     tiles.append(tile)
 
-MAP_DATA = [
+map_data = [
     [1, 0, 1, 1, 1],
     [1, 1, 1, 0, 1],
     [0, 0, 0, 0, 1],
@@ -42,7 +54,7 @@ MAP_DATA = [
 
 TILE_WIDTH_HALF = 32
 TILE_HEIGHT_HALF = 16
-OFFSET_X = display.get_rect().width // 2 - TILE_WIDTH_HALF * len(MAP_DATA[0])
+OFFSET_X = display.get_rect().width // 2 - TILE_WIDTH_HALF * len(map_data[0])
 OFFSET_Y = display.get_rect().height // 2 - TILE_HEIGHT_HALF
 
 running = True
@@ -61,9 +73,13 @@ while running:
                 OFFSET_Y += TILE_HEIGHT_HALF
             elif event.key == pygame.K_d:
                 OFFSET_X += TILE_WIDTH_HALF
+            elif event.key == pygame.K_e:
+                map_data = rotate_clockwise(map_data)
+            elif event.key == pygame.K_q:
+                map_data = rotate_counterclockwise(map_data)
 
     display.fill(BACKGROUND_COLOR)
-    for map_y, row in enumerate(MAP_DATA):
+    for map_y, row in enumerate(map_data):
         for map_x, i in enumerate(row):
             tile = tiles[i]
             display_x = (map_x + map_y) * TILE_WIDTH_HALF + OFFSET_X
