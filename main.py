@@ -61,6 +61,8 @@ OFFSET_Y = display.get_rect().height // 2 - TILE_HEIGHT_HALF
 
 running = True
 while running:
+    clock.tick(60)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
