@@ -26,7 +26,6 @@ TODO:
 - Tiles, über denen die Maus schwebt, hervorheben. Das testet, ob die Koordinaten richtig transformiert werden.
 - Objekte, die sich flüssig über die Karte bewegen, also nicht an das Gitter gebunden sind.
 - Die Karte mit Maus und Tastatur verschieben. Aber begrenzt, dass man die Karte nicht komplett aus der Ansicht schieben kann:
-    - WASD
     - rechte Maustaste gedrückt halten und Mausbewegung
     - Maus an den Bildschirmrand. Dazu die Maus an das Fenster begrenzen. Kann ich dann noch das X oben rechts klicken? Wenn nicht, ist auch nicht wild. In Menüs oder im pausierten Modus wird die Maus frei sein.
 - Karte zoomen:

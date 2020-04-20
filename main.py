@@ -52,8 +52,10 @@ map_data = [
 ]
 # Important: index the map with MAP_DATA[y][x] like a matrix.
 
-TILE_WIDTH_HALF = 32
-TILE_HEIGHT_HALF = 16
+TILE_WIDTH = 64
+TILE_HEIGHT = 32
+TILE_WIDTH_HALF = TILE_WIDTH // 2
+TILE_HEIGHT_HALF = TILE_HEIGHT // 2
 OFFSET_X = display.get_rect().width // 2 - TILE_WIDTH_HALF * len(map_data[0])
 OFFSET_Y = display.get_rect().height // 2 - TILE_HEIGHT_HALF
 
@@ -66,13 +68,13 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
             elif event.key == pygame.K_w:
-                OFFSET_Y -= TILE_HEIGHT_HALF
+                OFFSET_Y -= TILE_HEIGHT
             elif event.key == pygame.K_a:
-                OFFSET_X -= TILE_WIDTH_HALF
+                OFFSET_X -= TILE_WIDTH
             elif event.key == pygame.K_s:
-                OFFSET_Y += TILE_HEIGHT_HALF
+                OFFSET_Y += TILE_HEIGHT
             elif event.key == pygame.K_d:
-                OFFSET_X += TILE_WIDTH_HALF
+                OFFSET_X += TILE_WIDTH
             elif event.key == pygame.K_e:
                 map_data = rotate_clockwise(map_data)
             elif event.key == pygame.K_q:
