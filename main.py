@@ -14,6 +14,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import os
 
 import pygame
 
@@ -45,7 +46,7 @@ TILE_HEIGHT_HALF = TILE_HEIGHT // 2
 tiles = []
 tile_offsets = []
 for filename in ("platform.png", "red.png"):
-    tile = pygame.image.load(filename).convert()
+    tile = pygame.image.load(os.path.join("images", filename)).convert()
     tile.set_colorkey(COLORKEY)
     tiles.append(tile)
     tile_offsets.append((
