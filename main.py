@@ -42,6 +42,7 @@ TILE_WIDTH = 64
 TILE_HEIGHT = 32
 TILE_WIDTH_HALF = TILE_WIDTH // 2
 TILE_HEIGHT_HALF = TILE_HEIGHT // 2
+MAP_SCROLL_SPEED = 150  # pixel per second
 
 tiles = []
 tile_offsets = []
@@ -70,7 +71,7 @@ OFFSET_Y = display.get_rect().height // 2 - TILE_HEIGHT_HALF
 
 running = True
 while running:
-    clock.tick(60)
+    dt = clock.tick(60) / 1000
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -78,18 +79,29 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
-            elif event.key == pygame.K_w:
-                OFFSET_Y -= TILE_HEIGHT
-            elif event.key == pygame.K_a:
-                OFFSET_X -= TILE_WIDTH
-            elif event.key == pygame.K_s:
-                OFFSET_Y += TILE_HEIGHT
-            elif event.key == pygame.K_d:
-                OFFSET_X += TILE_WIDTH
             elif event.key == pygame.K_e:
                 map_data = rotate_clockwise(map_data)
             elif event.key == pygame.K_q:
                 map_data = rotate_counterclockwise(map_data)
+        elif event.type == pygame.MOUSEMOTION:
+            if event.buttons[2]:  # right mouse button
+                pygame.mouse.set_visible(False)
+                OFFSET_X += event.rel[0]
+                OFFSET_Y += event.rel[1]
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if not pygame.mouse.get_visible():
+                pygame.mouse.set_visible(True)
+
+    pressed = pygame.key.get_pressed()
+    map_scroll_distance = MAP_SCROLL_SPEED * dt
+    if pressed[pygame.K_w]:
+        OFFSET_Y -= map_scroll_distance
+    if pressed[pygame.K_a]:
+        OFFSET_X -= map_scroll_distance
+    if pressed[pygame.K_s]:
+        OFFSET_Y += map_scroll_distance
+    if pressed[pygame.K_d]:
+        OFFSET_X += map_scroll_distance
 
     display.fill(BACKGROUND_COLOR)
     for map_y, row in enumerate(map_data):

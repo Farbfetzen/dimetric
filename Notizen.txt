@@ -20,17 +20,22 @@ screen:
    (0, 1)
 Heißt x wird nach oben rechts größer und y wird nach unten rechts größer.
 
+Steuerung:
+- WASD: Karte scrollen
+- rechte Maustaste und Mausbewegung: Karte scrollen
+- Q oder E: Karte rotieren
+
 
 TODO:
 - Debug Info:
     - FPS
     - Mauskoordinaten in world und display
-- Türme in der richtigen Reihenfolge blitten. Die vorderen müssen die hinteren verdecken.
 - Tiles, über denen die Maus schwebt, hervorheben. Das testet, ob die Koordinaten richtig transformiert werden.
 - Objekte, die sich flüssig über die Karte bewegen, also nicht an das Gitter gebunden sind.
 - Die Karte mit Maus und Tastatur verschieben. Aber begrenzt, dass man die Karte nicht komplett aus der Ansicht schieben kann:
-    - rechte Maustaste gedrückt halten und Mausbewegung
-    - Maus an den Bildschirmrand. Dazu die Maus an das Fenster begrenzen. Kann ich dann noch das X oben rechts klicken? Wenn nicht, ist auch nicht wild. In Menüs oder im pausierten Modus wird die Maus frei sein.
+    - Maus an den Bildschirmrand.
+    - Karte nur per Rechtsklick verschieben, wenn der Klick auf der Karte landet.
 - Karte zoomen:
     - Maurad
     - page up/down
+- Platform-Tiles: Vertikale Linie 1 Pixel breit machen? Dürfte besser aussehen.
