@@ -6,6 +6,9 @@ Gifs und Videos: obs?
 
 Programme empfohlen von DaFluffyPotato: https://www.youtube.com/watch?v=ung_U17kxDI
 
+Implementierung der doppelten for-Schleife zum Darstellen der Karte:
+https://stackoverflow.com/questions/892811/drawing-isometric-game-worlds
+
 
 Koordinaten:
 world:

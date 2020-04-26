@@ -37,25 +37,33 @@ clock = pygame.time.Clock()
 
 BACKGROUND_COLOR = (0, 0, 0)
 COLORKEY = (255, 255, 255)
-tiles = []
-for filename in ("green.png", "red.png"):
-    tile = pygame.image.load(filename).convert()
-    tile.set_colorkey(COLORKEY)
-    tiles.append(tile)
-
-map_data = [
-    [1, 0, 1, 1, 1],
-    [1, 1, 1, 0, 1],
-    [0, 0, 0, 0, 1],
-    [1, 1, 0, 1, 1],
-    [0, 1, 1, 1, 0]
-]
-# Important: index the map with MAP_DATA[y][x] like a matrix.
-
 TILE_WIDTH = 64
 TILE_HEIGHT = 32
 TILE_WIDTH_HALF = TILE_WIDTH // 2
 TILE_HEIGHT_HALF = TILE_HEIGHT // 2
+
+tiles = []
+tile_offsets = []
+for filename in ("platform.png", "red.png"):
+    tile = pygame.image.load(filename).convert()
+    tile.set_colorkey(COLORKEY)
+    tiles.append(tile)
+    tile_offsets.append((
+        TILE_WIDTH - tile.get_width(),
+        TILE_HEIGHT - tile.get_height()
+    ))
+
+map_data = [
+    [0, 1, 0, 0, 0, 0, 0],
+    [0, 1, 0, 1, 1, 1, 0],
+    [0, 1, 1, 1, 0, 1, 0],
+    [0, 0, 0, 0, 0, 1, 0],
+    [1, 1, 1, 0, 1, 1, 0],
+    [0, 0, 1, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+]
+# Important: index the map with MAP_DATA[y][x] like a matrix.
+
 OFFSET_X = display.get_rect().width // 2 - TILE_WIDTH_HALF * len(map_data[0])
 OFFSET_Y = display.get_rect().height // 2 - TILE_HEIGHT_HALF
 
@@ -84,10 +92,12 @@ while running:
 
     display.fill(BACKGROUND_COLOR)
     for map_y, row in enumerate(map_data):
-        for map_x, i in enumerate(row):
+        for map_x, i in reversed(list(enumerate(row))):
+            # reversed() so that tiles are drawn back to front
             tile = tiles[i]
-            display_x = (map_x + map_y) * TILE_WIDTH_HALF + OFFSET_X
-            display_y = (map_y - map_x) * TILE_HEIGHT_HALF + OFFSET_Y
+            tile_offset_x, tile_offset_y = tile_offsets[i]
+            display_x = (map_x + map_y) * TILE_WIDTH_HALF + OFFSET_X + tile_offset_x
+            display_y = (map_y - map_x) * TILE_HEIGHT_HALF + OFFSET_Y + tile_offset_y
             display.blit(tile, (display_x, display_y))
 
     pygame.display.flip()
