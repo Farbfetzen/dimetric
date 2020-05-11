@@ -19,18 +19,6 @@ import os
 import pygame
 
 
-def rotate_clockwise(world):
-    world = list(zip(*world[::-1]))
-    world = [list(column) for column in world]
-    return world
-
-
-def rotate_counterclockwise(world):
-    world = list(zip(*world))[::-1]
-    world = [list(column) for column in world]
-    return world
-
-
 pygame.init()
 
 display = pygame.display.set_mode((640, 480))
@@ -79,10 +67,6 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
-            elif event.key == pygame.K_e:
-                map_data = rotate_clockwise(map_data)
-            elif event.key == pygame.K_q:
-                map_data = rotate_counterclockwise(map_data)
         elif event.type == pygame.MOUSEMOTION:
             if event.buttons[2]:  # right mouse button
                 pygame.mouse.set_visible(False)
