@@ -6,9 +6,6 @@ Gifs und Videos: obs?
 
 Programme empfohlen von DaFluffyPotato: https://www.youtube.com/watch?v=ung_U17kxDI
 
-Implementierung der doppelten for-Schleife zum Darstellen der Karte:
-https://stackoverflow.com/questions/892811/drawing-isometric-game-worlds
-
 
 Koordinaten:
 world:
@@ -25,7 +22,6 @@ in umgekehrte x-Richtung blitten muss, damit sich hohe tiles nicht überlappen.
 Steuerung:
 - WASD: Karte scrollen
 - rechte Maustaste und Mausbewegung: Karte scrollen
-- Q oder E: Karte rotieren
 
 
 TODO:
@@ -33,11 +29,13 @@ TODO:
     - FPS
     - Mauskoordinaten in world und display
 - Tiles, über denen die Maus schwebt, hervorheben. Das testet, ob die Koordinaten richtig transformiert werden.
+  Einfach den Rand leuchten lassen. Je nachdem, ob es eine Platform oder der Pfad ist, das richtige highlight auswählen.
 - Objekte, die sich flüssig über die Karte bewegen, also nicht an das Gitter gebunden sind.
+- Objekte mit Wegpunkten über den Pfad steuern. Wegpunkte vorher in der Kartendatei festlegen. Mehrere Lanes?
 - Die Karte mit Maus und Tastatur verschieben. Aber begrenzt, dass man die Karte nicht komplett aus der Ansicht schieben kann:
     - Maus an den Bildschirmrand.
     - Karte nur per Rechtsklick verschieben, wenn der Klick auf der Karte landet.
 - Karte zoomen:
     - Maurad
     - page up/down
-- Platform-Tiles: Vertikale Linie 1 Pixel breit machen? Dürfte besser aussehen.
+- Bessere Struktur, Karte aus extern laden, Klassen und so.

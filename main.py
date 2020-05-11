@@ -53,10 +53,27 @@ map_data = [
     [0, 0, 1, 1, 1, 0, 0],
     [0, 0, 0, 0, 0, 0, 0],
 ]
-# Important: index the map with MAP_DATA[y][x] like a matrix.
 
 OFFSET_X = display_rect.centerx - TILE_WIDTH_HALF
 OFFSET_Y = display_rect.centery - TILE_HEIGHT_HALF * len(map_data)
+
+
+def map_to_screen(map_x, map_y, offset_x, offset_y):
+    screen_x = (map_x - map_y) * TILE_WIDTH_HALF + OFFSET_X + offset_x
+    screen_y = (map_x + map_y) * TILE_HEIGHT_HALF + OFFSET_Y + offset_y
+    return screen_x, screen_y
+
+
+def screen_to_map(screen_x, screen_y):
+    # Adapted from the code example in wikipedia:
+    # https://en.wikipedia.org/wiki/Isometric_video_game_graphics#Mapping_screen_to_world_coordinates
+    virt_x = (screen_x - (OFFSET_X - (len(map_data) - 1) * TILE_WIDTH_HALF)) / TILE_WIDTH
+    virt_y = (screen_y - OFFSET_Y) / TILE_HEIGHT
+    map_x = virt_y + (virt_x - len(map_data[0]) / 2)
+    map_y = virt_y - (virt_x - len(map_data) / 2)
+    # Coordinates are floats. Use int() to get the tile position in the map data.
+    return map_x, map_y
+
 
 running = True
 while running:
@@ -70,12 +87,10 @@ while running:
                 running = False
         elif event.type == pygame.MOUSEMOTION:
             if event.buttons[2]:  # right mouse button
-                pygame.mouse.set_visible(False)
                 OFFSET_X += event.rel[0]
                 OFFSET_Y += event.rel[1]
-        elif event.type == pygame.MOUSEBUTTONUP:
-            if not pygame.mouse.get_visible():
-                pygame.mouse.set_visible(True)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            print(screen_to_map(*event.pos))
 
     pressed = pygame.key.get_pressed()
     map_scroll_distance = MAP_SCROLL_SPEED * dt
@@ -91,11 +106,10 @@ while running:
     display.fill(BACKGROUND_COLOR)
     for map_y, row in enumerate(map_data):
         for map_x, i in enumerate(row):
-            # reversed() so that tiles are drawn back to front
             tile = tiles[i]
-            tile_offset_x, tile_offset_y = tile_offsets[i]
-            screen_x = (map_x - map_y) * TILE_WIDTH_HALF + OFFSET_X + tile_offset_x
-            screen_y = (map_x + map_y) * TILE_HEIGHT_HALF + OFFSET_Y + tile_offset_y
-            display.blit(tile, (screen_x, screen_y))
+            display.blit(tile, map_to_screen(map_x, map_y, *tile_offsets[i]))
+
+    # pygame.draw.circle(display, pygame.Color("red"), (OFFSET_X, OFFSET_Y), 1)
+    # pygame.draw.circle(display, pygame.Color("orange"), display_rect.center, 1)
 
     pygame.display.flip()
