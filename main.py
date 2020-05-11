@@ -34,7 +34,7 @@ MAP_SCROLL_SPEED = 150  # pixel per second
 
 tiles = []
 tile_offsets = []
-for filename in ("platform.png", "red.png"):
+for filename in ("platform.png", "path.png"):
     tile = pygame.image.load(os.path.join("images", filename)).convert()
     tile.set_colorkey(COLORKEY)
     tiles.append(tile)
