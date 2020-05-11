@@ -15,10 +15,12 @@ world:
 (0, 0)(0, 1)
 (1, 0)(1, 1)
 screen:
-   (1, 0)
-(0, 0)(1, 1)
-   (0, 1)
-Heißt x wird nach oben rechts größer und y wird nach unten rechts größer.
+   (0, 0)
+(0, 1)(1, 0)
+   (1, 1)
+Heißt x wird nach unten rechts größer und y wird nach unten links größer.
+Anfangs hatte ich (0, 0) an der linken Ecke. Aber das hat den Nachteil, dass ich
+in umgekehrte x-Richtung blitten muss, damit sich hohe tiles nicht überlappen.
 
 Steuerung:
 - WASD: Karte scrollen

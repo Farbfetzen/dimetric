@@ -22,6 +22,7 @@ import pygame
 pygame.init()
 
 display = pygame.display.set_mode((640, 480))
+display_rect = display.get_rect()
 clock = pygame.time.Clock()
 
 BACKGROUND_COLOR = (0, 0, 0)
@@ -54,8 +55,8 @@ map_data = [
 ]
 # Important: index the map with MAP_DATA[y][x] like a matrix.
 
-OFFSET_X = display.get_rect().width // 2 - TILE_WIDTH_HALF * len(map_data[0])
-OFFSET_Y = display.get_rect().height // 2 - TILE_HEIGHT_HALF
+OFFSET_X = display_rect.centerx - TILE_WIDTH_HALF
+OFFSET_Y = display_rect.centery - TILE_HEIGHT_HALF * len(map_data)
 
 running = True
 while running:
@@ -89,12 +90,12 @@ while running:
 
     display.fill(BACKGROUND_COLOR)
     for map_y, row in enumerate(map_data):
-        for map_x, i in reversed(list(enumerate(row))):
+        for map_x, i in enumerate(row):
             # reversed() so that tiles are drawn back to front
             tile = tiles[i]
             tile_offset_x, tile_offset_y = tile_offsets[i]
-            display_x = (map_x + map_y) * TILE_WIDTH_HALF + OFFSET_X + tile_offset_x
-            display_y = (map_y - map_x) * TILE_HEIGHT_HALF + OFFSET_Y + tile_offset_y
-            display.blit(tile, (display_x, display_y))
+            screen_x = (map_x - map_y) * TILE_WIDTH_HALF + OFFSET_X + tile_offset_x
+            screen_y = (map_x + map_y) * TILE_HEIGHT_HALF + OFFSET_Y + tile_offset_y
+            display.blit(tile, (screen_x, screen_y))
 
     pygame.display.flip()
