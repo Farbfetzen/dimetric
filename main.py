@@ -15,6 +15,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import os
+from math import floor
 
 import pygame
 
@@ -35,7 +36,7 @@ MAP_SCROLL_SPEED = 150  # pixel per second
 
 tiles = []
 tile_offsets = []
-for filename in ("platform.png", "path.png"):
+for filename in ("platform.png", "path.png", "highlight.png"):
     tile = pygame.image.load(os.path.join("images", filename)).convert()
     tile.set_colorkey(COLORKEY)
     tiles.append(tile)
@@ -69,9 +70,12 @@ def screen_to_map(screen_x, screen_y):
     # https://en.wikipedia.org/wiki/Isometric_video_game_graphics#Mapping_screen_to_world_coordinates
     virt_x = (screen_x - (OFFSET_X - (len(map_data) - 1) * TILE_WIDTH_HALF)) / TILE_WIDTH
     virt_y = (screen_y - OFFSET_Y) / TILE_HEIGHT
-    map_x = virt_y + (virt_x - len(map_data[0]) / 2)
-    map_y = virt_y - (virt_x - len(map_data) / 2)
+    map_x = floor(virt_y + (virt_x - len(map_data[0]) / 2))
+    map_y = floor(virt_y - (virt_x - len(map_data) / 2))
     # Coordinates are floats. Use int() to get the tile position in the map data.
+    # Strictly speaking it should be rounded down but int() rounds towards zero.
+    # Rounding down will result in the correct coordinates even if
+    # the map coordinates are negative.
     return map_x, map_y
 
 
@@ -111,5 +115,27 @@ while running:
 
     # pygame.draw.circle(display, pygame.Color("red"), (OFFSET_X, OFFSET_Y), 1)
     # pygame.draw.circle(display, pygame.Color("orange"), display_rect.center, 1)
+
+
+    # Highlight the outline of a tile when the mouse is over the map.
+    # TODO: highlight the top of the platform
+    # TODO: snap to grid when mouse is over the raised part of a platform, not
+    #   only over the base.
+    mouse_pos = pygame.mouse.get_pos()
+    mouse_map_pos = screen_to_map(*mouse_pos)
+    if any(0 > pos or pos > len(map_data) - 1 for pos in mouse_map_pos):
+        tile = tiles[2]
+        rect = tile.get_rect(center=mouse_pos)
+        display.blit(tiles[2], rect)
+    else:
+        display.blit(
+            tiles[2],
+            map_to_screen(
+                mouse_map_pos[0],
+                mouse_map_pos[1],
+                *tile_offsets[2]
+            )
+        )
+
 
     pygame.display.flip()
