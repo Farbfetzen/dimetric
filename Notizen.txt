@@ -28,8 +28,6 @@ TODO:
 - Debug Info:
     - FPS
     - Mauskoordinaten in world und display
-- Tiles, über denen die Maus schwebt, hervorheben. Das testet, ob die Koordinaten richtig transformiert werden.
-  Einfach den Rand leuchten lassen. Je nachdem, ob es eine Platform oder der Pfad ist, das richtige highlight auswählen.
 - Objekte, die sich flüssig über die Karte bewegen, also nicht an das Gitter gebunden sind.
 - Objekte mit Wegpunkten über den Pfad steuern. Wegpunkte vorher in der Kartendatei festlegen. Mehrere Lanes?
 - Die Karte mit Maus und Tastatur verschieben. Aber begrenzt, dass man die Karte nicht komplett aus der Ansicht schieben kann:

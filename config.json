@@ -1,0 +1,18 @@
+{
+    "general": {
+        "window_width": 800,
+        "window_height": 600,
+        "fps": 60,
+        "map_scroll_speed": 150
+    },
+    "colors": {
+        "background": [0, 0, 0],
+        "colorkey": [255, 255, 255]
+    },
+    "tiles": {
+        "width": 64,
+        "height": 32,
+        "width_half": 32,
+        "height_half": 16
+    }
+}
