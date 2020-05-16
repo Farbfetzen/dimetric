@@ -41,6 +41,11 @@ def load_map(config):
         # Liste und wird nach x und y sortiert.
         # Jedes map-tile kennt seine position auf Karte und Bildschirm,
         # seine Tile-Abmessungen, Offsets und hat eine Referenz zur Surface.
+        # Aber eine eigene Klasse wäre overkill. Die machen ja nichts und sind
+        # alle gleich. daher wäre namedtuple besser und sparsamer.
+        # Wenn die Karte verschoben wird, ändert sich zwar die
+        # Bildschirmposition, aber das kann man mit dem Karten-Offset neu
+        # berechnen. Muss man sowieso in jedem Frame für die beweglichen Objekte.
 
         # tile = pygame.image.load(os.path.join("images", filename)).convert()
         # tile.set_colorkey(COLORKEY)
