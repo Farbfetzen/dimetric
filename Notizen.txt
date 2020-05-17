@@ -13,8 +13,9 @@ world:
 (1, 0)(1, 1)
 screen:
    (0, 0)
-(0, 1)(1, 0)
+(1, 0)(0, 1)
    (1, 1)
+Achtung: Matrixnotation (y, x)
 Heißt x wird nach unten rechts größer und y wird nach unten links größer.
 Anfangs hatte ich (0, 0) an der linken Ecke. Aber das hat den Nachteil, dass ich
 in umgekehrte x-Richtung blitten muss, damit sich hohe tiles nicht überlappen.
@@ -28,14 +29,8 @@ TODO:
 - Debug Info:
     - FPS
     - Mauskoordinaten in world und display
-- Tiles, über denen die Maus schwebt, hervorheben. Das testet, ob die Koordinaten richtig transformiert werden.
-  Einfach den Rand leuchten lassen. Je nachdem, ob es eine Platform oder der Pfad ist, das richtige highlight auswählen.
 - Objekte, die sich flüssig über die Karte bewegen, also nicht an das Gitter gebunden sind.
-- Objekte mit Wegpunkten über den Pfad steuern. Wegpunkte vorher in der Kartendatei festlegen. Mehrere Lanes?
+- Objekte mit Wegpunkten über den Pfad steuern.
 - Die Karte mit Maus und Tastatur verschieben. Aber begrenzt, dass man die Karte nicht komplett aus der Ansicht schieben kann:
     - Maus an den Bildschirmrand.
     - Karte nur per Rechtsklick verschieben, wenn der Klick auf der Karte landet.
-- Karte zoomen:
-    - Maurad
-    - page up/down
-- Bessere Struktur, Karte aus extern laden, Klassen und so.
