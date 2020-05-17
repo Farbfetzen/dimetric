@@ -1,4 +1,4 @@
-"""Parent state."""
+"""Game state super class."""
 
 # Copyright (C) 2020  Sebastian Henz
 #

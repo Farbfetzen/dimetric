@@ -18,11 +18,11 @@
 
 import json
 import os
-import collections
+from collections import namedtuple
 import pygame
 
 from src.coordinate_conversion import map_to_screen
-from src import constants
+import src.constants as const
 from src.states.main_game import MainGame
 
 
@@ -30,7 +30,7 @@ def load_sprites():
     sprites = {}
     for filename in os.listdir("sprites"):
         sprite = pygame.image.load(os.path.join("sprites", filename)).convert()
-        sprite.set_colorkey(constants.COLORKEY)
+        sprite.set_colorkey(const.COLORKEY)
         name = os.path.splitext(filename)[0]
         sprites[name] = sprite
     return sprites
@@ -38,11 +38,12 @@ def load_sprites():
 
 def load_maps(sprites):
     maps = {}
-    Tile = collections.namedtuple("tile", [
-        "type", "sprite",
+    Tile = namedtuple("tile", [
+        "type", "surface",
         "map_x", "map_y",
         "x", "y"
     ])
+    map_obj = namedtuple("map", ["tiles", "width", "height"])
     for filename in os.listdir("maps"):
         with open(os.path.join("maps", filename), "r") as file:
             map_data = json.load(file)
@@ -54,21 +55,21 @@ def load_maps(sprites):
                     sprite = sprites[tile_name]
                     x, y = map_to_screen(
                         map_x, map_y,
-                        constants.TILE_WIDTH - sprite.get_width(),
-                        constants.TILE_HEIGHT - sprite.get_height(),
+                        const.TILE_WIDTH - sprite.get_width(),
+                        const.TILE_HEIGHT - sprite.get_height(),
                         0, 0
                     )
                     tile = Tile(tile_name, sprite, map_x, map_y, x, y)
                     tiles.append(tile)
             name = os.path.splitext(filename)[0]
-            maps[name] = tiles
+            maps[name] = map_obj(tiles=tiles, width=map_x + 1, height=map_y + 1)
     return maps
 
 
 def run():
     pygame.init()
     display = pygame.display.set_mode(
-        (constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT)
+        (const.WINDOW_WIDTH, const.WINDOW_HEIGHT)
     )
 
     sprites = load_sprites()
@@ -83,7 +84,7 @@ def run():
 
     clock = pygame.time.Clock()
     while True:
-        dt = clock.tick(constants.FPS)
+        dt = clock.tick(const.FPS)
 
         if pygame.event.get(pygame.QUIT):
             break
@@ -91,12 +92,12 @@ def run():
             state.process_events()
 
         if state.done:
-            state_data = state.close()
-            next_state_name = state_data["next_state_name"]
+            persistent_state_data = state.close()
+            next_state_name = persistent_state_data["next_state_name"]
             if next_state_name == "quit":
                 break
             state = states[next_state_name]
-            state.start(state_data)
+            state.start(persistent_state_data)
 
         state.update(dt)
 

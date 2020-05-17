@@ -1,4 +1,4 @@
-"""game constants."""
+"""Game constants."""
 
 # Copyright (C) 2020  Sebastian Henz
 #

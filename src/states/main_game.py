@@ -16,44 +16,35 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-import src.states.state
+import pygame
+
+from src.states.state import State
+import src.constants as const
 
 
-class MainGame(src.states.state.State):
+class MainGame(State):
     def __init__(self, data, map_name):
         super().__init__(data)
         self.map = data["maps"][map_name]
 
-    # camera_offset_x = display_rect.centerx - constants.TILE_WIDTH_HALF
-    # camera_offset_y = display_rect.centery - constants.TILE_HEIGHT_HALF * len(map_data)
+        self.camera_offset_x = const.WINDOW_WIDTH // 2 - const.TILE_WIDTH_HALF
+        self.camera_offset_y = const.WINDOW_HEIGHT // 2 - const.TILE_HEIGHT_HALF * self.map.height
 
     def process_events(self):
-        # for event in pygame.event.get():
-        #     if event.type == pygame.QUIT:
-        #         running = False
-        #     elif event.type == pygame.KEYDOWN:
-        #         if event.key == pygame.K_ESCAPE:
-        #             running = False
-        #     elif event.type == pygame.MOUSEMOTION:
-        #         if event.buttons[2]:  # right mouse button
-        #             OFFSET_X += event.rel[0]
-        #             OFFSET_Y += event.rel[1]
-        #     elif event.type == pygame.MOUSEBUTTONDOWN:
-        #         print(screen_to_map(*event.pos))
-        # pressed = pygame.key.get_pressed()
-        # map_scroll_distance = MAP_SCROLL_SPEED * dt
-        # if pressed[pygame.K_w]:
-        #     OFFSET_Y -= map_scroll_distance
-        # if pressed[pygame.K_a]:
-        #     OFFSET_X -= map_scroll_distance
-        # if pressed[pygame.K_s]:
-        #     OFFSET_Y += map_scroll_distance
-        # if pressed[pygame.K_d]:
-        #     OFFSET_X += map_scroll_distance
-        pass
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.done = True
 
     def draw(self, dest_surface):
-        # display.fill(BACKGROUND_COLOR)
+        dest_surface.fill((0, 0, 0))
+
+        for tile in self.map.tiles:
+            dest_surface.blit(
+                tile.surface,
+                (tile.x + self.camera_offset_x, tile.y + self.camera_offset_y)
+            )
+
         # for map_y, row in enumerate(map_data):
         #     for map_x, i in enumerate(row):
         #         tile = tiles[i]
@@ -81,4 +72,3 @@ class MainGame(src.states.state.State):
         #             *tile_offsets[2]
         #         )
         #     )
-        pass
