@@ -1,4 +1,4 @@
-"""Main game state"""
+"""game constants."""
 
 # Copyright (C) 2020  Sebastian Henz
 #
@@ -16,8 +16,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-import src.state
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
+FPS = 60
 
+MAP_SCROLL_SPEED = 150
 
-class MainGame(src.state.State):
-    pass
+COLORKEY = (255, 255, 255)
+
+TILE_WIDTH = 64
+TILE_HEIGHT = 32
+TILE_WIDTH_HALF = 32
+TILE_HEIGHT_HALF = 16

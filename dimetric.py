@@ -17,11 +17,9 @@
 
 
 import os
-
-import src.main
-
-
+# These must be set before importing Pygame:
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 os.environ["SDL_VIDEO_CENTERED"] = "1"
 
+import src.main
 src.main.run()

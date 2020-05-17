@@ -44,11 +44,11 @@ class State:
         persistent_state_data = {"next_state_name": "quit"}
         return persistent_state_data
 
-    def process_events(self, events):
+    def process_events(self):
         pass
 
     def update(self, dt):
         pass
 
-    def draw(self, window):
+    def draw(self, dest_surface):
         pass
