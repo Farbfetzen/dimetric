@@ -45,14 +45,6 @@ class MainGame(State):
                 (tile.x + self.camera_offset_x, tile.y + self.camera_offset_y)
             )
 
-        # for map_y, row in enumerate(map_data):
-        #     for map_x, i in enumerate(row):
-        #         tile = tiles[i]
-        #         display.blit(tile, map_to_screen(map_x, map_y, *tile_offsets[i]))
-        #
-        # # pygame.draw.circle(display, pygame.Color("red"), (OFFSET_X, OFFSET_Y), 1)
-        # # pygame.draw.circle(display, pygame.Color("orange"), display_rect.center, 1)
-        #
         # # Highlight the outline of a tile when the mouse is over the map.
         # # TODO: highlight the top of the platform
         # # TODO: snap to grid when mouse is over the raised part of a platform, not
