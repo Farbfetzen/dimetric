@@ -25,6 +25,16 @@ Steuerung:
 - rechte Maustaste und Mausbewegung: Karte scrollen
 
 
+Je nach Schwierigkeitsgrad oder Spielmodus sind die Waves anders zusammengesetzt.
+Ich sollte das in einer Textdatei konfigurieren.:
+Gegnertyp, Anzahl, Abstand, Trefferpunkte, Geschwindigkeit, etc.
+
+
+Die Wegpunkte des Pfades der Gegner in der Karten-json festlegen. Nur eine Lane,
+denn die Tiles sind zu klein für mehr. Ansonsten werden die Gegner zu klein.
+Ich könnte aber auch alles einfach größer machen.
+
+
 TODO:
 - Debug Info:
     - FPS

@@ -20,30 +20,54 @@ import pygame
 
 from src.states.state import State
 import src.constants as const
+from src.enemy import Enemy
+from src.resources import maps
+from src.coordinate_conversion import map_to_screen
 
 
 class MainGame(State):
-    def __init__(self, data, map_name):
-        super().__init__(data)
-        self.map = data["maps"][map_name]
-
+    def __init__(self, map_name):
+        super().__init__()
+        self.map = maps[map_name]
         self.camera_offset_x = const.WINDOW_WIDTH // 2 - const.TILE_WIDTH_HALF
         self.camera_offset_y = const.WINDOW_HEIGHT // 2 - const.TILE_HEIGHT_HALF * self.map.height
+        self.enemies = []
 
     def process_events(self):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.done = True
+                elif event.key == pygame.K_s:
+                    self.next_wave()
+
+    def update(self, dt):
+        for e in self.enemies:
+            e.update(dt)
 
     def draw(self, dest_surface):
         dest_surface.fill((0, 0, 0))
 
+        # FIXME: The map to screen conversion is still wrong. [0, 0] should be at the top.
         for tile in self.map.tiles:
             dest_surface.blit(
                 tile.surface,
                 (tile.x + self.camera_offset_x, tile.y + self.camera_offset_y)
             )
+
+        for e in self.enemies:
+            dest_surface.blit(
+                e.surface,
+                map_to_screen(
+                    e.rect.x, e.rect.y,
+                    0, e.offset_y,
+                    self.camera_offset_x, self.camera_offset_y
+                )
+            )
+
+
+        pygame.draw.circle(dest_surface, (255, 0, 0),
+                           map_to_screen(0, 0, 0, 0, self.camera_offset_x, self.camera_offset_y), 5)
 
         # # Highlight the outline of a tile when the mouse is over the map.
         # # TODO: highlight the top of the platform
@@ -64,3 +88,6 @@ class MainGame(State):
         #             *tile_offsets[2]
         #         )
         #     )
+
+    def next_wave(self):
+        self.enemies.append(Enemy("cube", self.map.path))

@@ -17,20 +17,12 @@
 
 
 class State:
-    def __init__(self, data):
+    def __init__(self):
         self.done = False
 
-        # Access the game data and extract the relevant info, for example
-        # self.images = data["images"]["player_character"]
-        # or
-        # self.config = data["config"]["main_menu"]
-        # Remember that this is a reference to the config and not a copy.
-        # So if you modify this here then that specific sub-dictionary of the
-        # config is modified for the whole app.
-
-    def start(self, data):
+    def start(self, persistent_state_data):
         """Start or resume a state.
-        Use the information from the previous state provided in data to set up
+        Use the information provided by the previous state to set up
         this state.
         """
         self.done = False
