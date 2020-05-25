@@ -16,18 +16,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-# Must be set before importing Pygame:
+# Must be done before importing Pygame:
 import os
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 os.environ["SDL_VIDEO_CENTERED"] = "1"
 
 
-# Must be done before loading resources like sprites and sounds:
 import pygame
-import src.constants as const
 pygame.init()
-display = pygame.display.set_mode((const.WINDOW_WIDTH, const.WINDOW_HEIGHT))
 
 
 import src.main
-src.main.run(display)
+src.main.run()

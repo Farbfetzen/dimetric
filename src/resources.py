@@ -41,6 +41,9 @@ def _load_maps(sprites):
         "map_x", "map_y",
         "x", "y"
     ])
+    # FIXME: Check if the map stores references to the tile surfaces or
+    #  if it makes copies of the surfaces. Because the latter would be a waste
+    #  of resources.
     map_obj = namedtuple("map", ["tiles", "width", "height", "path"])
     for filename in os.listdir("maps"):
         with open(os.path.join("maps", filename), "r") as file:
@@ -59,7 +62,7 @@ def _load_maps(sprites):
                     tile = Tile(tile_name, sprite, map_x, map_y, x, y)
                     tiles.append(tile)
 
-            # TODO: construct complete path in separate function
+            # TODO: construct complete enemy path in separate function
             path = (map_data["path_start"], map_data["path_end"])
 
             name = os.path.splitext(filename)[0]
@@ -72,5 +75,8 @@ def _load_maps(sprites):
     return maps
 
 
+# The display must be created before loading images:
+display = pygame.display.set_mode((const.WINDOW_WIDTH, const.WINDOW_HEIGHT))
 sprites = _load_sprites()
+
 maps = _load_maps(sprites)

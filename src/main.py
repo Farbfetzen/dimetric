@@ -22,7 +22,7 @@ import src.constants as const
 from src.states.main_game import MainGame
 
 
-def run(display):
+def run():
     states = {"MainGame": MainGame("test")}
     state = states["MainGame"]
 
@@ -45,5 +45,5 @@ def run(display):
 
         state.update(dt)
 
-        state.draw(display)
+        state.draw()
         pygame.display.flip()
