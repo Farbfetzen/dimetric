@@ -1,5 +1,5 @@
 Projektion: https://en.wikipedia.org/wiki/Isometric_video_game_graphics#Dimetric_projection
-Graphik: gimp, krita oder pyxeledit in wine?
+Graphik: aseprite (steam)?
 Musik: Chiptune wäre cool. Programme: "beepbox", "bosca ceoil", "lmms"
 Soundeffekte: "sfxr" oder "bfxr"
 Gifs und Videos: obs?
@@ -36,6 +36,7 @@ Ich könnte aber auch alles einfach größer machen.
 
 
 TODO:
+- Kleinere sprites und dünne vertikale Linien. Siehe Referenz mit 32*32 tiles.
 - Debug Info:
     - FPS
     - Mauskoordinaten in world und display

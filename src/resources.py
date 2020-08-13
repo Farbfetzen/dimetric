@@ -1,4 +1,4 @@
-"""Load sprites, maps, config etc. and make them accessible."""
+"""Load images, maps, config etc. and make them accessible."""
 
 # Copyright (C) 2020  Sebastian Henz
 #
@@ -24,26 +24,26 @@ import src.constants as const
 from src.coordinate_conversion import map_to_screen
 
 
-def _load_sprites():
-    sprites = {}
-    for filename in os.listdir("sprites"):
-        sprite = pygame.image.load(os.path.join("sprites", filename)).convert()
-        sprite.set_colorkey(const.COLORKEY)
+def _load_images():
+    images = {}
+    for filename in os.listdir("images"):
+        image = pygame.image.load(os.path.join("images", filename)).convert()
+        image.set_colorkey(const.COLORKEY)
         name = os.path.splitext(filename)[0]
-        sprites[name] = sprite
-    return sprites
+        images[name] = image
+    return images
 
 
-def _load_maps(sprites):
+def _build_maps(images):
     maps = {}
     Tile = namedtuple("tile", [
-        "type", "surface",
+        "type", "image",
         "map_x", "map_y",
         "x", "y"
     ])
     # FIXME: Check if the map stores references to the tile surfaces or
-    #  if it makes copies of the surfaces. Because the latter would be a waste
-    #  of resources.
+    #     if it makes copies of the surfaces. Because the latter would be
+    #     a waste of resources.
     map_obj = namedtuple("map", ["tiles", "width", "height", "path"])
     for filename in os.listdir("maps"):
         with open(os.path.join("maps", filename), "r") as file:
@@ -52,14 +52,14 @@ def _load_maps(sprites):
             for map_y, row in enumerate(map_data["map"]):
                 for map_x, i in enumerate(row):
                     tile_name = map_data["types"][i]
-                    sprite = sprites[tile_name]
+                    image = images[tile_name]
                     x, y = map_to_screen(
                         map_x, map_y,
-                        const.TILE_WIDTH - sprite.get_width(),
-                        const.TILE_HEIGHT - sprite.get_height(),
+                        const.TILE_WIDTH - image.get_width(),
+                        const.TILE_HEIGHT - image.get_height(),
                         0, 0
                     )
-                    tile = Tile(tile_name, sprite, map_x, map_y, x, y)
+                    tile = Tile(tile_name, image, map_x, map_y, x, y)
                     tiles.append(tile)
 
             # TODO: construct complete enemy path in separate function
@@ -77,6 +77,5 @@ def _load_maps(sprites):
 
 # The display must be created before loading images:
 display = pygame.display.set_mode((const.WINDOW_WIDTH, const.WINDOW_HEIGHT))
-sprites = _load_sprites()
-
-maps = _load_maps(sprites)
+images = _load_images()
+maps = _build_maps(images)

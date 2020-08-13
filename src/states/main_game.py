@@ -51,13 +51,13 @@ class MainGame(State):
         # FIXME: The map to screen conversion is still wrong. [0, 0] should be at the top.
         for tile in self.map.tiles:
             self.display.blit(
-                tile.surface,
+                tile.image,
                 (tile.x + self.camera_offset_x, tile.y + self.camera_offset_y)
             )
 
         for e in self.enemies:
             self.display.blit(
-                e.surface,
+                e.image,
                 map_to_screen(
                     e.rect.x, e.rect.y,
                     0, e.offset_y,
@@ -65,9 +65,12 @@ class MainGame(State):
                 )
             )
 
-
-        pygame.draw.circle(self.display, (255, 0, 0),
-                           map_to_screen(0, 0, 0, 0, self.camera_offset_x, self.camera_offset_y), 5)
+        pygame.draw.circle(
+            self.display,
+            (255, 0, 0),
+            map_to_screen(0, 0, 0, 0, self.camera_offset_x, self.camera_offset_y),
+            5
+        )
 
         # # Highlight the outline of a tile when the mouse is over the map.
         # # TODO: highlight the top of the platform
