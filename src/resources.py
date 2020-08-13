@@ -51,7 +51,7 @@ def _build_maps(images):
             tiles = []
             for map_y, row in enumerate(map_data["map"]):
                 for map_x, i in enumerate(row):
-                    tile_name = map_data["types"][i]
+                    tile_name = map_data["palette"][i]
                     image = images[tile_name]
                     x, y = map_to_screen(
                         map_x, map_y,

@@ -45,3 +45,4 @@ TODO:
 - Die Karte mit Maus und Tastatur verschieben. Aber begrenzt, dass man die Karte nicht komplett aus der Ansicht schieben kann:
     - Maus an den Bildschirmrand.
     - Karte nur per Rechtsklick verschieben, wenn der Klick auf der Karte landet.
+- Start und Ende des Pfades in der Karte selbst mit "S" und "E" angeben anstatt als Koordinaten. In der palette dann "S": "path" und "E": "path" eintragen.
