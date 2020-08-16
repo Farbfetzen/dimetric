@@ -55,11 +55,16 @@ def _build_maps(images):
                     image = images[tile_name]
                     x, y = map_to_screen(
                         map_x, map_y,
-                        const.TILE_WIDTH - image.get_width(),
-                        const.TILE_HEIGHT - image.get_height()
+                        const.TILE_WIDTH - image.get_width() + 1,
+                        const.TILE_HEIGHT - image.get_height() + 1
                     )
                     tile = Tile(tile_name, image, map_x, map_y, x, y)
                     tiles.append(tile)
+
+                    # FIXME: Is this correct? (0, 0) should translate to (-1, -1)
+                    #     and not (-2, -1) because that would be one pixel too far
+                    #     to the right. So this is why there are "+1" offsets above.
+                    # print(map_x, map_y, x, y)
 
             # TODO: construct complete enemy path in separate function
             path = (map_data["path_start"], map_data["path_end"])

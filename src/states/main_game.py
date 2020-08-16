@@ -31,6 +31,7 @@ class MainGame(State):
         self.map = maps[map_name]
         self.camera_offset_x = const.SMALL_WINDOW_WIDTH // 2 - const.TILE_WIDTH_HALF
         self.camera_offset_y = const.SMALL_WINDOW_HEIGHT // 2 - const.TILE_HEIGHT_HALF * self.map.height
+        print(self.map.height)
         self.enemies = []
 
     def process_events(self):

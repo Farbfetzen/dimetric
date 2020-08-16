@@ -48,4 +48,20 @@ def run():
 
         state.draw(small_display)
         pygame.transform.scale(small_display, const.WINDOW_SIZE, display)
+
+        # TODO: Remove this (debug)
+        pygame.draw.line(
+            display,
+            (255, 0, 255),
+            (const.WINDOW_WIDTH // 2, 0),
+            (const.WINDOW_WIDTH // 2, const.WINDOW_HEIGHT)
+        )
+        pygame.draw.line(
+            display,
+            (255, 0, 255),
+            (0, const.WINDOW_HEIGHT // 2),
+            (const.WINDOW_WIDTH, const.WINDOW_HEIGHT // 2)
+        )
+        # ---
+
         pygame.display.flip()
