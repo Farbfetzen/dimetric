@@ -34,6 +34,16 @@ Die Wegpunkte des Pfades der Gegner in der Karten-json festlegen. Nur eine Lane,
 denn die Tiles sind zu klein für mehr. Ansonsten werden die Gegner zu klein.
 Ich könnte aber auch alles einfach größer machen.
 
+Klasse "camera" zum Steuern des blittens: offset, zoom, coordinate conversion, etc.
+
+
+Neue Größen:
+Tiles 32 Pixel breit, Sichtbarer Bereich 400 Pixel breit. Das Bild dann vor
+dem Blitten in x und y verdoppeln. Heißt das Fenster wird 800 Breit.
+Die eigentlichen Bilder sind 34 Pixel breit, damit das tiling besser funktioniert
+und die vertikalen Linien besser aussieht.
+
+
 
 TODO:
 - Kleinere sprites und dünne vertikale Linien. Siehe Referenz mit 32*32 tiles.

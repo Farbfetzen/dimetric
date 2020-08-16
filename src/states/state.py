@@ -16,13 +16,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from src.resources import display
-
-
 class State:
     def __init__(self):
         self.done = False
-        self.display = display
 
     def start(self, persistent_state_data):
         """Start or resume a state.
@@ -46,5 +42,5 @@ class State:
     def update(self, dt):
         pass
 
-    def draw(self):
+    def draw(self, target_surface):
         pass

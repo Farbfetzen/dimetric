@@ -56,8 +56,7 @@ def _build_maps(images):
                     x, y = map_to_screen(
                         map_x, map_y,
                         const.TILE_WIDTH - image.get_width(),
-                        const.TILE_HEIGHT - image.get_height(),
-                        0, 0
+                        const.TILE_HEIGHT - image.get_height()
                     )
                     tile = Tile(tile_name, image, map_x, map_y, x, y)
                     tiles.append(tile)
@@ -76,6 +75,8 @@ def _build_maps(images):
 
 
 # The display must be created before loading images:
-display = pygame.display.set_mode((const.WINDOW_WIDTH, const.WINDOW_HEIGHT))
+display = pygame.display.set_mode(const.WINDOW_SIZE)
+small_display = pygame.Surface(const.SMALL_WINDOW_SIZE)
+
 images = _load_images()
 maps = _build_maps(images)

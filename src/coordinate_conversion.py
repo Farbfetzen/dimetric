@@ -20,9 +20,8 @@ from src.constants import TILE_WIDTH_HALF, TILE_HEIGHT_HALF
 
 
 def map_to_screen(map_x, map_y,
-                  offset_x, offset_y,
-                  camera_offset_x, camera_offset_y):
-    # Remember to also add the camera offset before blitting.
+                  offset_x=0, offset_y=0,
+                  camera_offset_x=0, camera_offset_y=0):
     x = (map_x - map_y) * TILE_WIDTH_HALF + offset_x + camera_offset_x
     y = (map_x + map_y) * TILE_HEIGHT_HALF + offset_y + camera_offset_y
     return x, y

@@ -21,7 +21,7 @@ import pygame
 from src.states.state import State
 import src.constants as const
 from src.enemy import Enemy
-from src.resources import maps
+from src.resources import maps, display
 from src.coordinate_conversion import map_to_screen
 
 
@@ -29,8 +29,8 @@ class MainGame(State):
     def __init__(self, map_name):
         super().__init__()
         self.map = maps[map_name]
-        self.camera_offset_x = const.WINDOW_WIDTH // 2 - const.TILE_WIDTH_HALF
-        self.camera_offset_y = const.WINDOW_HEIGHT // 2 - const.TILE_HEIGHT_HALF * self.map.height
+        self.camera_offset_x = const.SMALL_WINDOW_WIDTH // 2 - const.TILE_WIDTH_HALF
+        self.camera_offset_y = const.SMALL_WINDOW_HEIGHT // 2 - const.TILE_HEIGHT_HALF * self.map.height
         self.enemies = []
 
     def process_events(self):
@@ -45,18 +45,18 @@ class MainGame(State):
         for e in self.enemies:
             e.update(dt)
 
-    def draw(self):
-        self.display.fill((0, 0, 0))
+    def draw(self, target_surface):
+        target_surface.fill((0, 0, 0))
 
         # FIXME: The map to screen conversion is still wrong. [0, 0] should be at the top.
         for tile in self.map.tiles:
-            self.display.blit(
+            target_surface.blit(
                 tile.image,
                 (tile.x + self.camera_offset_x, tile.y + self.camera_offset_y)
             )
 
         for e in self.enemies:
-            self.display.blit(
+            target_surface.blit(
                 e.image,
                 map_to_screen(
                     e.rect.x, e.rect.y,
@@ -66,10 +66,10 @@ class MainGame(State):
             )
 
         pygame.draw.circle(
-            self.display,
+            target_surface,
             (255, 0, 0),
             map_to_screen(0, 0, 0, 0, self.camera_offset_x, self.camera_offset_y),
-            5
+            2
         )
 
         # # Highlight the outline of a tile when the mouse is over the map.

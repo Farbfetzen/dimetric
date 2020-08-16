@@ -20,6 +20,7 @@ import pygame
 
 import src.constants as const
 from src.states.main_game import MainGame
+from src.resources import display, small_display
 
 
 def run():
@@ -45,5 +46,6 @@ def run():
 
         state.update(dt)
 
-        state.draw()
+        state.draw(small_display)
+        pygame.transform.scale(small_display, const.WINDOW_SIZE, display)
         pygame.display.flip()
