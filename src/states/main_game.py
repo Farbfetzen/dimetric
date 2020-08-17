@@ -66,12 +66,18 @@ class MainGame(State):
                 )
             )
 
-        pygame.draw.circle(
-            target_surface,
-            (255, 0, 0),
-            map_to_screen(0, 0, 0, 0, self.camera_offset_x, self.camera_offset_y),
-            2
-        )
+        # DEBUG:
+        pos = ((0, 0), (8, 8), (0, 8), (8, 0))
+        col = ((255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255))
+        for p, c in zip(pos, col):
+            pygame.draw.circle(
+                target_surface,
+                c,
+                map_to_screen(p[0], p[1], 0, 0, self.camera_offset_x, self.camera_offset_y),
+                2
+            )
+
+        # ---
 
         # # Highlight the outline of a tile when the mouse is over the map.
         # # TODO: highlight the top of the platform

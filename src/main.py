@@ -49,7 +49,7 @@ def run():
         state.draw(small_display)
         pygame.transform.scale(small_display, const.WINDOW_SIZE, display)
 
-        # TODO: Remove this (debug)
+        # DEBUG
         pygame.draw.line(
             display,
             (255, 0, 255),

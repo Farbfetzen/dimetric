@@ -23,6 +23,11 @@
 # The camera object will be an attribute of the main_game object.
 # Start the map centered on the screen.
 
+# Map coordinates should be similar in dimension to screen coordinates. This
+# will make movement and collision detection easier because the collision rects
+# will live in map coordinates. Maybe make one tile edge 10 or 100 long? it
+# should not matter much because of the conversion.
+
 from src.resources import small_display
 
 
