@@ -30,12 +30,16 @@ class Camera:
         self.world_width = world_width
         self.world_height = world_height
 
-        # Start centered on the world center:
-        self.offset_x = const.SMALL_WINDOW_WIDTH // 2 - const.TILE_WIDTH_HALF
-        self.offset_y = const.SMALL_WINDOW_HEIGHT // 2 - const.TILE_HEIGHT_HALF * self.world_height
+        # The camera offset is the top of the base of the topmost tile.
+        # The world starts displayed centered on the screen.
+        self.offset_x = (const.SMALL_WINDOW_WIDTH // 2
+                         - (self.world_width - self.world_height) / 2
+                         * const.TILE_WIDTH_HALF)
+        self.offset_y = (const.SMALL_WINDOW_HEIGHT // 2
+                         - (self.world_width + self.world_height) / 2
+                         * const.TILE_HEIGHT_HALF)
 
     def world_to_screen(self, world_x, world_y):
-        # FIXME: The map is not centered for rectangular maps, e.g. 8 wide, 9 tall.
         screen_x = (world_x - world_y) * const.TILE_WIDTH_HALF + self.offset_x
         screen_y = (world_x + world_y) * const.TILE_HEIGHT_HALF + self.offset_y
         return screen_x, screen_y

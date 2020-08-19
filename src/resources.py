@@ -22,32 +22,7 @@ from collections import namedtuple
 
 import src.camera
 import src.constants as const
-
-
-class Tile:
-    def __init__(self,
-                 type_, image,
-                 offset_x, offset_y,
-                 world_x, world_y,
-                 camera_offset_x, camera_offset_y):
-        self.type = type_
-        self.image = image
-        # offset_* = difference between the rhombus of the tile base and image:
-        self.offset_x = offset_x
-        self.offset_y = offset_y
-        self.world_x = world_x
-        self.world_y = world_y
-        self.screen_x = 0
-        self.screen_y = 0
-
-        self.a = (self.world_x - self.world_y) * const.TILE_WIDTH_HALF + self.offset_x
-        self.b = (self.world_x + self.world_y) * const.TILE_HEIGHT_HALF + self.offset_y
-
-        self.update_screen_xy(camera_offset_x, camera_offset_y)
-
-    def update_screen_xy(self, camera_offset_x, camera_offset_y):
-        self.screen_x = self.a + camera_offset_x
-        self.screen_y = self.b + camera_offset_y
+import src.tile
 
 
 def _load_images():
@@ -79,15 +54,14 @@ def _build_worlds(images_):
             map_ = world_data["map"]
             check_map_rectangular(map_, filename)
             tiles = []
-            camera = src.camera.Camera(len(map_), len(map_[0]))
+            world_width = len(map_[0])  # towards bottom right
+            world_height = len(map_)  # towards bottom left
+            camera = src.camera.Camera(world_width, world_height)
             for world_y, row in enumerate(map_):
                 for world_x, i in enumerate(row):
                     tile_type = world_data["palette"][i]
-                    tile_image = images_[tile_type]
-                    tile = Tile(
-                        tile_type, images_[tile_type],
-                        const.TILE_WIDTH - tile_image.get_width() + 1,
-                        const.TILE_HEIGHT - tile_image.get_height() + 1,
+                    tile = src.tile.Tile(
+                        world_data["palette"][i], images_[tile_type],
                         world_x, world_y,
                         camera.offset_x, camera.offset_y
                     )
@@ -104,8 +78,8 @@ def _build_worlds(images_):
             name = os.path.splitext(filename)[0]
             worlds_[name] = world_obj(
                 tiles=tiles,
-                width=world_x + 1,
-                height=world_y + 1,
+                width=world_width,
+                height=world_height,
                 path=path
             )
     return worlds_

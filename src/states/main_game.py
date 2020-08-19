@@ -50,10 +50,7 @@ class MainGame(State):
         # FIXME: The world to screen conversion is still wrong. [0, 0] should
         #     match the top of the topmost tile base.
         for tile in self.world.tiles:
-            target_surface.blit(
-                tile.image,
-                (tile.screen_x, tile.screen_y)
-            )
+            tile.draw(target_surface)
 
         # for e in self.enemies:
         #     target_surface.blit(
@@ -68,17 +65,16 @@ class MainGame(State):
         # DEBUG:
         # Must also match the map corners for scrolled maps and rectangular maps!
         # Try different map sizes: 8*8, 8*9, 8*10.
-        pos = ((0, 0), (self.world.width, self.world.height),
-               (0, self.world.height), (self.world.width, 0))
-        col = ((255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255))
-        for p, c in zip(pos, col):
-            pygame.draw.circle(
-                target_surface,
-                c,
-                self.camera.world_to_screen(p[0], p[1]),
-                2
-            )
-
+        # pos = ((0, 0), (self.world.width, self.world.height),
+        #        (0, self.world.height), (self.world.width, 0))
+        # col = ((255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255))
+        # for p, c in zip(pos, col):
+        #     pygame.draw.circle(
+        #         target_surface,
+        #         c,
+        #         self.camera.world_to_screen(p[0], p[1]),
+        #         2
+        #     )
         # ---
 
         # # Highlight the outline of a tile when the mouse is over the world.
