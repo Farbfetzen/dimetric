@@ -26,12 +26,13 @@ import src.constants as const
 
 
 class Camera:
-    def __init__(self, world):
-        self.world = world
+    def __init__(self, world_width, world_height):
+        self.world_width = world_width
+        self.world_height = world_height
 
         # Start centered on the world center:
         self.camera_offset_x = const.SMALL_WINDOW_WIDTH // 2 - const.TILE_WIDTH_HALF
-        self.camera_offset_y = const.SMALL_WINDOW_HEIGHT // 2 - const.TILE_HEIGHT_HALF * self.world.height
+        self.camera_offset_y = const.SMALL_WINDOW_HEIGHT // 2 - const.TILE_HEIGHT_HALF * self.world_height
 
     def world_to_screen(self,
                         world_x, world_y,

@@ -21,7 +21,16 @@ import json
 from collections import namedtuple
 
 import src.constants as const
-from src.coordinate_conversion import world_to_screen
+
+
+class Tile:
+    def __init__(self, name, image, world_x, world_y, screen_x, screen_y):
+        self.name = name
+        self.image = image
+        self.world_x = world_x
+        self.world_y = world_y
+        self.screen_x = screen_x
+        self.screen_y = screen_y
 
 
 def _load_images():
@@ -34,18 +43,8 @@ def _load_images():
     return images
 
 
-# TODO: Make a Tile class that stores the screen x and y coordinates for
-#     blitting, among other stuff. Then every time the camera moves, change
-#     those coordinates. This will be better than adding the camera offset
-#     every blit because blitting happens way more often than camera movement.
-
 def _build_worlds(images):
     worlds = {}
-    Tile = namedtuple("tile", [
-        "type", "image",
-        "world_x", "world_y",
-        "x", "y"
-    ])
     # FIXME: Check if the world stores references to the tile surfaces or
     #     if it makes copies of the surfaces. Because the latter would be
     #     a waste of resources.
@@ -57,13 +56,12 @@ def _build_worlds(images):
             for world_y, row in enumerate(world_data["map"]):
                 for world_x, i in enumerate(row):
                     tile_name = world_data["palette"][i]
-                    image = images[tile_name]
                     x, y = world_to_screen(
                         world_x, world_y,
                         const.TILE_WIDTH - image.get_width() + 1,
                         const.TILE_HEIGHT - image.get_height() + 1
                     )
-                    tile = Tile(tile_name, image, world_x, world_y, x, y)
+                    tile = Tile(tile_name, images[tile_name], world_x, world_y, x, y)
                     tiles.append(tile)
 
                     # FIXME: Is this correct? (0, 0) should translate to (-1, -1)
