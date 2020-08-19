@@ -21,7 +21,7 @@
 # will live in world coordinates. Maybe make one tile edge 10 or 100 long? it
 # should not matter much because of the conversion.
 
-from src.resources import small_display
+
 import src.constants as const
 
 
@@ -31,16 +31,14 @@ class Camera:
         self.world_height = world_height
 
         # Start centered on the world center:
-        self.camera_offset_x = const.SMALL_WINDOW_WIDTH // 2 - const.TILE_WIDTH_HALF
-        self.camera_offset_y = const.SMALL_WINDOW_HEIGHT // 2 - const.TILE_HEIGHT_HALF * self.world_height
+        self.offset_x = const.SMALL_WINDOW_WIDTH // 2 - const.TILE_WIDTH_HALF
+        self.offset_y = const.SMALL_WINDOW_HEIGHT // 2 - const.TILE_HEIGHT_HALF * self.world_height
 
-    def world_to_screen(self,
-                        world_x, world_y,
-                        offset_x=0, offset_y=0):
-        # FIXME: What are offset_x and offset_y? Tile offset? Then name them as such!
-        x = (world_x - world_y) * const.TILE_WIDTH_HALF + offset_x + self.camera_offset_x
-        y = (world_x + world_y) * const.TILE_HEIGHT_HALF + offset_y + self.camera_offset_y
-        return x, y
+    def world_to_screen(self, world_x, world_y):
+        # FIXME: The map is not centered for rectangular maps, e.g. 8 wide, 9 tall.
+        screen_x = (world_x - world_y) * const.TILE_WIDTH_HALF + self.offset_x
+        screen_y = (world_x + world_y) * const.TILE_HEIGHT_HALF + self.offset_y
+        return screen_x, screen_y
 
     def screen_to_world(self):
         # # Adapted from the code example in wikipedia:

@@ -29,8 +29,7 @@ class MainGame(State):
     def __init__(self, world_name):
         super().__init__()
         self.world = worlds[world_name]
-        self.camera = src.camera.Camera(self.world)
-        print(self.world.height)
+        self.camera = src.camera.Camera(self.world.width, self.world.height)
         self.enemies = []
 
     def process_events(self):
@@ -48,31 +47,35 @@ class MainGame(State):
     def draw(self, target_surface):
         target_surface.fill((0, 0, 0))
 
-        # FIXME: The world to screen conversion is still wrong. [0, 0] should be at the top.
+        # FIXME: The world to screen conversion is still wrong. [0, 0] should
+        #     match the top of the topmost tile base.
         for tile in self.world.tiles:
             target_surface.blit(
                 tile.image,
-                (tile.x + self.camera_offset_x, tile.y + self.camera_offset_y)
+                (tile.screen_x, tile.screen_y)
             )
 
-        for e in self.enemies:
-            target_surface.blit(
-                e.image,
-                world_to_screen(
-                    e.rect.x, e.rect.y,
-                    0, e.offset_y,
-                    self.camera_offset_x, self.camera_offset_y
-                )
-            )
+        # for e in self.enemies:
+        #     target_surface.blit(
+        #         e.image,
+        #         world_to_screen(
+        #             e.rect.x, e.rect.y,
+        #             0, e.offset_y,
+        #             self.camera_offset_x, self.camera_offset_y
+        #         )
+        #     )
 
         # DEBUG:
-        pos = ((0, 0), (8, 8), (0, 8), (8, 0))
+        # Must also match the map corners for scrolled maps and rectangular maps!
+        # Try different map sizes: 8*8, 8*9, 8*10.
+        pos = ((0, 0), (self.world.width, self.world.height),
+               (0, self.world.height), (self.world.width, 0))
         col = ((255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255))
         for p, c in zip(pos, col):
             pygame.draw.circle(
                 target_surface,
                 c,
-                world_to_screen(p[0], p[1], 0, 0, self.camera_offset_x, self.camera_offset_y),
+                self.camera.world_to_screen(p[0], p[1]),
                 2
             )
 

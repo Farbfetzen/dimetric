@@ -37,10 +37,10 @@ class State:
         return persistent_state_data
 
     def process_events(self):
-        pass
+        raise NotImplementedError
 
     def update(self, dt):
-        pass
+        raise NotImplementedError
 
     def draw(self, target_surface):
-        pass
+        raise NotImplementedError
