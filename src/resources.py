@@ -1,4 +1,4 @@
-"""Load images, maps, config etc. and make them accessible."""
+"""Load images, worlds, config etc. and make them accessible."""
 
 # Copyright (C) 2020  Sebastian Henz
 #
@@ -21,7 +21,7 @@ import json
 from collections import namedtuple
 
 import src.constants as const
-from src.coordinate_conversion import map_to_screen
+from src.coordinate_conversion import world_to_screen
 
 
 def _load_images():
@@ -34,49 +34,54 @@ def _load_images():
     return images
 
 
-def _build_maps(images):
-    maps = {}
+# TODO: Make a Tile class that stores the screen x and y coordinates for
+#     blitting, among other stuff. Then every time the camera moves, change
+#     those coordinates. This will be better than adding the camera offset
+#     every blit because blitting happens way more often than camera movement.
+
+def _build_worlds(images):
+    worlds = {}
     Tile = namedtuple("tile", [
         "type", "image",
-        "map_x", "map_y",
+        "world_x", "world_y",
         "x", "y"
     ])
-    # FIXME: Check if the map stores references to the tile surfaces or
+    # FIXME: Check if the world stores references to the tile surfaces or
     #     if it makes copies of the surfaces. Because the latter would be
     #     a waste of resources.
-    map_obj = namedtuple("map", ["tiles", "width", "height", "path"])
-    for filename in os.listdir("maps"):
-        with open(os.path.join("maps", filename), "r") as file:
-            map_data = json.load(file)
+    world_obj = namedtuple("world", ["tiles", "width", "height", "path"])
+    for filename in os.listdir("worlds"):
+        with open(os.path.join("worlds", filename), "r") as file:
+            world_data = json.load(file)
             tiles = []
-            for map_y, row in enumerate(map_data["map"]):
-                for map_x, i in enumerate(row):
-                    tile_name = map_data["palette"][i]
+            for world_y, row in enumerate(world_data["map"]):
+                for world_x, i in enumerate(row):
+                    tile_name = world_data["palette"][i]
                     image = images[tile_name]
-                    x, y = map_to_screen(
-                        map_x, map_y,
+                    x, y = world_to_screen(
+                        world_x, world_y,
                         const.TILE_WIDTH - image.get_width() + 1,
                         const.TILE_HEIGHT - image.get_height() + 1
                     )
-                    tile = Tile(tile_name, image, map_x, map_y, x, y)
+                    tile = Tile(tile_name, image, world_x, world_y, x, y)
                     tiles.append(tile)
 
                     # FIXME: Is this correct? (0, 0) should translate to (-1, -1)
                     #     and not (-2, -1) because that would be one pixel too far
                     #     to the right. So this is why there are "+1" offsets above.
-                    # print(map_x, map_y, x, y)
+                    # print(world_x, world_y, x, y)
 
             # TODO: construct complete enemy path in separate function
-            path = (map_data["path_start"], map_data["path_end"])
+            path = (world_data["path_start"], world_data["path_end"])
 
             name = os.path.splitext(filename)[0]
-            maps[name] = map_obj(
+            worlds[name] = world_obj(
                 tiles=tiles,
-                width=map_x + 1,
-                height=map_y + 1,
+                width=world_x + 1,
+                height=world_y + 1,
                 path=path
             )
-    return maps
+    return worlds
 
 
 # The display must be created before loading images:
@@ -84,4 +89,4 @@ display = pygame.display.set_mode(const.WINDOW_SIZE)
 small_display = pygame.Surface(const.SMALL_WINDOW_SIZE)
 
 images = _load_images()
-maps = _build_maps(images)
+worlds = _build_worlds(images)

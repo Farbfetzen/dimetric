@@ -16,20 +16,53 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-# TODO: method for map to screen conversion
-# TODO: method for screen to map conversion
-# TODO: variable camera offset when dragging the mouse or using arrow keys
-
-# The camera object will be an attribute of the main_game object.
-# Start the map centered on the screen.
-
-# Map coordinates should be similar in dimension to screen coordinates. This
+# World coordinates should be similar in dimension to screen coordinates. This
 # will make movement and collision detection easier because the collision rects
-# will live in map coordinates. Maybe make one tile edge 10 or 100 long? it
+# will live in world coordinates. Maybe make one tile edge 10 or 100 long? it
 # should not matter much because of the conversion.
 
 from src.resources import small_display
+import src.constants as const
 
 
 class Camera:
-    pass
+    def __init__(self, world):
+        self.world = world
+
+        # Start centered on the world center:
+        self.camera_offset_x = const.SMALL_WINDOW_WIDTH // 2 - const.TILE_WIDTH_HALF
+        self.camera_offset_y = const.SMALL_WINDOW_HEIGHT // 2 - const.TILE_HEIGHT_HALF * self.world.height
+
+    def world_to_screen(self,
+                        world_x, world_y,
+                        offset_x=0, offset_y=0):
+        # FIXME: What are offset_x and offset_y? Tile offset? Then name them as such!
+        x = (world_x - world_y) * const.TILE_WIDTH_HALF + offset_x + self.camera_offset_x
+        y = (world_x + world_y) * const.TILE_HEIGHT_HALF + offset_y + self.camera_offset_y
+        return x, y
+
+    def screen_to_world(self):
+        # # Adapted from the code example in wikipedia:
+        # # https://en.wikipedia.org/wiki/Isometric_video_game_graphics#Mapping_screen_to_world_coordinates
+        # virt_x = (screen_x - (OFFSET_X - (len(world_data) - 1) * TILE_WIDTH_HALF)) / TILE_WIDTH
+        # virt_y = (screen_y - OFFSET_Y) / TILE_HEIGHT
+        # world_x = floor(virt_y + (virt_x - len(world_data[0]) / 2))
+        # world_y = floor(virt_y - (virt_x - len(world_data) / 2))
+        # # Coordinates are floats. Use int() to get the tile position in the world data.
+        # # Strictly speaking it should be rounded down but int() rounds towards zero.
+        # # Rounding down will result in the correct coordinates even if
+        # # the world coordinates are negative.
+        # return world_x, world_y
+        pass
+
+    def scroll_up(self):
+        pass
+
+    def scroll_right(self):
+        pass
+
+    def scroll_down(self):
+        pass
+
+    def scroll_left(self):
+        pass

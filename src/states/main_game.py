@@ -21,17 +21,16 @@ import pygame
 from src.states.state import State
 import src.constants as const
 from src.enemy import Enemy
-from src.resources import maps, display
-from src.coordinate_conversion import map_to_screen
+from src.resources import worlds, display
+import src.camera
 
 
 class MainGame(State):
-    def __init__(self, map_name):
+    def __init__(self, world_name):
         super().__init__()
-        self.map = maps[map_name]
-        self.camera_offset_x = const.SMALL_WINDOW_WIDTH // 2 - const.TILE_WIDTH_HALF
-        self.camera_offset_y = const.SMALL_WINDOW_HEIGHT // 2 - const.TILE_HEIGHT_HALF * self.map.height
-        print(self.map.height)
+        self.world = worlds[world_name]
+        self.camera = src.camera.Camera(self.world)
+        print(self.world.height)
         self.enemies = []
 
     def process_events(self):
@@ -49,8 +48,8 @@ class MainGame(State):
     def draw(self, target_surface):
         target_surface.fill((0, 0, 0))
 
-        # FIXME: The map to screen conversion is still wrong. [0, 0] should be at the top.
-        for tile in self.map.tiles:
+        # FIXME: The world to screen conversion is still wrong. [0, 0] should be at the top.
+        for tile in self.world.tiles:
             target_surface.blit(
                 tile.image,
                 (tile.x + self.camera_offset_x, tile.y + self.camera_offset_y)
@@ -59,7 +58,7 @@ class MainGame(State):
         for e in self.enemies:
             target_surface.blit(
                 e.image,
-                map_to_screen(
+                world_to_screen(
                     e.rect.x, e.rect.y,
                     0, e.offset_y,
                     self.camera_offset_x, self.camera_offset_y
@@ -73,31 +72,31 @@ class MainGame(State):
             pygame.draw.circle(
                 target_surface,
                 c,
-                map_to_screen(p[0], p[1], 0, 0, self.camera_offset_x, self.camera_offset_y),
+                world_to_screen(p[0], p[1], 0, 0, self.camera_offset_x, self.camera_offset_y),
                 2
             )
 
         # ---
 
-        # # Highlight the outline of a tile when the mouse is over the map.
+        # # Highlight the outline of a tile when the mouse is over the world.
         # # TODO: highlight the top of the platform
         # # TODO: snap to grid when mouse is over the raised part of a platform, not
         # #   only over the base.
         # mouse_pos = pygame.mouse.get_pos()
-        # mouse_map_pos = screen_to_map(*mouse_pos)
-        # if any(0 > pos or pos > len(map_data) - 1 for pos in mouse_map_pos):
+        # mouse_world_pos = screen_to_world(*mouse_pos)
+        # if any(0 > pos or pos > len(world_data) - 1 for pos in mouse_world_pos):
         #     tile = tiles[2]
         #     rect = tile.get_rect(center=mouse_pos)
         #     display.blit(tiles[2], rect)
         # else:
         #     display.blit(
         #         tiles[2],
-        #         map_to_screen(
-        #             mouse_map_pos[0],
-        #             mouse_map_pos[1],
+        #         world_to_screen(
+        #             mouse_world_pos[0],
+        #             mouse_world_pos[1],
         #             *tile_offsets[2]
         #         )
         #     )
 
     def next_wave(self):
-        self.enemies.append(Enemy("cube", self.map.path))
+        self.enemies.append(Enemy("cube", self.world.path))

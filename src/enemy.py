@@ -19,7 +19,6 @@
 import pygame
 
 from src.resources import images
-from src.coordinate_conversion import map_to_screen
 
 
 class Enemy:
@@ -29,14 +28,14 @@ class Enemy:
         self.image = images[self.type]
 
         # FIXME: Achtung, ich muss hier unterscheiden zwischen width und height
-        #  in map space und screen space! Das Rect ist für Kollisionen im
-        #  map space gedacht. Das heißt ich muss sehr genau aufpassen, wie ich
-        #  die Sachen benennen und zwischen map und screen umrechne.
+        #     in world space und screen space! Das Rect ist für Kollisionen im
+        #     world space gedacht. Das heißt ich muss sehr genau aufpassen, wie
+        #     ich die Sachen benennen und zwischen world und screen umrechne.
 
         width, height = self.image.get_size()
         height_dimetric = width // 2
         self.offset_y = height_dimetric - height
-        # Rect in map space, used for collision detection, not for blitting.
+        # Rect in world space, used for collision detection, not for blitting.
         self.rect = pygame.Rect(-1, -1, width, height_dimetric)
         print(self.rect)
         self.rect.center = path[0]
