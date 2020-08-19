@@ -19,7 +19,6 @@
 import pygame
 
 from src.states.state import State
-import src.constants as const
 from src.enemy import Enemy
 from src.resources import worlds, display
 import src.camera
@@ -39,6 +38,11 @@ class MainGame(State):
                     self.done = True
                 elif event.key == pygame.K_s:
                     self.next_wave()
+            elif event.type == pygame.MOUSEMOTION:
+                if event.buttons[0]:  # left klick held while moving
+                    self.camera.scroll(*event.rel)
+                    for tile in self.world.tiles:
+                        tile.update_screen_xy(self.camera.offset_x, self.camera.offset_y)
 
     def update(self, dt):
         for e in self.enemies:
@@ -47,8 +51,6 @@ class MainGame(State):
     def draw(self, target_surface):
         target_surface.fill((0, 0, 0))
 
-        # FIXME: The world to screen conversion is still wrong. [0, 0] should
-        #     match the top of the topmost tile base.
         for tile in self.world.tiles:
             tile.draw(target_surface)
 
@@ -63,8 +65,6 @@ class MainGame(State):
         #     )
 
         # DEBUG:
-        # Must also match the map corners for scrolled maps and rectangular maps!
-        # Try different map sizes: 8*8, 8*9, 8*10.
         # pos = ((0, 0), (self.world.width, self.world.height),
         #        (0, self.world.height), (self.world.width, 0))
         # col = ((255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255))

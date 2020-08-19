@@ -66,12 +66,6 @@ def _build_worlds(images_):
                         camera.offset_x, camera.offset_y
                     )
                     tiles.append(tile)
-
-                    # FIXME: Is this correct? (0, 0) should translate to (-1, -1)
-                    #     and not (-2, -1) because that would be one pixel too far
-                    #     to the right. So this is why there are "+1" offsets above.
-                    # print(world_x, world_y, x, y)
-
             # TODO: construct complete enemy path in separate function
             path = (world_data["path_start"], world_data["path_end"])
 

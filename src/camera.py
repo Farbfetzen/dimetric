@@ -1,4 +1,4 @@
-"""Camer object controlling coordinate conversions."""
+"""Camera object controlling coordinate conversions."""
 
 # Copyright (C) 2020  Sebastian Henz
 #
@@ -16,10 +16,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-# World coordinates should be similar in dimension to screen coordinates. This
-# will make movement and collision detection easier because the collision rects
-# will live in world coordinates. Maybe make one tile edge 10 or 100 long? it
-# should not matter much because of the conversion.
+# TODO: World coordinates should be similar in dimension to screen coordinates.
+#  This will make movement and collision detection easier because the collision
+#  rects will live in world coordinates. Maybe make one tile edge 10 or 100 long?
+#  It should not matter much because of the conversion.
 
 
 import src.constants as const
@@ -57,6 +57,12 @@ class Camera:
         # # the world coordinates are negative.
         # return world_x, world_y
         pass
+
+    def scroll(self, rel_x, rel_y):
+        # Multiply by WINDOW_SIZE_FACTOR because the mouse moves in
+        # the main display but the map moves in small_display.
+        self.offset_x += rel_x * const.WINDOW_SIZE_FACTOR
+        self.offset_y += rel_y * const.WINDOW_SIZE_FACTOR
 
     def scroll_up(self):
         pass
