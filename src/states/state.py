@@ -19,6 +19,7 @@
 class State:
     def __init__(self):
         self.done = False
+        self.debug_overlay = False
 
     def start(self, persistent_state_data):
         """Start or resume a state.
@@ -36,11 +37,11 @@ class State:
         persistent_state_data = {"next_state_name": "quit"}
         return persistent_state_data
 
-    def process_events(self):
+    def process_events(self, events, mouse_pos):
         raise NotImplementedError
 
     def update(self, dt):
         raise NotImplementedError
 
-    def draw(self, target_surface):
+    def draw(self):
         raise NotImplementedError

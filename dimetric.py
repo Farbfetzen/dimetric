@@ -24,6 +24,7 @@ os.environ["SDL_VIDEO_CENTERED"] = "1"
 
 import pygame
 pygame.init()
+assert pygame.font.get_init(), "Font module not initialized!"
 
 
 import src.main

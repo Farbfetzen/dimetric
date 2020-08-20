@@ -19,22 +19,24 @@
 import pygame
 
 import src.constants as const
-from src.states.main_game import MainGame
-from src.resources import display, small_display
+import src.states.main_game
+from src.resources import main_display, small_display, clock
 
 
 def run():
-    states = {"MainGame": MainGame("test")}
+    states = {"MainGame": src.states.main_game.MainGame("test")}
     state = states["MainGame"]
 
-    clock = pygame.time.Clock()
     while True:
         dt = clock.tick(const.FPS)
 
         if pygame.event.get(pygame.QUIT):
             break
         else:
-            state.process_events()
+            state.process_events(
+                pygame.event.get(),
+                pygame.mouse.get_pos()
+            )
 
         if state.done:
             persistent_state_data = state.close()
@@ -45,23 +47,24 @@ def run():
             state.start(persistent_state_data)
 
         state.update(dt)
-
-        state.draw(small_display)
-        pygame.transform.scale(small_display, const.WINDOW_SIZE, display)
+        state.draw()
+        pygame.transform.scale(small_display, const.WINDOW_SIZE, main_display)
 
         # DEBUG
-        pygame.draw.line(
-            display,
-            (255, 0, 255),
-            (const.WINDOW_WIDTH // 2, 0),
-            (const.WINDOW_WIDTH // 2, const.WINDOW_HEIGHT)
-        )
-        pygame.draw.line(
-            display,
-            (255, 0, 255),
-            (0, const.WINDOW_HEIGHT // 2),
-            (const.WINDOW_WIDTH, const.WINDOW_HEIGHT // 2)
-        )
+        # pygame.draw.line(
+        #     main_display,
+        #     (255, 0, 255),
+        #     (const.WINDOW_WIDTH // 2, 0),
+        #     (const.WINDOW_WIDTH // 2, const.WINDOW_HEIGHT)
+        # )
+        # pygame.draw.line(
+        #     main_display,
+        #     (255, 0, 255),
+        #     (0, const.WINDOW_HEIGHT // 2),
+        #     (const.WINDOW_WIDTH, const.WINDOW_HEIGHT // 2)
+        # )
         # ---
 
+        if state.debug_overlay:
+            state.draw_debug_overlay()
         pygame.display.flip()

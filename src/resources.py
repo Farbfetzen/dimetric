@@ -80,8 +80,9 @@ def _build_worlds(images_):
 
 
 # The display must be created before loading images:
-display = pygame.display.set_mode(const.WINDOW_SIZE)
+main_display = pygame.display.set_mode(const.WINDOW_SIZE)
 small_display = pygame.Surface(const.SMALL_WINDOW_SIZE)
+clock = pygame.time.Clock()
 
 images = _load_images()
 worlds = _build_worlds(images)

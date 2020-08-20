@@ -18,26 +18,37 @@
 
 import pygame
 
+import src.camera
+import src.resources as res
 from src.states.state import State
 from src.enemy import Enemy
-from src.resources import worlds, display
-import src.camera
 
 
 class MainGame(State):
     def __init__(self, world_name):
         super().__init__()
-        self.world = worlds[world_name]
+        self.world = res.worlds[world_name]
         self.camera = src.camera.Camera(self.world.width, self.world.height)
         self.enemies = []
+        self.debug_overlay = False
+        self.mouse_pos_world_x = 0
+        self.mouse_pos_world_y = 0
 
-    def process_events(self):
-        for event in pygame.event.get():
+        # Debug overlay:
+        self.debug_font = pygame.font.SysFont("monospace", 18)
+        self.debug_color = (255, 255, 255)
+        self.debug_line_height = self.debug_font.get_height()
+        self.debug_margin = (10, 10)
+
+    def process_events(self, events, mouse_pos):
+        for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.done = True
                 elif event.key == pygame.K_s:
                     self.next_wave()
+                elif event.key == pygame.K_F1:
+                    self.debug_overlay = not self.debug_overlay
             elif event.type == pygame.MOUSEMOTION:
                 if event.buttons[0]:  # left klick held while moving
                     self.camera.scroll(*event.rel)
@@ -48,11 +59,11 @@ class MainGame(State):
         for e in self.enemies:
             e.update(dt)
 
-    def draw(self, target_surface):
-        target_surface.fill((0, 0, 0))
+    def draw(self):
+        res.small_display.fill((0, 0, 0))
 
         for tile in self.world.tiles:
-            tile.draw(target_surface)
+            tile.draw(res.small_display)
 
         # for e in self.enemies:
         #     target_surface.blit(
@@ -96,6 +107,14 @@ class MainGame(State):
         #             *tile_offsets[2]
         #         )
         #     )
+
+    def draw_debug_overlay(self):
+        fps_text = self.debug_font.render(
+            f"FPS: {int(res.clock.get_fps())}",
+            False,
+            self.debug_color
+        )
+        res.main_display.blit(fps_text, self.debug_margin)
 
     def next_wave(self):
         self.enemies.append(Enemy("cube", self.world.path))
