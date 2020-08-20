@@ -19,6 +19,7 @@
 import pygame
 
 import src.camera
+import src.tile
 import src.resources as res
 from src.states.state import State
 from src.enemy import Enemy
@@ -30,15 +31,19 @@ class MainGame(State):
         self.world = res.worlds[world_name]
         self.camera = src.camera.Camera(self.world.width, self.world.height)
         self.enemies = []
-        self.debug_overlay = False
         self.mouse_pos_world_x = 0
         self.mouse_pos_world_y = 0
+        self.highlight_tile = src.tile.Tile(res.images["highlight"], 0, 0)
+        for tile in self.world.tiles:
+            tile.update_screen_position(self.camera.offset_x, self.camera.offset_y)
 
         # Debug overlay:
+        self.debug_overlay = True
         self.debug_font = pygame.font.SysFont("monospace", 18)
         self.debug_color = (255, 255, 255)
         self.debug_line_height = self.debug_font.get_height()
-        self.debug_margin = (10, 10)
+        self.debug_margin_x = 10
+        self.debug_margin_y = 10
 
     def process_events(self, events, mouse_pos):
         for event in events:
@@ -49,15 +54,31 @@ class MainGame(State):
                     self.next_wave()
                 elif event.key == pygame.K_F1:
                     self.debug_overlay = not self.debug_overlay
-            elif event.type == pygame.MOUSEMOTION:
-                if event.buttons[0]:  # left klick held while moving
-                    self.camera.scroll(*event.rel)
-                    for tile in self.world.tiles:
-                        tile.update_screen_xy(self.camera.offset_x, self.camera.offset_y)
+            elif event.type == pygame.MOUSEMOTION and event.buttons[0]:
+                self.camera.scroll(*event.rel)
+                for tile in self.world.tiles:
+                    tile.update_screen_position(
+                        self.camera.offset_x,
+                        self.camera.offset_y
+                    )
+                self.highlight_tile.update_screen_position(
+                    self.camera.offset_x,
+                    self.camera.offset_y
+                )
+
+        self.mouse_pos_world_x, self.mouse_pos_world_y = \
+            self.camera.main_display_to_world(*pygame.mouse.get_pos())
 
     def update(self, dt):
         for e in self.enemies:
             e.update(dt)
+
+        if ((0 <= self.mouse_pos_world_x < self.world.width)
+                and (0 <= self.mouse_pos_world_y < self.world.height)):
+            self.highlight_tile.update_position(
+                self.mouse_pos_world_x, self.mouse_pos_world_y,
+                self.camera.offset_x, self.camera.offset_y
+            )
 
     def draw(self):
         res.small_display.fill((0, 0, 0))
@@ -107,6 +128,7 @@ class MainGame(State):
         #             *tile_offsets[2]
         #         )
         #     )
+        self.highlight_tile.draw(res.small_display)
 
     def draw_debug_overlay(self):
         fps_text = self.debug_font.render(
@@ -114,7 +136,17 @@ class MainGame(State):
             False,
             self.debug_color
         )
-        res.main_display.blit(fps_text, self.debug_margin)
+        res.main_display.blit(fps_text, (self.debug_margin_x, self.debug_margin_y))
+
+        world_pos_text = self.debug_font.render(
+            f"mouse world pos: {int(self.mouse_pos_world_x)}, {int(self.mouse_pos_world_y)}",
+            False,
+            self.debug_color
+        )
+        res.main_display.blit(
+            world_pos_text,
+            (self.debug_margin_x, self.debug_margin_y * 3)
+        )
 
     def next_wave(self):
         self.enemies.append(Enemy("cube", self.world.path))

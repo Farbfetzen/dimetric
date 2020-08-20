@@ -16,35 +16,42 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import math
+
 import src.constants as const
 
 
 class Tile:
-    def __init__(self,
-                 type_, image,
+    def __init__(self, image,
                  world_x, world_y,
-                 camera_offset_x, camera_offset_y):
-        self.type = type_
+                 camera_offset_x=0,  camera_offset_y=0):
         self.image = image
         self.rect = self.image.get_rect()
-        self.world_x = world_x
-        self.world_y = world_y
-
-        # the difference from camera_offset in screen coordinates:
-        self.screen_offset_x = (self.world_x - self.world_y) * const.TILE_WIDTH_HALF
-        self.screen_offset_y = (self.world_x + self.world_y) * const.TILE_HEIGHT_HALF
-
+        self.world_x = 0
+        self.world_y = 0
+        # The difference from the camera_offset in small_display coordinates:
+        self.screen_offset_x = 0
+        self.screen_offset_y = 0
         # Account for images taller than TILE_HEIGHT, like platforms and such.
         # The -1 is because the base rhombus is const.TILE_HEIGHT + 1 tall.
-        self.screen_offset_y -= self.rect.height - const.TILE_HEIGHT - 1
+        self.tile_offset_y = self.rect.height - const.TILE_HEIGHT - 1
 
-        self.update_screen_xy(camera_offset_x, camera_offset_y)
+        self.update_position(world_x, world_y, camera_offset_x, camera_offset_y)
 
-    def update_screen_xy(self, camera_offset_x, camera_offset_y):
+    def update_screen_position(self, camera_offset_x, camera_offset_y):
         self.rect.midtop = (
             self.screen_offset_x + camera_offset_x,
             self.screen_offset_y + camera_offset_y
         )
+
+    def update_position(self, world_x, world_y, camera_offset_x, camera_offset_y):
+        # Update screen and world positions.
+        self.world_x = math.floor(world_x)
+        self.world_y = math.floor(world_y)
+        self.screen_offset_x = (self.world_x - self.world_y) * const.TILE_WIDTH_HALF
+        self.screen_offset_y = ((self.world_x + self.world_y) * const.TILE_HEIGHT_HALF
+                                - self.tile_offset_y)
+        self.update_screen_position(camera_offset_x, camera_offset_y)
 
     def draw(self, target_surface):
         target_surface.blit(self.image, self.rect)

@@ -19,8 +19,8 @@
 import pygame
 
 import src.constants as const
+import src.resources as res
 import src.states.main_game
-from src.resources import main_display, small_display, clock
 
 
 def run():
@@ -28,7 +28,7 @@ def run():
     state = states["MainGame"]
 
     while True:
-        dt = clock.tick(const.FPS)
+        dt = res.clock.tick(const.FPS)
 
         if pygame.event.get(pygame.QUIT):
             break
@@ -48,7 +48,7 @@ def run():
 
         state.update(dt)
         state.draw()
-        pygame.transform.scale(small_display, const.WINDOW_SIZE, main_display)
+        pygame.transform.scale(res.small_display, const.WINDOW_SIZE, res.main_display)
 
         # DEBUG
         # pygame.draw.line(

@@ -32,6 +32,8 @@ class Camera:
 
         # The camera offset is the top of the base of the topmost tile.
         # The world starts displayed centered on the screen.
+        # ATTENTION: The camera operates on the small_display! Remember that
+        # when handling mouse input.
         self.offset_x = (const.SMALL_WINDOW_WIDTH // 2
                          - (self.world_width - self.world_height) / 2
                          * const.TILE_WIDTH_HALF)
@@ -44,19 +46,19 @@ class Camera:
         screen_y = (world_x + world_y) * const.TILE_HEIGHT_HALF + self.offset_y
         return screen_x, screen_y
 
-    def screen_to_world(self):
-        # # Adapted from the code example in wikipedia:
-        # # https://en.wikipedia.org/wiki/Isometric_video_game_graphics#Mapping_screen_to_world_coordinates
-        # virt_x = (screen_x - (OFFSET_X - (len(world_data) - 1) * TILE_WIDTH_HALF)) / TILE_WIDTH
-        # virt_y = (screen_y - OFFSET_Y) / TILE_HEIGHT
-        # world_x = floor(virt_y + (virt_x - len(world_data[0]) / 2))
-        # world_y = floor(virt_y - (virt_x - len(world_data) / 2))
-        # # Coordinates are floats. Use int() to get the tile position in the world data.
-        # # Strictly speaking it should be rounded down but int() rounds towards zero.
-        # # Rounding down will result in the correct coordinates even if
-        # # the world coordinates are negative.
-        # return world_x, world_y
-        pass
+    def main_display_to_world(self, x, y):
+        # Adapted from the code example in wikipedia:
+        # https://en.wikipedia.org/wiki/Isometric_video_game_graphics#Mapping_screen_to_world_coordinates
+        # x and y coordinates are in main_display space and must be converted
+        # to the small_display space:
+        x *= const.WINDOW_SIZE_FACTOR
+        y *= const.WINDOW_SIZE_FACTOR
+        virt_x = (x - (self.offset_x - self.world_width * const.TILE_WIDTH_HALF)) / const.TILE_WIDTH
+        virt_y = (y - self.offset_y) / const.TILE_HEIGHT
+        world_x = virt_y + (virt_x - self.world_width / 2)
+        world_y = virt_y - (virt_x - self.world_height / 2)
+        # Coordinates are floats. Use math.floor() to get the tile position.
+        return world_x, world_y
 
     def scroll(self, rel_x, rel_y):
         # Multiply by WINDOW_SIZE_FACTOR because the mouse moves in

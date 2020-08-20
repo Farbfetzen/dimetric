@@ -56,14 +56,11 @@ def _build_worlds(images_):
             tiles = []
             world_width = len(map_[0])  # towards bottom right
             world_height = len(map_)  # towards bottom left
-            camera = src.camera.Camera(world_width, world_height)
             for world_y, row in enumerate(map_):
                 for world_x, i in enumerate(row):
-                    tile_type = world_data["palette"][i]
                     tile = src.tile.Tile(
-                        world_data["palette"][i], images_[tile_type],
-                        world_x, world_y,
-                        camera.offset_x, camera.offset_y
+                        images_[world_data["palette"][i]],
+                        world_x, world_y
                     )
                     tiles.append(tile)
             # TODO: construct complete enemy path in separate function
