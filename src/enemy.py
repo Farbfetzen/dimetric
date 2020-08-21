@@ -42,7 +42,7 @@ class Enemy:
 
         self.hitpoints = 100
         self.speed = 1
-        self.direction = [1, 0]  # [x, y]
+        self.direction = pygame.Vector2(1, 0)
 
         print(path[0])
         print(self.rect.center)

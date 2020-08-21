@@ -18,28 +18,26 @@
 
 import math
 
+import pygame
+
 import src.constants as const
 
 
 class Tile:
-    def __init__(self,
-                 name, images,
-                 world_x, world_y,
-                 camera_offset_x=0,  camera_offset_y=0):
+    def __init__(self, name, images, x, y):
         self.name = name
         self.images = images
         self.image = images[name]
         self.is_highlighted = False
         self.rect = self.image.get_rect()
-        self.world_x = 0
-        self.world_y = 0
+        self.world_pos = pygame.Vector2(math.floor(x), math.floor(y))
         # The difference from the camera_offset in small_display coordinates:
-        self.screen_offset_x = 0
-        self.screen_offset_y = 0
+        self.offset = pygame.Vector2()
+        self.offset.x = (self.world_pos.x - self.world_pos.y) * const.TILE_WIDTH_HALF
+        self.offset.y = (self.world_pos.x + self.world_pos.y) * const.TILE_HEIGHT_HALF
         # Account for images taller than TILE_HEIGHT, like platforms and such.
         # The -1 is because the base rhombus is const.TILE_HEIGHT + 1 tall.
-        self.tile_offset_y = self.rect.height - const.TILE_HEIGHT - 1
-        self.update_position(world_x, world_y, camera_offset_x, camera_offset_y)
+        self.offset.y -= self.rect.height - const.TILE_HEIGHT - 1
 
     def toggle_highlight(self):
         self.is_highlighted = not self.is_highlighted
@@ -48,20 +46,8 @@ class Tile:
         else:
             self.image = self.images[self.name]
 
-    def scroll(self, camera_offset_x, camera_offset_y):
-        self.rect.midtop = (
-            self.screen_offset_x + camera_offset_x,
-            self.screen_offset_y + camera_offset_y
-        )
-
-    def update_position(self, world_x, world_y, camera_offset_x, camera_offset_y):
-        # Update screen and world positions.
-        self.world_x = math.floor(world_x)
-        self.world_y = math.floor(world_y)
-        self.screen_offset_x = (self.world_x - self.world_y) * const.TILE_WIDTH_HALF
-        self.screen_offset_y = ((self.world_x + self.world_y) * const.TILE_HEIGHT_HALF
-                                - self.tile_offset_y)
-        self.scroll(camera_offset_x, camera_offset_y)
+    def scroll(self, camera_offset):
+        self.rect.midtop = self.offset + camera_offset
 
     def draw(self, target_surface):
         target_surface.blit(self.image, self.rect)
@@ -80,7 +66,7 @@ class World:
         self.width = len(self.tiles[0])
         self.height = len(self.tiles)
         self.check_map_rectangular()
-        self.path = []
+        self.path = self.construct_path()
         self.highlighted_tile = None
 
     def check_map_rectangular(self):
@@ -89,12 +75,12 @@ class World:
                 raise ValueError(f"Map '{self.name}' is not rectangular!")
 
     def construct_path(self):
-        pass
+        return None
 
-    def scroll(self, camera_offset_x, camera_offset_y):
+    def scroll(self, camera_offset):
         for row in self.tiles:
             for tile in row:
-                tile.scroll(camera_offset_x, camera_offset_y)
+                tile.scroll(camera_offset)
 
     def highlight(self, x, y):
         x = int(x)
@@ -103,7 +89,8 @@ class World:
             if self.highlighted_tile is None:
                 self.highlighted_tile = self.tiles[y][x]
                 self.highlighted_tile.toggle_highlight()
-            elif self.highlighted_tile.world_x != x or self.highlighted_tile.world_y != y:
+            elif (self.highlighted_tile.world_pos.x != x
+                  or self.highlighted_tile.world_pos.y != y):
                 self.highlighted_tile.toggle_highlight()
                 self.highlighted_tile = self.tiles[y][x]
                 self.highlighted_tile.toggle_highlight()
@@ -118,19 +105,3 @@ class World:
             for tile in row:
                 tile.draw(target_surface)
 
-
-# world_data = json.load(file)
-# map_ = world_data["map"]
-# check_map_rectangular(map_, filename)
-# tiles = []
-# world_width = len(map_[0])  # towards bottom right
-# world_height = len(map_)  # towards bottom left
-# for world_y, row in enumerate(map_):
-#     for world_x, i in enumerate(row):
-#         tile = src.tile_world.Tile(
-#             images_[world_data["palette"][i]],
-#             world_x, world_y
-#         )
-#         tiles.append(tile)
-# # TODO: construct complete enemy path in separate function
-# path = (world_data["path_start"], world_data["path_end"])

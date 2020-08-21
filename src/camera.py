@@ -22,6 +22,8 @@
 #  It should not matter much because of the conversion.
 
 
+import pygame
+
 import src.constants as const
 
 
@@ -34,37 +36,38 @@ class Camera:
         # The world starts displayed centered on the screen.
         # ATTENTION: The camera operates on the small_display! Remember that
         # when handling mouse input.
-        self.offset_x = (const.SMALL_WINDOW_WIDTH // 2
-                         - (self.world_width - self.world_height) / 2
-                         * const.TILE_WIDTH_HALF)
-        self.offset_y = (const.SMALL_WINDOW_HEIGHT // 2
-                         - (self.world_width + self.world_height) / 2
-                         * const.TILE_HEIGHT_HALF)
+        offset_x = (const.SMALL_WINDOW_WIDTH // 2
+                    - (self.world_width - self.world_height) / 2
+                    * const.TILE_WIDTH_HALF)
+        offset_y = (const.SMALL_WINDOW_HEIGHT // 2
+                    - (self.world_width + self.world_height) / 2
+                    * const.TILE_HEIGHT_HALF)
+        self.offset = pygame.Vector2(offset_x, offset_y)
 
-    def world_to_screen(self, world_x, world_y):
-        screen_x = (world_x - world_y) * const.TILE_WIDTH_HALF + self.offset_x
-        screen_y = (world_x + world_y) * const.TILE_HEIGHT_HALF + self.offset_y
-        return screen_x, screen_y
+    def world_to_screen(self, world_pos):
+        screen_x = (world_pos.x - world_pos.y) * const.TILE_WIDTH_HALF + self.offset.x
+        screen_y = (world_pos.x + world_pos.y) * const.TILE_HEIGHT_HALF + self.offset.y
+        return pygame.Vector2(screen_x, screen_y)
 
-    def main_display_to_world(self, x, y):
+    def main_display_to_world(self, mouse_x, mouse_y):
         # Adapted from the code example in wikipedia:
         # https://en.wikipedia.org/wiki/Isometric_video_game_graphics#Mapping_screen_to_world_coordinates
-        # x and y coordinates are in main_display space and must be converted
-        # to the small_display space:
-        x *= const.WINDOW_SIZE_FACTOR
-        y *= const.WINDOW_SIZE_FACTOR
-        virt_x = (x - (self.offset_x - self.world_width * const.TILE_WIDTH_HALF)) / const.TILE_WIDTH
-        virt_y = (y - self.offset_y) / const.TILE_HEIGHT
+        # x and y are multiplied with WINDOW_SIZE_FACTOR because they are
+        # main_display coordinates and must be converted to small_display coordinates.
+        virt_x = ((mouse_x * const.WINDOW_SIZE_FACTOR
+                   - (self.offset.x - self.world_width * const.TILE_WIDTH_HALF))
+                  / const.TILE_WIDTH)
+        virt_y = (mouse_y * const.WINDOW_SIZE_FACTOR - self.offset.y) / const.TILE_HEIGHT
         world_x = virt_y + (virt_x - self.world_width / 2)
         world_y = virt_y - (virt_x - self.world_height / 2)
         # Coordinates are floats. Use math.floor() to get the tile position.
-        return world_x, world_y
+        return pygame.Vector2(world_x, world_y)
 
     def scroll(self, rel_x, rel_y):
         # Multiply by WINDOW_SIZE_FACTOR because the mouse moves in
         # the main display but the map moves in small_display.
-        self.offset_x += rel_x * const.WINDOW_SIZE_FACTOR
-        self.offset_y += rel_y * const.WINDOW_SIZE_FACTOR
+        self.offset.x += rel_x * const.WINDOW_SIZE_FACTOR
+        self.offset.y += rel_y * const.WINDOW_SIZE_FACTOR
 
     def scroll_up(self):
         pass

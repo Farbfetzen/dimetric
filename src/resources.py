@@ -18,7 +18,6 @@
 import os
 import pygame
 import json
-from collections import namedtuple
 
 import src.camera
 import src.constants as const

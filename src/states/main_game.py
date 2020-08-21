@@ -30,18 +30,16 @@ class MainGame(State):
         super().__init__()
         self.world = res.worlds[world_name]
         self.camera = src.camera.Camera(self.world.width, self.world.height)
-        self.world.scroll(self.camera.offset_x, self.camera.offset_y)
+        self.world.scroll(self.camera.offset)
         self.enemies = []
-        self.mouse_pos_world_x = 0
-        self.mouse_pos_world_y = 0
+        self.mouse_pos_world = pygame.Vector2()
 
         # Debug overlay:
         self.debug_overlay = True
         self.debug_font = pygame.font.SysFont("monospace", 18)
         self.debug_color = (255, 255, 255)
         self.debug_line_height = self.debug_font.get_height()
-        self.debug_margin_x = 10
-        self.debug_margin_y = 10
+        self.debug_margin = pygame.Vector2(10, 10)
 
     def process_events(self, events, mouse_pos):
         for event in events:
@@ -54,20 +52,18 @@ class MainGame(State):
                     self.debug_overlay = not self.debug_overlay
             elif event.type == pygame.MOUSEMOTION and event.buttons[0]:
                 self.camera.scroll(*event.rel)
-                self.world.scroll(
-                    self.camera.offset_x,
-                    self.camera.offset_y
-                )
+                self.world.scroll(self.camera.offset)
 
-        self.mouse_pos_world_x, self.mouse_pos_world_y = \
+        self.mouse_pos_world.update(
             self.camera.main_display_to_world(*pygame.mouse.get_pos())
+        )
 
     def update(self, dt):
         for e in self.enemies:
             e.update(dt)
 
         if self.debug_overlay:
-            self.world.highlight(self.mouse_pos_world_x, self.mouse_pos_world_y)
+            self.world.highlight(*self.mouse_pos_world)
         else:
             self.world.disable_highlight()
 
@@ -125,16 +121,16 @@ class MainGame(State):
             False,
             self.debug_color
         )
-        res.main_display.blit(fps_text, (self.debug_margin_x, self.debug_margin_y))
+        res.main_display.blit(fps_text, self.debug_margin)
 
         world_pos_text = self.debug_font.render(
-            f"mouse world pos: {int(self.mouse_pos_world_x)}, {int(self.mouse_pos_world_y)}",
+            f"mouse world pos: {int(self.mouse_pos_world.x)}, {int(self.mouse_pos_world.y)}",
             False,
             self.debug_color
         )
         res.main_display.blit(
             world_pos_text,
-            (self.debug_margin_x, self.debug_margin_y * 3)
+            (self.debug_margin.x, self.debug_margin.y * 3)
         )
 
     def next_wave(self):
