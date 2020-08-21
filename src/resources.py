@@ -22,7 +22,7 @@ from collections import namedtuple
 
 import src.camera
 import src.constants as const
-import src.tile
+import src.tile_world
 
 
 def _load_images():
@@ -35,44 +35,16 @@ def _load_images():
     return images_
 
 
-def check_map_rectangular(map_, name):
-    length = len(map_[0])
-    for row in map_[1:]:
-        if len(row) != length:
-            raise ValueError(f"Map '{name}' is not rectangular!")
-
-
 def _build_worlds(images_):
     worlds_ = {}
     # FIXME: Check if the world stores references to the tile surfaces or
     #     if it makes copies of the surfaces. Because the latter would be
     #     a waste of resources.
-    world_obj = namedtuple("world", ["tiles", "width", "height", "path"])
     for filename in os.listdir("worlds"):
         with open(os.path.join("worlds", filename), "r") as file:
-            world_data = json.load(file)
-            map_ = world_data["map"]
-            check_map_rectangular(map_, filename)
-            tiles = []
-            world_width = len(map_[0])  # towards bottom right
-            world_height = len(map_)  # towards bottom left
-            for world_y, row in enumerate(map_):
-                for world_x, i in enumerate(row):
-                    tile = src.tile.Tile(
-                        images_[world_data["palette"][i]],
-                        world_x, world_y
-                    )
-                    tiles.append(tile)
-            # TODO: construct complete enemy path in separate function
-            path = (world_data["path_start"], world_data["path_end"])
-
             name = os.path.splitext(filename)[0]
-            worlds_[name] = world_obj(
-                tiles=tiles,
-                width=world_width,
-                height=world_height,
-                path=path
-            )
+            world_data = json.load(file)
+            worlds_[name] = src.tile_world.World(world_data, name, images_)
     return worlds_
 
 

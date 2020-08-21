@@ -19,7 +19,7 @@
 import pygame
 
 import src.camera
-import src.tile
+import src.tile_world
 import src.resources as res
 from src.states.state import State
 from src.enemy import Enemy
@@ -30,12 +30,10 @@ class MainGame(State):
         super().__init__()
         self.world = res.worlds[world_name]
         self.camera = src.camera.Camera(self.world.width, self.world.height)
+        self.world.scroll(self.camera.offset_x, self.camera.offset_y)
         self.enemies = []
         self.mouse_pos_world_x = 0
         self.mouse_pos_world_y = 0
-        self.highlight_tile = src.tile.Tile(res.images["highlight"], 0, 0)
-        for tile in self.world.tiles:
-            tile.update_screen_position(self.camera.offset_x, self.camera.offset_y)
 
         # Debug overlay:
         self.debug_overlay = True
@@ -56,12 +54,7 @@ class MainGame(State):
                     self.debug_overlay = not self.debug_overlay
             elif event.type == pygame.MOUSEMOTION and event.buttons[0]:
                 self.camera.scroll(*event.rel)
-                for tile in self.world.tiles:
-                    tile.update_screen_position(
-                        self.camera.offset_x,
-                        self.camera.offset_y
-                    )
-                self.highlight_tile.update_screen_position(
+                self.world.scroll(
                     self.camera.offset_x,
                     self.camera.offset_y
                 )
@@ -75,16 +68,15 @@ class MainGame(State):
 
         if ((0 <= self.mouse_pos_world_x < self.world.width)
                 and (0 <= self.mouse_pos_world_y < self.world.height)):
-            self.highlight_tile.update_position(
-                self.mouse_pos_world_x, self.mouse_pos_world_y,
-                self.camera.offset_x, self.camera.offset_y
+            self.world.highlight = (
+                self.mouse_pos_world_x,
+                self.mouse_pos_world_y
             )
 
     def draw(self):
         res.small_display.fill((0, 0, 0))
 
-        for tile in self.world.tiles:
-            tile.draw(res.small_display)
+        self.world.draw(res.small_display)
 
         # for e in self.enemies:
         #     target_surface.blit(
@@ -128,7 +120,6 @@ class MainGame(State):
         #             *tile_offsets[2]
         #         )
         #     )
-        self.highlight_tile.draw(res.small_display)
 
     def draw_debug_overlay(self):
         fps_text = self.debug_font.render(

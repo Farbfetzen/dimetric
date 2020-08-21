@@ -1,4 +1,4 @@
-"""Tile class."""
+"""Tile and world class."""
 
 # Copyright (C) 2020  Sebastian Henz
 #
@@ -22,9 +22,11 @@ import src.constants as const
 
 
 class Tile:
-    def __init__(self, image,
+    def __init__(self,
+                 name, image,
                  world_x, world_y,
                  camera_offset_x=0,  camera_offset_y=0):
+        self.name = name
         self.image = image
         self.rect = self.image.get_rect()
         self.world_x = 0
@@ -38,7 +40,7 @@ class Tile:
 
         self.update_position(world_x, world_y, camera_offset_x, camera_offset_y)
 
-    def update_screen_position(self, camera_offset_x, camera_offset_y):
+    def scroll(self, camera_offset_x, camera_offset_y):
         self.rect.midtop = (
             self.screen_offset_x + camera_offset_x,
             self.screen_offset_y + camera_offset_y
@@ -51,7 +53,62 @@ class Tile:
         self.screen_offset_x = (self.world_x - self.world_y) * const.TILE_WIDTH_HALF
         self.screen_offset_y = ((self.world_x + self.world_y) * const.TILE_HEIGHT_HALF
                                 - self.tile_offset_y)
-        self.update_screen_position(camera_offset_x, camera_offset_y)
+        self.scroll(camera_offset_x, camera_offset_y)
 
     def draw(self, target_surface):
         target_surface.blit(self.image, self.rect)
+
+
+class World:
+    def __init__(self, world_data, name, images):
+        self.name = name
+        self.tiles = []
+        for y, row in enumerate(world_data["map"]):
+            self.tiles.append([])
+            for x, i in enumerate(row):
+                name = world_data["palette"][i]
+                tile = Tile(name, images[name], x, y)
+                self.tiles[y].append(tile)
+        self.width = len(self.tiles[0])
+        self.height = len(self.tiles)
+        self.check_map_rectangular()
+        self.path = []
+        self.highlight = None
+
+    def check_map_rectangular(self):
+        for row in self.tiles[1:]:
+            if len(row) != self.width:
+                raise ValueError(f"Map '{self.name}' is not rectangular!")
+
+    def construct_path(self):
+        pass
+
+    def scroll(self, camera_offset_x, camera_offset_y):
+        for row in self.tiles:
+            for tile in row:
+                tile.scroll(camera_offset_x, camera_offset_y)
+
+    def highlight(self, x, y):
+        pass
+
+    def draw(self, target_surface):
+        for row in self.tiles:
+            for tile in row:
+                tile.draw(target_surface)
+
+
+# world_data = json.load(file)
+# map_ = world_data["map"]
+# check_map_rectangular(map_, filename)
+# tiles = []
+# world_width = len(map_[0])  # towards bottom right
+# world_height = len(map_)  # towards bottom left
+# for world_y, row in enumerate(map_):
+#     for world_x, i in enumerate(row):
+#         tile = src.tile_world.Tile(
+#             images_[world_data["palette"][i]],
+#             world_x, world_y
+#         )
+#         tiles.append(tile)
+# # TODO: construct complete enemy path in separate function
+# path = (world_data["path_start"], world_data["path_end"])
