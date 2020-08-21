@@ -23,11 +23,13 @@ import src.constants as const
 
 class Tile:
     def __init__(self,
-                 name, image,
+                 name, images,
                  world_x, world_y,
                  camera_offset_x=0,  camera_offset_y=0):
         self.name = name
-        self.image = image
+        self.images = images
+        self.image = images[name]
+        self.is_highlighted = False
         self.rect = self.image.get_rect()
         self.world_x = 0
         self.world_y = 0
@@ -37,8 +39,14 @@ class Tile:
         # Account for images taller than TILE_HEIGHT, like platforms and such.
         # The -1 is because the base rhombus is const.TILE_HEIGHT + 1 tall.
         self.tile_offset_y = self.rect.height - const.TILE_HEIGHT - 1
-
         self.update_position(world_x, world_y, camera_offset_x, camera_offset_y)
+
+    def toggle_highlight(self):
+        self.is_highlighted = not self.is_highlighted
+        if self.is_highlighted:
+            self.image = self.images[self.name + "_highlight"]
+        else:
+            self.image = self.images[self.name]
 
     def scroll(self, camera_offset_x, camera_offset_y):
         self.rect.midtop = (
@@ -67,13 +75,13 @@ class World:
             self.tiles.append([])
             for x, i in enumerate(row):
                 name = world_data["palette"][i]
-                tile = Tile(name, images[name], x, y)
+                tile = Tile(name, images, x, y)
                 self.tiles[y].append(tile)
         self.width = len(self.tiles[0])
         self.height = len(self.tiles)
         self.check_map_rectangular()
         self.path = []
-        self.highlight = None
+        self.highlighted_tile = None
 
     def check_map_rectangular(self):
         for row in self.tiles[1:]:
@@ -89,7 +97,21 @@ class World:
                 tile.scroll(camera_offset_x, camera_offset_y)
 
     def highlight(self, x, y):
-        pass
+        x = int(x)
+        y = int(y)
+        if 0 <= x < self.width and 0 <= y < self.height:
+            if self.highlighted_tile is None:
+                self.highlighted_tile = self.tiles[y][x]
+                self.highlighted_tile.toggle_highlight()
+            elif self.highlighted_tile.world_x != x or self.highlighted_tile.world_y != y:
+                self.highlighted_tile.toggle_highlight()
+                self.highlighted_tile = self.tiles[y][x]
+                self.highlighted_tile.toggle_highlight()
+
+    def disable_highlight(self):
+        if self.highlighted_tile is not None:
+            self.highlighted_tile.toggle_highlight()
+            self.highlighted_tile = None
 
     def draw(self, target_surface):
         for row in self.tiles:

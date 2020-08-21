@@ -66,12 +66,10 @@ class MainGame(State):
         for e in self.enemies:
             e.update(dt)
 
-        if ((0 <= self.mouse_pos_world_x < self.world.width)
-                and (0 <= self.mouse_pos_world_y < self.world.height)):
-            self.world.highlight = (
-                self.mouse_pos_world_x,
-                self.mouse_pos_world_y
-            )
+        if self.debug_overlay:
+            self.world.highlight(self.mouse_pos_world_x, self.mouse_pos_world_y)
+        else:
+            self.world.disable_highlight()
 
     def draw(self):
         res.small_display.fill((0, 0, 0))

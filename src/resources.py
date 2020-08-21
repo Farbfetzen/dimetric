@@ -32,7 +32,21 @@ def _load_images():
         image.set_colorkey(const.COLORKEY)
         name = os.path.splitext(filename)[0]
         images_[name] = image
+        images_[name + "_highlight"] = _highlight_image(image)
     return images_
+
+
+def _highlight_image(image):
+    """Replace the grey outline with orange to highlight a tile."""
+    highlighted = image.copy()
+    pygame.transform.threshold(
+        highlighted,
+        image,
+        const.OUTLINE_COLOR,
+        set_color=const.HIGHLIGHT_COLOR,
+        inverse_set=True
+    )
+    return highlighted
 
 
 def _build_worlds(images_):
