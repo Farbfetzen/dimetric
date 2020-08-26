@@ -9,16 +9,18 @@ Programme empfohlen von DaFluffyPotato: https://www.youtube.com/watch?v=ung_U17k
 
 Koordinaten:
 world:
-(0, 0)(0, 1)
-(1, 0)(1, 1)
+(0, 0)(1, 0)
+(0, 1)(1, 1)
 screen:
    (0, 0)
-(1, 0)(0, 1)
+(0, 1)(1, 0)
    (1, 1)
-Achtung: Matrixnotation (y, x)
+Notation: (x, y)
 Heißt x wird nach unten rechts größer und y wird nach unten links größer.
 Anfangs hatte ich (0, 0) an der linken Ecke. Aber das hat den Nachteil, dass ich
 in umgekehrte x-Richtung blitten muss, damit sich hohe tiles nicht überlappen.
+So muss ich einfach nach aufsteigendem x und y sortieren und die Reihenfolge
+der Blits ist korrekt.
 
 Steuerung:
 - WASD: Karte scrollen
@@ -34,22 +36,8 @@ Die Wegpunkte des Pfades der Gegner in der Karten-json festlegen. Nur eine Lane,
 denn die Tiles sind zu klein für mehr. Ansonsten werden die Gegner zu klein.
 Ich könnte aber auch alles einfach größer machen.
 
-Klasse "camera" zum Steuern des blittens: offset, zoom, coordinate conversion, etc.
-
-
-Neue Größen:
-Tiles 32 Pixel breit, Sichtbarer Bereich 400 Pixel breit. Das Bild dann vor
-dem Blitten in x und y verdoppeln. Heißt das Fenster wird 800 Breit.
-Die eigentlichen Bilder sind 34 Pixel breit, damit das tiling besser funktioniert
-und die vertikalen Linien besser aussieht.
-
-
 
 TODO:
-- Kleinere sprites und dünne vertikale Linien. Siehe Referenz mit 32*32 tiles.
-- Debug Info:
-    - FPS
-    - Mauskoordinaten in world und display
 - Objekte, die sich flüssig über die Karte bewegen, also nicht an das Gitter gebunden sind.
 - Objekte mit Wegpunkten über den Pfad steuern.
 - Die Karte mit Maus und Tastatur verschieben. Aber begrenzt, dass man die Karte nicht komplett aus der Ansicht schieben kann:

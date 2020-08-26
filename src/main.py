@@ -65,6 +65,6 @@ def run():
         # )
         # ---
 
-        if state.debug_overlay:
-            state.draw_debug_overlay()
+        if state.dev_overlay:
+            state.draw_dev_overlay()
         pygame.display.flip()

@@ -19,7 +19,7 @@
 class State:
     def __init__(self):
         self.done = False
-        self.debug_overlay = False
+        self.dev_overlay = False
 
     def start(self, persistent_state_data):
         """Start or resume a state.
