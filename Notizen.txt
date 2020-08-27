@@ -38,6 +38,16 @@ Ich könnte aber auch alles einfach größer machen.
 
 
 TODO:
+- Das System optimieren: statt jedes Tile zu einem Objekt zu machen lieber die
+Positionen und Bilder in einer Liste in der world speichern. Stell dir vor du
+machst mal eine Karte mit 100 Tiles Kantenlänge. Das muss auch flüsig laufen.
+Inspiration: https://www.reddit.com/r/pygame/comments/7hwwu2/optimizing_tile_based_game/
+Keine Klassen, keine rects. In der list of lists nur ein namedtuple mit x, y und
+einen pointer zum Bild. Beim Scrollen der Karte die screen Positionen der Tiles
+nicht verändern. Stattdessen einfach das kleine Display verschieben.
+Teste, ob es wirklich eine Verbesserung ist, indem du eine sehr große Karte baust,
+die FPS nicht begrenzt und schaust, ob es danach schneller läuft. Klappt natürlich
+nur, wenn vorher die FPS kleiner als das max sind.
 - Objekte, die sich flüssig über die Karte bewegen, also nicht an das Gitter gebunden sind.
 - Objekte mit Wegpunkten über den Pfad steuern.
 - Die Karte mit Maus und Tastatur verschieben. Aber begrenzt, dass man die Karte nicht komplett aus der Ansicht schieben kann:
