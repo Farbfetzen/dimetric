@@ -59,5 +59,11 @@ Start und Ende des Pfades in der Karte selbst mit "S" und "E" angeben anstatt al
 
 Nur ein Tile-Objekt pro Tile-Sorte? Könnte manches evtl. einfacher machen.
 
-Small_display muss groß genug sein, um alle Tiles enthalten zu können. Heißt ich kann es erst erzeugen, wenn ich weiß, wie groß die Karte ist.
-Wenn ich die Tiles auf das small_display blitte und nur diese Surface verschiebe anstatt die Tiles einzeln, dann ist erstens die Umrechnung einfacher und zweitens kann ich einfacher das scrollen limitieren.
+Small_display muss groß genug sein, um alle Tiles enthalten zu können. Heißt ich
+kann es erst erzeugen, wenn ich weiß, wie groß die Karte ist.
+Wenn ich die Tiles auf das small_display blitte und nur diese Surface verschiebe
+anstatt die Tiles einzeln, dann ist erstens die Umrechnung einfacher und zweitens
+kann ich einfacher das scrollen limitieren.
+Am besten blitte die Karte auf eine neue surface, vielleicht "map_display" oder
+"map_surface". Diese kann ich dann zoomen und verschieben, wie ich will. Und
+diese wird dann auf small_display geblittet.

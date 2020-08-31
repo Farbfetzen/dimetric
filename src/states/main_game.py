@@ -29,7 +29,7 @@ class MainGame(State):
     def __init__(self, world_name):
         super().__init__()
         self.world = res.worlds[world_name]
-        self.camera = src.camera.Camera(self.world.width, self.world.height)
+        self.camera = src.camera.Camera(self.world.sidelength)
         self.world.scroll(self.camera.offset)
         self.enemies = []
         self.mouse_pos_world = pygame.Vector2()
@@ -83,14 +83,14 @@ class MainGame(State):
         #     )
 
         # DEBUG:
-        # pos = ((0, 0), (self.world.width, self.world.height),
-        #        (0, self.world.height), (self.world.width, 0))
+        # pos = ((0, 0), (self.world.sidelength, self.world.sidelength),
+        #        (0, self.world.sidelength), (self.world.sidelength, 0))
         # col = ((255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255))
         # for p, c in zip(pos, col):
         #     pygame.draw.circle(
-        #         target_surface,
+        #         res.small_display,
         #         c,
-        #         self.camera.world_to_screen(p[0], p[1]),
+        #         self.camera.world_to_screen(pygame.Vector2(p)),
         #         2
         #     )
         # ---

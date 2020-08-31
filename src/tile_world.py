@@ -63,16 +63,14 @@ class World:
                 name = world_data["palette"][i]
                 tile = Tile(name, images, x, y)
                 self.tiles[y].append(tile)
-        self.width = len(self.tiles[0])
-        self.height = len(self.tiles)
+        self.sidelength = len(self.tiles)
         self.check_map_square()
         self.path = self.construct_path()
         self.highlighted_tile = None
 
     def check_map_square(self):
-        sidelength = len(self.tiles)
         for row in self.tiles:
-            if len(row) != sidelength:
+            if len(row) != self.sidelength:
                 raise ValueError(f"Map '{self.name}' is not square!")
 
     def construct_path(self):
@@ -86,7 +84,7 @@ class World:
     def highlight(self, x, y):
         x = int(x)
         y = int(y)
-        if 0 <= x < self.width and 0 <= y < self.height:
+        if 0 <= x < self.sidelength and 0 <= y < self.sidelength:
             if self.highlighted_tile is None:
                 self.highlighted_tile = self.tiles[y][x]
                 self.highlighted_tile.toggle_highlight()

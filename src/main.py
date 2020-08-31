@@ -52,13 +52,13 @@ def run():
 
         # DEBUG
         # pygame.draw.line(
-        #     main_display,
+        #     res.main_display,
         #     (255, 0, 255),
         #     (const.WINDOW_WIDTH // 2, 0),
         #     (const.WINDOW_WIDTH // 2, const.WINDOW_HEIGHT)
         # )
         # pygame.draw.line(
-        #     main_display,
+        #     res.main_display,
         #     (255, 0, 255),
         #     (0, const.WINDOW_HEIGHT // 2),
         #     (const.WINDOW_WIDTH, const.WINDOW_HEIGHT // 2)
