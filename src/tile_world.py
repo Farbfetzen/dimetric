@@ -65,14 +65,15 @@ class World:
                 self.tiles[y].append(tile)
         self.width = len(self.tiles[0])
         self.height = len(self.tiles)
-        self.check_map_rectangular()
+        self.check_map_square()
         self.path = self.construct_path()
         self.highlighted_tile = None
 
-    def check_map_rectangular(self):
-        for row in self.tiles[1:]:
-            if len(row) != self.width:
-                raise ValueError(f"Map '{self.name}' is not rectangular!")
+    def check_map_square(self):
+        sidelength = len(self.tiles)
+        for row in self.tiles:
+            if len(row) != sidelength:
+                raise ValueError(f"Map '{self.name}' is not square!")
 
     def construct_path(self):
         return None

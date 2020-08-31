@@ -36,9 +36,7 @@ Die Wegpunkte des Pfades der Gegner in der Karten-json festlegen. Nur eine Lane,
 denn die Tiles sind zu klein für mehr. Ansonsten werden die Gegner zu klein.
 Ich könnte aber auch alles einfach größer machen.
 
-
-TODO:
-- Das System optimieren: statt jedes Tile zu einem Objekt zu machen lieber die
+Das System optimieren: statt jedes Tile zu einem Objekt zu machen lieber die
 Positionen und Bilder in einer Liste in der world speichern. Stell dir vor du
 machst mal eine Karte mit 100 Tiles Kantenlänge. Das muss auch flüsig laufen.
 Inspiration: https://www.reddit.com/r/pygame/comments/7hwwu2/optimizing_tile_based_game/
@@ -48,9 +46,18 @@ nicht verändern. Stattdessen einfach das kleine Display verschieben.
 Teste, ob es wirklich eine Verbesserung ist, indem du eine sehr große Karte baust,
 die FPS nicht begrenzt und schaust, ob es danach schneller läuft. Klappt natürlich
 nur, wenn vorher die FPS kleiner als das max sind.
-- Objekte, die sich flüssig über die Karte bewegen, also nicht an das Gitter gebunden sind.
-- Objekte mit Wegpunkten über den Pfad steuern.
-- Die Karte mit Maus und Tastatur verschieben. Aber begrenzt, dass man die Karte nicht komplett aus der Ansicht schieben kann:
+
+Objekte, die sich flüssig über die Karte bewegen, also nicht an das Gitter gebunden sind.
+
+Objekte mit Wegpunkten über den Pfad steuern.
+
+Die Karte mit Maus und Tastatur verschieben. Aber begrenzt, dass man die Karte nicht komplett aus der Ansicht schieben kann:
     - Maus an den Bildschirmrand.
     - Karte nur per Rechtsklick verschieben, wenn der Klick auf der Karte landet.
-- Start und Ende des Pfades in der Karte selbst mit "S" und "E" angeben anstatt als Koordinaten. In der palette dann "S": "path" und "E": "path" eintragen.
+
+Start und Ende des Pfades in der Karte selbst mit "S" und "E" angeben anstatt als Koordinaten. In der palette dann "S": "path" und "E": "path" eintragen.
+
+Nur ein Tile-Objekt pro Tile-Sorte? Könnte manches evtl. einfacher machen.
+
+Small_display muss groß genug sein, um alle Tiles enthalten zu können. Heißt ich kann es erst erzeugen, wenn ich weiß, wie groß die Karte ist.
+Wenn ich die Tiles auf das small_display blitte und nur diese Surface verschiebe anstatt die Tiles einzeln, dann ist erstens die Umrechnung einfacher und zweitens kann ich einfacher das scrollen limitieren.
