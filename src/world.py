@@ -75,7 +75,7 @@ class World:
 
         self.rect = self.surface.get_rect()
         self.rect.center = (const.SMALL_DISPLAY_WIDTH / 2, const.SMALL_DISPLAY_HEIGHT / 2)
-        print(self.rect.center)
+        self.surf_pos = pygame.Vector2(self.rect.topleft)  # for scrolling
 
         Tile = namedtuple(
             "Tile",
@@ -114,8 +114,11 @@ class World:
     def scroll(self, rel_x, rel_y):
         # Multiply by ZOOM_FACTOR because the mouse moves in
         # the main display but the map moves in small_display.
-        self.rect.x += rel_x * const.ZOOM_FACTOR
-        self.rect.y += rel_y * const.ZOOM_FACTOR
+        # Use surf_pos to track the floating point possition because
+        # rects can only hold integers.
+        self.surf_pos.x += rel_x * const.ZOOM_FACTOR
+        self.surf_pos.y += rel_y * const.ZOOM_FACTOR
+        self.rect.topleft = self.surf_pos
 
     # def highlight(self, x, y):
     #     x = int(x)

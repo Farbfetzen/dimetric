@@ -44,13 +44,13 @@ class MainGame(State):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.done = True
-                elif event.key == pygame.K_s:
-                    self.next_wave()
+                # elif event.key == pygame.K_s:
+                #     self.next_wave()
                 elif event.key == pygame.K_F1:
                     self.dev_overlay = not self.dev_overlay
-            elif event.type == pygame.MOUSEMOTION and event.buttons[0]:
-                self.camera.scroll(*event.rel)
-                self.world.scroll(self.camera.offset)
+            elif event.type == pygame.MOUSEMOTION and event.buttons[2]:
+                # buttons[2] is the right mouse button
+                self.world.scroll(*event.rel)
 
         # self.mouse_pos_world.update(
         #     self.camera.main_display_to_world(*pygame.mouse.get_pos())
@@ -59,11 +59,6 @@ class MainGame(State):
     def update(self, dt):
         # for e in self.enemies:
         #     e.update(dt)
-
-        # if self.dev_overlay:
-        #     self.world.highlight(*self.mouse_pos_world)
-        # else:
-        #     self.world.disable_highlight()
         pass
 
     def draw(self):
@@ -73,7 +68,6 @@ class MainGame(State):
 
         if self.dev_overlay:
             pygame.draw.rect(res.small_display, self.dev_color, self.world.rect, 1)
-
 
         # for e in self.enemies:
         #     target_surface.blit(
