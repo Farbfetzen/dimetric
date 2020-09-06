@@ -48,7 +48,7 @@ def run():
 
         state.update(dt)
         state.draw()
-        pygame.transform.scale(res.small_display, const.WINDOW_SIZE, res.main_display)
+        pygame.transform.scale(res.small_display, const.MAIN_DISPLAY_SIZE, res.main_display)
 
         # DEBUG
         # pygame.draw.line(

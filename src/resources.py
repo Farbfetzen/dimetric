@@ -21,7 +21,7 @@ import json
 
 import src.camera
 import src.constants as const
-import src.tile_world
+import src.world
 
 
 def _load_images():
@@ -50,20 +50,21 @@ def _highlight_image(image):
 
 def _build_worlds(images_):
     worlds_ = {}
-    # FIXME: Check if the world stores references to the tile surfaces or
-    #     if it makes copies of the surfaces. Because the latter would be
-    #     a waste of resources.
     for filename in os.listdir("worlds"):
         with open(os.path.join("worlds", filename), "r") as file:
             name = os.path.splitext(filename)[0]
             world_data = json.load(file)
-            worlds_[name] = src.tile_world.World(world_data, name, images_)
+            # Check if map is square:
+            for row in world_data["map"]:
+                if len(row) != len(world_data["map"]):
+                    raise ValueError(f"Map '{name}' is not square!")
+            worlds_[name] = src.world.World(world_data, name, images_)
     return worlds_
 
 
 # The display must be created before loading images:
-main_display = pygame.display.set_mode(const.WINDOW_SIZE)
-small_display = pygame.Surface(const.SMALL_WINDOW_SIZE)
+main_display = pygame.display.set_mode(const.MAIN_DISPLAY_SIZE)
+small_display = pygame.Surface(const.SMALL_DISPLAY_SIZE)
 clock = pygame.time.Clock()
 
 images = _load_images()

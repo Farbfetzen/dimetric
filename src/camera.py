@@ -31,29 +31,25 @@ class Camera:
     def __init__(self, world_sidelength):
         self.world_sidelength = world_sidelength
 
-        # The camera offset is the top of the base of the topmost tile.
+        # The camera offset is the top of the base of the topmost tile, i.e.
+        # (0, 0) in world coordinates.
         # The world starts displayed centered on the screen.
         # ATTENTION: The camera operates on the small_display! Remember that
-        # when handling mouse input.a
-        offset_x = const.SMALL_WINDOW_WIDTH // 2
-        offset_y = (const.SMALL_WINDOW_HEIGHT // 2
+        #   when handling mouse input.
+        offset_x = const.SMALL_DISPLAY_WIDTH // 2
+        offset_y = (const.SMALL_DISPLAY_HEIGHT // 2
                     - self.world_sidelength * const.TILE_HEIGHT_HALF)
         self.offset = pygame.Vector2(offset_x, offset_y)
-
-    def world_to_screen(self, world_pos):
-        screen_x = (world_pos.x - world_pos.y) * const.TILE_WIDTH_HALF + self.offset.x
-        screen_y = (world_pos.x + world_pos.y) * const.TILE_HEIGHT_HALF + self.offset.y
-        return pygame.Vector2(screen_x, screen_y)
 
     def main_display_to_world(self, mouse_x, mouse_y):
         # Adapted from the code example in wikipedia:
         # https://en.wikipedia.org/wiki/Isometric_video_game_graphics#Mapping_screen_to_world_coordinates
         # x and y are multiplied with WINDOW_SIZE_FACTOR because they are
         # main_display coordinates and must be converted to small_display coordinates.
-        virt_x = ((mouse_x * const.WINDOW_SIZE_FACTOR
+        virt_x = ((mouse_x * const.ZOOM_FACTOR
                    - (self.offset.x - self.world_sidelength * const.TILE_WIDTH_HALF))
                   / const.TILE_WIDTH)
-        virt_y = (mouse_y * const.WINDOW_SIZE_FACTOR - self.offset.y) / const.TILE_HEIGHT
+        virt_y = (mouse_y * const.ZOOM_FACTOR - self.offset.y) / const.TILE_HEIGHT
         world_x = virt_y + (virt_x - self.world_sidelength / 2)
         world_y = virt_y - (virt_x - self.world_sidelength / 2)
         # Coordinates are floats. Use math.floor() to get the tile position.
@@ -62,8 +58,8 @@ class Camera:
     def scroll(self, rel_x, rel_y):
         # Multiply by WINDOW_SIZE_FACTOR because the mouse moves in
         # the main display but the map moves in small_display.
-        self.offset.x += rel_x * const.WINDOW_SIZE_FACTOR
-        self.offset.y += rel_y * const.WINDOW_SIZE_FACTOR
+        self.offset.x += rel_x * const.ZOOM_FACTOR
+        self.offset.y += rel_y * const.ZOOM_FACTOR
 
     def scroll_up(self):
         pass

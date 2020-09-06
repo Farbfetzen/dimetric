@@ -19,7 +19,7 @@
 import pygame
 
 import src.camera
-import src.tile_world
+import src.world
 import src.resources as res
 from src.states.state import State
 from src.enemy import Enemy
@@ -29,9 +29,7 @@ class MainGame(State):
     def __init__(self, world_name):
         super().__init__()
         self.world = res.worlds[world_name]
-        self.camera = src.camera.Camera(self.world.sidelength)
-        self.world.scroll(self.camera.offset)
-        self.enemies = []
+        # self.enemies = []
         self.mouse_pos_world = pygame.Vector2()
 
         # Developer overlay:
@@ -54,23 +52,28 @@ class MainGame(State):
                 self.camera.scroll(*event.rel)
                 self.world.scroll(self.camera.offset)
 
-        self.mouse_pos_world.update(
-            self.camera.main_display_to_world(*pygame.mouse.get_pos())
-        )
+        # self.mouse_pos_world.update(
+        #     self.camera.main_display_to_world(*pygame.mouse.get_pos())
+        # )
 
     def update(self, dt):
-        for e in self.enemies:
-            e.update(dt)
+        # for e in self.enemies:
+        #     e.update(dt)
 
-        if self.dev_overlay:
-            self.world.highlight(*self.mouse_pos_world)
-        else:
-            self.world.disable_highlight()
+        # if self.dev_overlay:
+        #     self.world.highlight(*self.mouse_pos_world)
+        # else:
+        #     self.world.disable_highlight()
+        pass
 
     def draw(self):
         res.small_display.fill((0, 0, 0))
 
         self.world.draw(res.small_display)
+
+        if self.dev_overlay:
+            pygame.draw.rect(res.small_display, self.dev_color, self.world.rect, 1)
+
 
         # for e in self.enemies:
         #     target_surface.blit(
@@ -133,5 +136,5 @@ class MainGame(State):
             (self.dev_margin.x, self.dev_margin.y * 3)
         )
 
-    def next_wave(self):
-        self.enemies.append(Enemy("cube", self.world.path))
+    # def next_wave(self):
+    #     self.enemies.append(Enemy("cube", self.world.path))
