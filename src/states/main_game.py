@@ -105,14 +105,27 @@ class MainGame(State):
         )
         res.main_display.blit(fps_text, self.dev_margin)
 
+        mouse_pos_tile_x = floor(self.mouse_pos_world.x)
+        mouse_pos_tile_y = floor(self.mouse_pos_world.y)
         world_pos_text = self.dev_font.render(
-            f"mouse world pos: {floor(self.mouse_pos_world.x)}, {floor(self.mouse_pos_world.y)}",
+            f"mouse world pos: {mouse_pos_tile_x}, {mouse_pos_tile_y}",
             False,
             self.dev_color
         )
         res.main_display.blit(
             world_pos_text,
             (self.dev_margin.x, self.dev_margin.y * 3)
+        )
+
+        tile_at_mouse = self.world.get_tile_at(mouse_pos_tile_x, mouse_pos_tile_y)
+        mouse_tile_text = self.dev_font.render(
+            f"tile at mouse: {tile_at_mouse}",
+            False,
+            self.dev_color
+        )
+        res.main_display.blit(
+            mouse_tile_text,
+            (self.dev_margin.x, self.dev_margin.y * 5)
         )
 
     # def next_wave(self):

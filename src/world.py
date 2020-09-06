@@ -152,8 +152,10 @@ class World:
         world_y = virt_y - (virt_x - self.sidelength / 2)
         return world_x, world_y
 
-    def get_at(self, x, y):
-        return self.tiles_nested[y][x]
+    def get_tile_at(self, x, y):
+        if 0 <= x < self.sidelength and 0 <= y < self.sidelength:
+            return self.tiles_nested[y][x].type
+        return "none"
 
     def scroll(self, rel_x, rel_y):
         # Multiply by ZOOM_FACTOR because the mouse moves in
