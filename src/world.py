@@ -55,9 +55,14 @@ import src.constants as const
 
 
 class World:
-    def __init__(self, world_data, name, images):
-        self.name = name
+    def __init__(self, world_data, images):
+        self.name = world_data["name"]
         self.sidelength = len(world_data["map"])
+
+        # Check if map is square:
+        for row in world_data["map"]:
+            if len(row) != len(world_data["map"]):
+                raise ValueError(f"Map '{self.name}' is not square.")
 
         # Add a margin of some tile sizes so other stuff fits on the world surface, too.
         margin_x = const.TILE_WIDTH * 2
@@ -76,26 +81,49 @@ class World:
         self.rect.center = (const.SMALL_DISPLAY_WIDTH / 2, const.SMALL_DISPLAY_HEIGHT / 2)
         self.surf_pos = pygame.Vector2(self.rect.topleft)  # for scrolling
 
+        self.tiles = []  # Used for blitting
+        self.tiles_nested = []  # Useful for finding a tile by world coordinates
         Tile = namedtuple(
             "Tile",
             ("type", "image", "world_x", "world_y", "topleft")
         )
-        self.tiles = []  # Used for blitting
-        self.tiles_nested = []  # Useful for finding a tile by world coordinates
+        path_start = None
+        path_end = None
+        self.path_raw = set()
         for world_y, row in enumerate(world_data["map"]):
             self.tiles_nested.append([])
-            for world_x, i in enumerate(row):
-                name = world_data["palette"][i]
-                image = images[name]
+            for world_x, symbol in enumerate(row):
+                tile_type = world_data["palette"][symbol]
+                if tile_type == "path":
+                    pos = (world_x, world_y)
+                    self.path_raw.add(pos)
+                    if symbol == "S":
+                        path_start = pos
+                        self.path_raw.remove(pos)
+                    elif symbol == "E":
+                        path_end = pos
+                image = images[tile_type]
                 x, y = self.world_pos_to_world_surf(world_x, world_y)
                 x -= image.get_width() / 2
                 y -= image.get_height() - const.TILE_HEIGHT
-                tile = Tile(name, image, world_x, world_y, (x, y))
+                tile = Tile(tile_type, image, world_x, world_y, (x, y))
                 self.tiles_nested[world_y].append(tile)
                 self.tiles.append(tile)
 
-        # self.path = self.construct_path()
-        self.highlighted_tile = None
+        if path_start is None or path_end is None:
+            raise ValueError(f"Missing path start or end in map '{self.name}'.")
+        self.path = [path_start]
+        while self.path_raw:
+            x, y = self.path[-1]
+            for neighbor in ((x+1, y), (x-1, y), (x, y+1), (x, y-1)):
+                if neighbor in self.path_raw:
+                    self.path.append(neighbor)
+                    self.path_raw.remove(neighbor)
+                    break
+            else:
+                raise ValueError(f"Malformed path in map '{self.name}': Neighbor not found.")
+        if self.path[-1] != path_end:
+            raise ValueError(f"Malformed path in map '{self.name}': Ends at wrong position.")
 
     def world_pos_to_world_surf(self, world_x, world_y):
         # ATTENTION: Remember to account for the width and height of a sprite
@@ -126,9 +154,6 @@ class World:
 
     def get_at(self, x, y):
         return self.tiles_nested[y][x]
-
-    # def construct_path(self):
-    #     return None
 
     def scroll(self, rel_x, rel_y):
         # Multiply by ZOOM_FACTOR because the mouse moves in

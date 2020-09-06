@@ -51,13 +51,8 @@ def _build_worlds(images_):
     worlds_ = {}
     for filename in os.listdir("worlds"):
         with open(os.path.join("worlds", filename), "r") as file:
-            name = os.path.splitext(filename)[0]
             world_data = json.load(file)
-            # Check if map is square:
-            for row in world_data["map"]:
-                if len(row) != len(world_data["map"]):
-                    raise ValueError(f"Map '{name}' is not square!")
-            worlds_[name] = src.world.World(world_data, name, images_)
+            worlds_[world_data["name"]] = src.world.World(world_data, images_)
     return worlds_
 
 
