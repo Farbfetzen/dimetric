@@ -19,7 +19,6 @@ import os
 import pygame
 import json
 
-import src.camera
 import src.constants as const
 import src.world
 

@@ -64,7 +64,6 @@ class World:
         margin_y = const.TILE_HEIGHT * 5
         self.surf_width = self.sidelength * const.TILE_WIDTH + margin_x
         self.surf_height = self.sidelength * const.TILE_HEIGHT + margin_y
-        print(self.surf_height)
         self.surface = pygame.Surface((self.surf_width, self.surf_height))
 
         # Center the map on the world surface. Offset is the position of
@@ -105,6 +104,26 @@ class World:
         y = (world_x + world_y) * const.TILE_HEIGHT_HALF + self.offset_y
         return x, y
 
+    def small_display_to_world_pos(self, x, y):
+        # Adapted from the code example in wikipedia:
+        # https://en.wikipedia.org/wiki/Isometric_video_game_graphics#Mapping_screen_to_world_coordinates
+
+        # Remember: Coordinates are floats. If you want to allow negative
+        # tile positions then you must use math.floor() and not int().
+        # int() rounds towards zero which would introduce an off-by-one error
+        # for negative tile positions.
+
+        # Get x and y relative to the topleft corner of the bounding rectangle
+        # of the map:
+        x = x - self.rect.x - self.offset_x + self.sidelength * const.TILE_WIDTH_HALF
+        y = y - self.rect.y - self.offset_y
+
+        virt_x = x / const.TILE_WIDTH
+        virt_y = y / const.TILE_HEIGHT
+        world_x = virt_y + (virt_x - self.sidelength / 2)
+        world_y = virt_y - (virt_x - self.sidelength / 2)
+        return world_x, world_y
+
     def get_at(self, x, y):
         return self.tiles_nested[y][x]
 
@@ -119,24 +138,6 @@ class World:
         self.surf_pos.x += rel_x * const.ZOOM_FACTOR
         self.surf_pos.y += rel_y * const.ZOOM_FACTOR
         self.rect.topleft = self.surf_pos
-
-    # def highlight(self, x, y):
-    #     x = int(x)
-    #     y = int(y)
-    #     if 0 <= x < self.sidelength and 0 <= y < self.sidelength:
-    #         if self.highlighted_tile is None:
-    #             self.highlighted_tile = self.tiles[y][x]
-    #             self.highlighted_tile.toggle_highlight()
-    #         elif (self.highlighted_tile.world_pos.x != x
-    #               or self.highlighted_tile.world_pos.y != y):
-    #             self.highlighted_tile.toggle_highlight()
-    #             self.highlighted_tile = self.tiles[y][x]
-    #             self.highlighted_tile.toggle_highlight()
-    #
-    # def disable_highlight(self):
-    #     if self.highlighted_tile is not None:
-    #         self.highlighted_tile.toggle_highlight()
-    #         self.highlighted_tile = None
 
     def draw(self, target_surface):
 

@@ -74,7 +74,7 @@ diese wird dann auf small_display geblittet.
 
 
 
-1. Tiles und objekte auf der Karte werden auf world_surf geblittet.
+1. Tiles und Objekte in der Welt werden auf world_surf geblittet.
 2. world_surf wird auf small_display geblittet, mit Versatz je nach scrolling.
 3. UI wird auch auf small_display geblittet.
 4. small_display wird vergrößert und ins main_display geblittet.

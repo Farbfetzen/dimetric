@@ -16,10 +16,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from math import floor
+
 import pygame
 
-import src.camera
 import src.world
+import src.constants as const
 import src.resources as res
 from src.states.state import State
 from src.enemy import Enemy
@@ -30,10 +32,11 @@ class MainGame(State):
         super().__init__()
         self.world = res.worlds[world_name]
         # self.enemies = []
+        self.mouse_pos = pygame.Vector2()
         self.mouse_pos_world = pygame.Vector2()
 
         # Developer overlay:
-        self.dev_overlay = True
+        self.dev_overlay = False
         self.dev_font = pygame.font.SysFont("monospace", 18)
         self.dev_color = (255, 255, 255)
         self.dev_line_height = self.dev_font.get_height()
@@ -52,9 +55,11 @@ class MainGame(State):
                 # buttons[2] is the right mouse button
                 self.world.scroll(*event.rel)
 
-        # self.mouse_pos_world.update(
-        #     self.camera.main_display_to_world(*pygame.mouse.get_pos())
-        # )
+        # Convert mouse position to small_display coordinates:
+        pos = pygame.mouse.get_pos()
+        self.mouse_pos.x = pos[0] * const.ZOOM_FACTOR
+        self.mouse_pos.y = pos[1] * const.ZOOM_FACTOR
+        self.mouse_pos_world.update(self.world.small_display_to_world_pos(*self.mouse_pos))
 
     def update(self, dt):
         # for e in self.enemies:
@@ -92,26 +97,6 @@ class MainGame(State):
         #     )
         # ---
 
-        # # Highlight the outline of a tile when the mouse is over the world.
-        # # TODO: highlight the top of the platform
-        # # TODO: snap to grid when mouse is over the raised part of a platform, not
-        # #   only over the base.
-        # mouse_pos = pygame.mouse.get_pos()
-        # mouse_world_pos = screen_to_world(*mouse_pos)
-        # if any(0 > pos or pos > len(world_data) - 1 for pos in mouse_world_pos):
-        #     tile = tiles[2]
-        #     rect = tile.get_rect(center=mouse_pos)
-        #     display.blit(tiles[2], rect)
-        # else:
-        #     display.blit(
-        #         tiles[2],
-        #         world_to_screen(
-        #             mouse_world_pos[0],
-        #             mouse_world_pos[1],
-        #             *tile_offsets[2]
-        #         )
-        #     )
-
     def draw_dev_overlay(self):
         fps_text = self.dev_font.render(
             f"FPS: {int(res.clock.get_fps())}",
@@ -121,7 +106,7 @@ class MainGame(State):
         res.main_display.blit(fps_text, self.dev_margin)
 
         world_pos_text = self.dev_font.render(
-            f"mouse world pos: {int(self.mouse_pos_world.x)}, {int(self.mouse_pos_world.y)}",
+            f"mouse world pos: {floor(self.mouse_pos_world.x)}, {floor(self.mouse_pos_world.y)}",
             False,
             self.dev_color
         )
