@@ -140,12 +140,7 @@ class World:
         self.rect.topleft = self.surf_pos
 
     def draw(self, target_surface):
-
-        # TODO: Try blits() and compare its speed with blit().
-
-        for row in self.tiles_nested:
-            for tile in row:
-                self.surface.blit(tile.image, tile.topleft)
+        blit_list = [(tile.image, tile.topleft) for tile in self.tiles]
+        self.surface.blits(blit_list, False)
 
         target_surface.blit(self.surface, self.rect)
-
