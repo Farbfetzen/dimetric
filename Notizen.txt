@@ -32,6 +32,19 @@ Gegnertyp, Anzahl, Abstand, Trefferpunkte, Geschwindigkeit, etc.
 4. small_display wird vergrößert und ins main_display geblittet.
 
 
+Map Zoom:
+Nicht so einfach. Beachte:
+- beeinflusst Scrollgeschwindigkeit
+- beeinflusst Umrechnung von screen coords zu world coords
+- Soll ich in die Mitte des Fensters hineinzoomen oder dortin, wo die Maus gerade ist?
+- Reienfolge:
+    1. alles auf die world surf blitten
+    2. die surface bei Bedarf vergrößern
+    3. dann scrollen
+- Niemals die original world surf zoomen, sondern immer eine temp surf erzeugen,
+  das dann auf small display geblittet wird.
+
+
 TODO:
 * Probiere mal das logging Modul aus. Logge z.B. die Namen und Details der geladenen Levels. Ersetze print() dadurch beim debuggen.
 * Die Karte zoombar machen (Mausrad oder Bild hoch und Bild runter). Natürlich mit min und max Begrenzung der Zoomstufe.
