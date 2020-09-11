@@ -22,31 +22,20 @@ in umgekehrte x-Richtung blitten muss, damit sich hohe tiles nicht überlappen.
 So muss ich einfach nach aufsteigendem x und y sortieren und die Reihenfolge
 der Blits ist korrekt.
 
-Steuerung:
-- WASD: Karte scrollen
-- rechte Maustaste und Mausbewegung: Karte scrollen
-
-
 Je nach Schwierigkeitsgrad oder Spielmodus sind die Waves anders zusammengesetzt.
 Ich sollte das in einer Textdatei konfigurieren.:
 Gegnertyp, Anzahl, Abstand, Trefferpunkte, Geschwindigkeit, etc.
-
-
-Die Wegpunkte des Pfades der Gegner in der Karten-json festlegen. Nur eine Lane,
-denn die Tiles sind zu klein für mehr. Ansonsten werden die Gegner zu klein.
-Ich könnte aber auch alles einfach größer machen.
-
-Objekte, die sich flüssig über die Karte bewegen, also nicht an das Gitter gebunden sind.
-
-Objekte mit Wegpunkten über den Pfad steuern.
-
-Die Karte mit Maus und Tastatur verschieben. Aber begrenzt, dass man die Karte
-nicht komplett aus der Ansicht schieben kann.
-
-Start und Ende des Pfades in der Karte selbst mit "S" und "E" angeben anstatt als Koordinaten. In der palette dann "S": "path" und "E": "path" eintragen.
-
 
 1. Tiles und Objekte in der Welt werden auf world_surf geblittet.
 2. world_surf wird auf small_display geblittet, mit Versatz je nach scrolling.
 3. UI wird auch auf small_display geblittet.
 4. small_display wird vergrößert und ins main_display geblittet.
+
+
+TODO:
+* Probiere mal das logging Modul aus. Logge z.B. die Namen und Details der geladenen Levels. Ersetze print() dadurch beim debuggen.
+* Die Karte zoombar machen (Mausrad oder Bild hoch und Bild runter). Natürlich mit min und max Begrenzung der Zoomstufe.
+* Karte verschiebbar mit Pfeiltasten.
+* Das scrollen der Karte begrenzen, sodass man es nicht komplett aus dem Bild schieben kann.
+* Mobs spawnen und den Pfad folgen lassen.
+* UI: Erstmal nur ein Button zum spawnen eines Mobs.
