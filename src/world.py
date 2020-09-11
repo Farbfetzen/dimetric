@@ -48,7 +48,9 @@ class World:
 
         self.rect = self.surface.get_rect()
         self.rect.center = (const.SMALL_DISPLAY_WIDTH / 2, const.SMALL_DISPLAY_HEIGHT / 2)
-        self.surf_pos = pygame.Vector2(self.rect.topleft)  # for scrolling
+        # Use surf_pos to track the floating point position because
+        # rects can only hold integers.
+        self.surf_pos = pygame.Vector2(self.rect.topleft)
 
         self.tiles = []  # Used for blitting
         self.tiles_nested = []  # Useful for finding a tile by world coordinates
@@ -126,13 +128,12 @@ class World:
             return self.tiles_nested[y][x].type
         return "none"
 
-    def scroll(self, rel_x, rel_y):
-        # Multiply by ZOOM_FACTOR because the mouse moves in
-        # the main display but the map moves in small_display.
-        # Use surf_pos to track the floating point possition because
-        # rects can only hold integers.
-        self.surf_pos.x += rel_x * const.ZOOM_FACTOR
-        self.surf_pos.y += rel_y * const.ZOOM_FACTOR
+    def scroll(self, rel, mouse=False):
+        if mouse:
+            # Multiply by ZOOM_FACTOR because the mouse moves in
+            # the main display but the map moves in small_display.
+            rel = [r * const.ZOOM_FACTOR for r in rel]
+        self.surf_pos += rel
         self.rect.topleft = self.surf_pos
 
     def draw(self, target_surface):

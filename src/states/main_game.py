@@ -49,11 +49,19 @@ class MainGame(State):
                     self.done = True
                 # elif event.key == pygame.K_s:
                 #     self.next_wave()
+                elif event.key == pygame.K_LEFT:
+                    self.world.scroll((-const.TILE_WIDTH, 0))
+                elif event.key == pygame.K_RIGHT:
+                    self.world.scroll((const.TILE_WIDTH, 0))
+                elif event.key == pygame.K_UP:
+                    self.world.scroll((0, -const.TILE_HEIGHT))
+                elif event.key == pygame.K_DOWN:
+                    self.world.scroll((0, const.TILE_HEIGHT))
                 elif event.key == pygame.K_F1:
                     self.dev_overlay = not self.dev_overlay
             elif event.type == pygame.MOUSEMOTION and event.buttons[2]:
                 # buttons[2] is the right mouse button
-                self.world.scroll(*event.rel)
+                self.world.scroll(event.rel, mouse=True)
 
         # Convert mouse position to small_display coordinates:
         pos = pygame.mouse.get_pos()
