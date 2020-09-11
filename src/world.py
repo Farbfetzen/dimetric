@@ -16,42 +16,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-import math
 from collections import namedtuple
 
 import pygame
 
 import src.constants as const
-
-
-# class Tile:
-#     def __init__(self, name, images, x, y):
-#         self.name = name
-#         self.images = images
-#         self.image = images[name]
-#         self.is_highlighted = False
-#         self.rect = self.image.get_rect()
-#         self.world_pos = pygame.Vector2(math.floor(x), math.floor(y))
-#         # The difference from the camera_offset in small_display coordinates:
-#         self.offset = pygame.Vector2()
-#         self.offset.x = (self.world_pos.x - self.world_pos.y) * const.TILE_WIDTH_HALF
-#         self.offset.y = (self.world_pos.x + self.world_pos.y) * const.TILE_HEIGHT_HALF
-#         # Account for images taller than TILE_HEIGHT, like platforms and such.
-#         # The -1 is because the base rhombus is const.TILE_HEIGHT + 1 tall.
-#         self.offset.y -= self.rect.height - const.TILE_HEIGHT - 1
-#
-#     def toggle_highlight(self):
-#         self.is_highlighted = not self.is_highlighted
-#         if self.is_highlighted:
-#             self.image = self.images[self.name + "_highlight"]
-#         else:
-#             self.image = self.images[self.name]
-#
-#     def scroll(self, camera_offset):
-#         self.rect.midtop = self.offset + camera_offset
-#
-#     def draw(self, target_surface):
-#         target_surface.blit(self.image, self.rect)
 
 
 class World:
