@@ -68,6 +68,11 @@ class World:
         )
         self.map_scroll_limit.center = self.rect.center
 
+        # scrolling can either be -1, 0 or 1, meaning left/top, none or right/down
+        self.scrolling_x = 0
+        self.scrolling_y = 0
+        self.time_since_last_scroll = const.WORLD_SCROLL_DELAY
+
         self.tiles = []  # Used for blitting
         self.tiles_nested = []  # Useful for finding a tile by world coordinates
         Tile = namedtuple(
@@ -143,6 +148,22 @@ class World:
         if 0 <= x < self.sidelength and 0 <= y < self.sidelength:
             return self.tiles_nested[y][x].type
         return "none"
+
+    def update(self, dt):
+        if self.time_since_last_scroll < const.WORLD_SCROLL_DELAY:
+            self.time_since_last_scroll += dt
+        elif self.scrolling_x != 0 or self.scrolling_y != 0:
+            self.scroll((
+                self.scrolling_x * const.WORLD_SCROLL_DISTANCE_X,
+                self.scrolling_y * const.WORLD_SCROLL_DISTANCE_Y
+            ))
+            # Don't set the timer to 0. Instead make the next scroll come
+            # earlier. Example: time is 113 and delay is 100. This means time
+            # gets set to 13 so the next change comes earlier by 13 ms.
+            # Otherwise the 13 ms would get lost and overall the actual delays
+            # would be longer than the desired 100.
+            self.time_since_last_scroll = \
+                self.time_since_last_scroll - const.WORLD_SCROLL_DELAY
 
     def scroll(self, rel, mouse=False):
         if mouse:

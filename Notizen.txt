@@ -44,6 +44,8 @@ Nicht so einfach. Beachte:
     3. dann scrollen
 - Niemals die original world surf zoomen, sondern immer eine temp surf erzeugen,
   das dann auf small display geblittet wird.
+- Ich denke die Scrolldistanz in Pixeln sollte unbeeinflusst bleiben. Probiere
+  mal, wie das aussieht.
 
 
 TODO:
@@ -51,6 +53,3 @@ TODO:
 * Die Karte zoombar machen (Mausrad oder Bild hoch und Bild runter). Natürlich mit min und max Begrenzung der Zoomstufe.
 * Mobs spawnen und den Pfad folgen lassen.
 * UI: Erstmal nur ein Button zum spawnen eines Mobs.
-* Scrollen der Karte durch gedrückt halten der Pfeiltasten. Auch diagonal.
-  Am besten in der world einen state speichern is_scrolling und ein delay. Das
-  dann mit keydown und keyup steuern.

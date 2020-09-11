@@ -50,15 +50,24 @@ class MainGame(State):
                 # elif event.key == pygame.K_s:
                 #     self.next_wave()
                 elif event.key == pygame.K_LEFT:
-                    self.world.scroll((-const.TILE_WIDTH, 0))
+                    self.world.scrolling_x -= 1
                 elif event.key == pygame.K_RIGHT:
-                    self.world.scroll((const.TILE_WIDTH, 0))
+                    self.world.scrolling_x += 1
                 elif event.key == pygame.K_UP:
-                    self.world.scroll((0, -const.TILE_HEIGHT))
+                    self.world.scrolling_y -= 1
                 elif event.key == pygame.K_DOWN:
-                    self.world.scroll((0, const.TILE_HEIGHT))
+                    self.world.scrolling_y += 1
                 elif event.key == pygame.K_F1:
                     self.dev_overlay = not self.dev_overlay
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    self.world.scrolling_x += 1
+                elif event.key == pygame.K_RIGHT:
+                    self.world.scrolling_x -= 1
+                elif event.key == pygame.K_UP:
+                    self.world.scrolling_y += 1
+                elif event.key == pygame.K_DOWN:
+                    self.world.scrolling_y -= 1
             elif event.type == pygame.MOUSEMOTION and event.buttons[2]:
                 # buttons[2] is the right mouse button
                 self.world.scroll(event.rel, mouse=True)
@@ -70,9 +79,9 @@ class MainGame(State):
         self.mouse_pos_world.update(self.world.small_display_to_world_pos(*self.mouse_pos))
 
     def update(self, dt):
+        self.world.update(dt)
         # for e in self.enemies:
         #     e.update(dt)
-        pass
 
     def draw(self):
         res.small_display.fill((0, 0, 0))
