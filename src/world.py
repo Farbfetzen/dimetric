@@ -21,6 +21,7 @@ from collections import namedtuple
 import pygame
 
 import src.constants as const
+import src.resources as res
 
 
 class World:
@@ -36,14 +37,14 @@ class World:
         # Add a margin of some tile sizes so other stuff fits on the world surface, too.
         margin_x = const.TILE_WIDTH * 2
         margin_y = const.TILE_HEIGHT * 5
-        self.surf_width = self.sidelength * const.TILE_WIDTH + margin_x
-        self.surf_height = self.sidelength * const.TILE_HEIGHT + margin_y
-        self.surface = pygame.Surface((self.surf_width, self.surf_height))
+        surf_width = self.sidelength * const.TILE_WIDTH + margin_x
+        surf_height = self.sidelength * const.TILE_HEIGHT + margin_y
+        self.surface = pygame.Surface((surf_width, surf_height))
 
         # Center the map on the world surface. Offset is the position of
         # (0, 0) world coordinates on the world surface.
-        self.offset_x = self.surf_width // 2
-        self.offset_y = (self.surf_height // 2
+        self.offset_x = surf_width // 2
+        self.offset_y = (surf_height // 2
                          - self.sidelength * const.TILE_HEIGHT_HALF)
 
         self.rect = self.surface.get_rect()
@@ -51,6 +52,21 @@ class World:
         # Use surf_pos to track the floating point position because
         # rects can only hold integers.
         self.surf_pos = pygame.Vector2(self.rect.topleft)
+
+        # Collision rect for limiting the map scrolling. Makes sure that
+        # parts of the map remain visible.
+        # FIXME: This will probably have to be modified when I implement zooming.
+        #  Test by zooming in really close or far away and then scrolling to
+        #  the edges.
+        outer_margin_x = surf_width
+        outer_margin_y = surf_height
+        self.map_scroll_limit = pygame.Rect(
+            0,
+            0,
+            const.SMALL_DISPLAY_WIDTH + outer_margin_x,
+            const.SMALL_DISPLAY_HEIGHT + outer_margin_y
+        )
+        self.map_scroll_limit.center = self.rect.center
 
         self.tiles = []  # Used for blitting
         self.tiles_nested = []  # Useful for finding a tile by world coordinates
@@ -135,6 +151,11 @@ class World:
             rel = [r * const.ZOOM_FACTOR for r in rel]
         self.surf_pos += rel
         self.rect.topleft = self.surf_pos
+
+        # Limit scrolling such that the map does not disappear completely
+        # from the screen:
+        self.rect.clamp_ip(self.map_scroll_limit)
+        self.surf_pos.update(self.rect.topleft)
 
     def draw(self, target_surface):
         blit_list = [(tile.image, tile.topleft) for tile in self.tiles]

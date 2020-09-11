@@ -35,6 +35,7 @@ Gegnertyp, Anzahl, Abstand, Trefferpunkte, Geschwindigkeit, etc.
 Map Zoom:
 Nicht so einfach. Beachte:
 - beeinflusst Scrollgeschwindigkeit
+- beeinflusst Begrenzung der Scrollweite
 - beeinflusst Umrechnung von screen coords zu world coords
 - Soll ich in die Mitte des Fensters hineinzoomen oder dortin, wo die Maus gerade ist?
 - Reienfolge:
@@ -48,6 +49,8 @@ Nicht so einfach. Beachte:
 TODO:
 * Probiere mal das logging Modul aus. Logge z.B. die Namen und Details der geladenen Levels. Ersetze print() dadurch beim debuggen.
 * Die Karte zoombar machen (Mausrad oder Bild hoch und Bild runter). Natürlich mit min und max Begrenzung der Zoomstufe.
-* Das scrollen der Karte begrenzen, sodass man es nicht komplett aus dem Bild schieben kann.
 * Mobs spawnen und den Pfad folgen lassen.
 * UI: Erstmal nur ein Button zum spawnen eines Mobs.
+* Scrollen der Karte durch gedrückt halten der Pfeiltasten. Auch diagonal.
+  Am besten in der world einen state speichern is_scrolling und ein delay. Das
+  dann mit keydown und keyup steuern.
