@@ -88,6 +88,8 @@ class MainGame(State):
 
         self.world.draw(res.small_display)
 
+        # Draw to small_display before that is scaled up. This is why this
+        # line is outside draw_dev_overlay().
         if self.dev_overlay:
             pygame.draw.rect(res.small_display, self.dev_color, self.world.rect, 1)
 
