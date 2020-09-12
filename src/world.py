@@ -173,10 +173,13 @@ class World:
         self.surf_pos += rel
         self.rect.topleft = self.surf_pos
 
-        # Limit scrolling such that the map does not disappear completely
-        # from the screen:
-        self.rect.clamp_ip(self.map_scroll_limit)
-        self.surf_pos.update(self.rect.topleft)
+        if not self.map_scroll_limit.contains(self.rect):
+            # Limit scrolling such that the map does not disappear completely
+            # from the screen. Only do this if the rect is not completely inside
+            # the limit because otherwise surf_pos will constantly get changed
+            # to integer rect coords which breaks scrolling with the mouse.
+            self.rect.clamp_ip(self.map_scroll_limit)
+            self.surf_pos.update(self.rect.topleft)
 
     def draw(self, target_surface):
         blit_list = [(tile.image, tile.topleft) for tile in self.tiles]
