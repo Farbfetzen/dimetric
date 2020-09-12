@@ -33,19 +33,10 @@ Gegnertyp, Anzahl, Abstand, Trefferpunkte, Geschwindigkeit, etc.
 
 
 Map Zoom:
-Nicht so einfach. Beachte:
-- beeinflusst Scrollgeschwindigkeit
-- beeinflusst Begrenzung der Scrollweite
-- beeinflusst Umrechnung von screen coords zu world coords
-- Soll ich in die Mitte des Fensters hineinzoomen oder dortin, wo die Maus gerade ist?
-- Reienfolge:
-    1. alles auf die world surf blitten
-    2. die surface bei Bedarf vergrößern
-    3. dann scrollen
-- Niemals die original world surf zoomen, sondern immer eine temp surf erzeugen,
-  das dann auf small display geblittet wird.
-- Ich denke die Scrolldistanz in Pixeln sollte unbeeinflusst bleiben. Probiere
-  mal, wie das aussieht.
+Mache es so, wie in Terra Nil. Behalte die Scrollgeschwindigkeit bei, sowohl 
+mit Maus als auch mit Tastatur. Zoome einfach in die Mitte der Surface hinen. Heißt
+Mitte vor dem Zoom == Mitte nach dem Zoom. Bedenke aber die Umrechnung der
+Mauskoordinaten in world-Koordinaten.
 
 
 TODO:
@@ -56,3 +47,4 @@ TODO:
 * Highlighte die Platform unter der Maus. Hole die Logik dazu aus der dev
   Funktion raus. Blitte einfach ein highlight sprite oben auf die Platform drauf.
   Das wird nützlich sein später für das Bauen.
+  Denke ich brauche dafür auch ein neue Koordinate bzw. Priorität. Denn Tile und das dazugehörige Highlight haben die gleiche world Koordinate, aber das highlight muss nach dem Tile geblittet werden. Berücksichtige das bei der Sortierung.
