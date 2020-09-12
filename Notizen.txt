@@ -48,6 +48,16 @@ Nicht so einfach. Beachte:
   mal, wie das aussieht.
 
 
+Mouse collission:
+1. Maus-Bildschirmkoordinaten werden um die Höhe der Platformen nach unte verschoben.
+2. Rechne diese Koordinaten in World-Koordinaten um.
+3. Ist an diesen Koordinaten eine Tile? Ist es eine Platform? Dann ist das ein Treffer und fertig.
+4. Ist da ein Tile aber keine Platform, dann schaue bei den ursprünglichen Mauskoordinaten nach.
+Auf diese Weise kann die Maus über dem erhöhten Teil eines Platform-Tiles sein,
+welches einen Pfad verdeckt, und die Platform hat vorrang.
+
+
+
 TODO:
 * Probiere mal das logging Modul aus. Logge z.B. die Namen und Details der geladenen Levels. Ersetze print() dadurch beim debuggen.
 * Die Karte zoombar machen (Mausrad oder Bild hoch und Bild runter). Natürlich mit min und max Begrenzung der Zoomstufe.

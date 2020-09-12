@@ -50,24 +50,24 @@ class MainGame(State):
                 # elif event.key == pygame.K_s:
                 #     self.next_wave()
                 elif event.key == pygame.K_LEFT:
-                    self.world.scrolling_x -= 1
+                    self.world.scroll_direction.x -= 1
                 elif event.key == pygame.K_RIGHT:
-                    self.world.scrolling_x += 1
+                    self.world.scroll_direction.x += 1
                 elif event.key == pygame.K_UP:
-                    self.world.scrolling_y -= 1
+                    self.world.scroll_direction.y -= 1
                 elif event.key == pygame.K_DOWN:
-                    self.world.scrolling_y += 1
+                    self.world.scroll_direction.y += 1
                 elif event.key == pygame.K_F1:
                     self.dev_overlay = not self.dev_overlay
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT:
-                    self.world.scrolling_x += 1
+                    self.world.scroll_direction.x += 1
                 elif event.key == pygame.K_RIGHT:
-                    self.world.scrolling_x -= 1
+                    self.world.scroll_direction.x -= 1
                 elif event.key == pygame.K_UP:
-                    self.world.scrolling_y += 1
+                    self.world.scroll_direction.y += 1
                 elif event.key == pygame.K_DOWN:
-                    self.world.scrolling_y -= 1
+                    self.world.scroll_direction.y -= 1
             elif event.type == pygame.MOUSEMOTION and event.buttons[2]:
                 # buttons[2] is the right mouse button
                 self.world.scroll(event.rel, mouse=True)

@@ -68,9 +68,9 @@ class World:
         )
         self.map_scroll_limit.center = self.rect.center
 
-        # scrolling can either be -1, 0 or 1, meaning left/top, none or right/down
-        self.scrolling_x = 0
-        self.scrolling_y = 0
+        # Scroll can be -1, 0 or 1. Meaning left/up, none or right/down.
+        self.scroll_direction = pygame.Vector2()
+        self.scroll_distance = pygame.Vector2(const.WORLD_SCROLL_DISTANCE)
         self.time_since_last_scroll = const.WORLD_SCROLL_DELAY
 
         self.tiles = []  # Used for blitting
@@ -152,11 +152,8 @@ class World:
     def update(self, dt):
         if self.time_since_last_scroll < const.WORLD_SCROLL_DELAY:
             self.time_since_last_scroll += dt
-        elif self.scrolling_x != 0 or self.scrolling_y != 0:
-            self.scroll((
-                self.scrolling_x * const.WORLD_SCROLL_DISTANCE_X,
-                self.scrolling_y * const.WORLD_SCROLL_DISTANCE_Y
-            ))
+        elif self.scroll_direction != (0, 0):
+            self.scroll(self.scroll_direction.elementwise() * const.WORLD_SCROLL_DISTANCE)
             # Don't set the timer to 0. Instead make the next scroll come
             # earlier. Example: time is 113 and delay is 100. This means time
             # gets set to 13 so the next change comes earlier by 13 ms.
