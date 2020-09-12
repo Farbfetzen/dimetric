@@ -28,7 +28,7 @@ def run():
     state = states["MainGame"]
 
     while True:
-        dt = res.clock.tick(const.FPS)
+        dt = res.clock.tick(const.FPS) / 1000  # in seconds
 
         if pygame.event.get(pygame.QUIT):
             break

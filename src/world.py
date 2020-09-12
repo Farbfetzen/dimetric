@@ -70,8 +70,7 @@ class World:
 
         # Scroll can be -1, 0 or 1. Meaning left/up, none or right/down.
         self.scroll_direction = pygame.Vector2()
-        self.scroll_distance = pygame.Vector2(const.WORLD_SCROLL_DISTANCE)
-        self.time_since_last_scroll = const.WORLD_SCROLL_DELAY
+        self.scroll_distance = pygame.Vector2(const.WORLD_SCROLL_SPEED)
 
         self.tiles = []  # Used for blitting
         self.tiles_nested = []  # Useful for finding a tile by world coordinates
@@ -154,22 +153,18 @@ class World:
         return None
 
     def update(self, dt):
-        if self.time_since_last_scroll < const.WORLD_SCROLL_DELAY:
-            self.time_since_last_scroll += dt
-        elif self.scroll_direction != (0, 0):
-            self.scroll(self.scroll_direction.elementwise() * const.WORLD_SCROLL_DISTANCE)
-            # Don't set the timer to 0. Instead make the next scroll come
-            # earlier. Example: time is 113 and delay is 100. This means time
-            # gets set to 13 so the next change comes earlier by 13 ms.
-            # Otherwise the 13 ms would get lost and overall the actual delays
-            # would be longer than the desired 100.
-            self.time_since_last_scroll = \
-                self.time_since_last_scroll - const.WORLD_SCROLL_DELAY
+        if self.scroll_direction != (0, 0):
+            self.scroll(
+                self.scroll_direction.elementwise() * const.WORLD_SCROLL_SPEED * dt
+            )
 
     def scroll(self, rel, mouse=False):
         if mouse:
             # Multiply by ZOOM_FACTOR because the mouse moves in
             # the main display but the map moves in small_display.
+            # TODO: Put this into the main_game state or somewhere else because
+            #  this should be done only once, not only for the world. This will
+            #  also affect the HUD, bulding, etc. And make it a Vector2.
             rel = [r * const.ZOOM_FACTOR for r in rel]
         self.surf_pos += rel
         self.rect.topleft = self.surf_pos
