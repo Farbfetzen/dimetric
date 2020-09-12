@@ -17,11 +17,11 @@
 
 
 from collections import namedtuple
+from math import floor
 
 import pygame
 
 import src.constants as const
-import src.resources as res
 
 
 class World:
@@ -124,14 +124,9 @@ class World:
         y = (world_x + world_y) * const.TILE_HEIGHT_HALF + self.offset_y
         return x, y
 
-    def small_display_to_world_pos(self, x, y):
+    def small_display_to_world_pos(self, x, y, tile=False):
         # Adapted from the code example in wikipedia:
         # https://en.wikipedia.org/wiki/Isometric_video_game_graphics#Mapping_screen_to_world_coordinates
-
-        # Remember: Coordinates are floats. If you want to allow negative
-        # tile positions then you must use math.floor() and not int().
-        # int() rounds towards zero which would introduce an off-by-one error
-        # for negative tile positions.
 
         # Get x and y relative to the topleft corner of the bounding rectangle
         # of the map:
@@ -142,12 +137,21 @@ class World:
         virt_y = y / const.TILE_HEIGHT
         world_x = virt_y + (virt_x - self.sidelength / 2)
         world_y = virt_y - (virt_x - self.sidelength / 2)
+
+        # Remember: Coordinates are floats. If you want to allow negative
+        # tile positions then you must use math.floor() and not int().
+        # int() rounds towards zero which would introduce an off-by-one error
+        # for negative tile positions.
+        if tile:
+            world_x = floor(world_x)
+            world_y = floor(world_y)
+
         return world_x, world_y
 
     def get_tile_at(self, x, y):
         if 0 <= x < self.sidelength and 0 <= y < self.sidelength:
             return self.tiles_nested[y][x].type
-        return "none"
+        return None
 
     def update(self, dt):
         if self.time_since_last_scroll < const.WORLD_SCROLL_DELAY:

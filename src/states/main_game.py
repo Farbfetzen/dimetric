@@ -16,11 +16,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from math import floor
-
 import pygame
 
-import src.world
 import src.constants as const
 import src.resources as res
 from src.states.state import State
@@ -37,7 +34,7 @@ class MainGame(State):
 
         # Developer overlay:
         self.dev_overlay = False
-        self.dev_font = pygame.font.SysFont("monospace", 18)
+        self.dev_font = pygame.font.SysFont("monospace", 15)
         self.dev_color = (255, 255, 255)
         self.dev_line_height = self.dev_font.get_height()
         self.dev_margin = pygame.Vector2(10, 10)
@@ -124,27 +121,25 @@ class MainGame(State):
         )
         res.main_display.blit(fps_text, self.dev_margin)
 
-        mouse_pos_tile_x = floor(self.mouse_pos_world.x)
-        mouse_pos_tile_y = floor(self.mouse_pos_world.y)
-        world_pos_text = self.dev_font.render(
-            f"mouse world pos: {mouse_pos_tile_x}, {mouse_pos_tile_y}",
-            False,
-            self.dev_color
-        )
-        res.main_display.blit(
-            world_pos_text,
-            (self.dev_margin.x, self.dev_margin.y * 3)
-        )
-
-        tile_at_mouse = self.world.get_tile_at(mouse_pos_tile_x, mouse_pos_tile_y)
+        # Check which tile is at the mouse position. Also checks if the mouse
+        # is over the raised part of a platform but not its base.
+        x, y = self.mouse_pos
+        for dy in range(const.PLATFORM_HEIGHT, -1, -1):
+            mouse_tile_x, mouse_tile_y = self.world.small_display_to_world_pos(
+                x, y + dy, tile=True
+            )
+            tile_at_mouse = self.world.get_tile_at(mouse_tile_x, mouse_tile_y)
+            if tile_at_mouse == "platform":
+                # Ignore tiles behind the platform
+                break
         mouse_tile_text = self.dev_font.render(
-            f"tile at mouse: {tile_at_mouse}",
+            f"tile at mouse: {tile_at_mouse} ({mouse_tile_x}, {mouse_tile_y})",
             False,
             self.dev_color
         )
         res.main_display.blit(
             mouse_tile_text,
-            (self.dev_margin.x, self.dev_margin.y * 5)
+            (self.dev_margin.x, self.dev_margin.y * 3)
         )
 
     # def next_wave(self):
