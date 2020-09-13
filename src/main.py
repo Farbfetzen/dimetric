@@ -50,21 +50,6 @@ def run():
         state.draw()
         pygame.transform.scale(res.small_display, const.MAIN_DISPLAY_SIZE, res.main_display)
 
-        # DEBUG
-        # pygame.draw.line(
-        #     res.main_display,
-        #     (255, 0, 255),
-        #     (const.WINDOW_WIDTH // 2, 0),
-        #     (const.WINDOW_WIDTH // 2, const.WINDOW_HEIGHT)
-        # )
-        # pygame.draw.line(
-        #     res.main_display,
-        #     (255, 0, 255),
-        #     (0, const.WINDOW_HEIGHT // 2),
-        #     (const.WINDOW_WIDTH, const.WINDOW_HEIGHT // 2)
-        # )
-        # ---
-
         if state.dev_overlay:
             state.draw_dev_overlay()
         pygame.display.flip()

@@ -120,19 +120,6 @@ class MainGame(State):
         #         )
         #     )
 
-        # DEBUG:
-        # pos = ((0, 0), (self.world.sidelength, self.world.sidelength),
-        #        (0, self.world.sidelength), (self.world.sidelength, 0))
-        # col = ((255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255))
-        # for p, c in zip(pos, col):
-        #     pygame.draw.circle(
-        #         res.small_display,
-        #         c,
-        #         self.camera.world_to_screen(pygame.Vector2(p)),
-        #         2
-        #     )
-        # ---
-
     def draw_dev_overlay(self):
         fps_text = self.dev_font.render(
             f"FPS: {int(res.clock.get_fps())}",
