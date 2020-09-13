@@ -19,7 +19,7 @@ import os
 import pygame
 import json
 
-import src.constants as const
+import src.settings as settings
 import src.world
 
 
@@ -27,7 +27,7 @@ def _load_images():
     images_ = {}
     for filename in os.listdir("images"):
         image = pygame.image.load(os.path.join("images", filename)).convert()
-        image.set_colorkey(const.COLORKEY)
+        image.set_colorkey(settings.COLORKEY)
         name = os.path.splitext(filename)[0]
         images_[name] = image
     return images_
@@ -43,8 +43,8 @@ def _build_worlds(images_):
 
 
 # The display must be created before loading images:
-main_display = pygame.display.set_mode(const.MAIN_DISPLAY_SIZE)
-small_display = pygame.Surface(const.SMALL_DISPLAY_SIZE)
+main_display = pygame.display.set_mode(settings.MAIN_DISPLAY_SIZE)
+small_display = pygame.Surface(settings.SMALL_DISPLAY_SIZE)
 clock = pygame.time.Clock()
 
 images = _load_images()

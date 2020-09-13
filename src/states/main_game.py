@@ -18,7 +18,7 @@
 
 import pygame
 
-import src.constants as const
+import src.settings as settings
 import src.resources as res
 from src.states.state import State
 from src.enemy import Enemy
@@ -70,13 +70,13 @@ class MainGame(State):
             elif event.type == pygame.MOUSEMOTION and event.buttons[2]:
                 # buttons[2] is the right mouse button
                 self.mouse_rel.update(event.rel)
-                self.mouse_rel /= const.ZOOM
+                self.mouse_rel /= settings.MAGNIFICATION
                 self.world.scroll(self.mouse_rel)
 
         # Convert mouse position to small_display coordinates:
         pos = pygame.mouse.get_pos()
-        self.mouse_pos.x = pos[0] / const.ZOOM
-        self.mouse_pos.y = pos[1] / const.ZOOM
+        self.mouse_pos.x = pos[0] / settings.MAGNIFICATION
+        self.mouse_pos.y = pos[1] / settings.MAGNIFICATION
         self.mouse_pos_world.update(self.world.small_display_to_world_pos(*self.mouse_pos))
 
     def update(self, dt):
@@ -92,7 +92,7 @@ class MainGame(State):
         # snapping the towers to the platforms.
 
         tiles = [None, None]
-        for i, dy in enumerate((const.PLATFORM_HEIGHT, 0)):
+        for i, dy in enumerate((settings.PLATFORM_HEIGHT, 0)):
             tile_x, tile_y = self.world.small_display_to_world_pos(
                 self.mouse_pos.x,
                 self.mouse_pos.y + dy,
@@ -133,7 +133,7 @@ class MainGame(State):
         pygame.draw.rect(
             res.main_display,
             self.dev_color,
-            pygame.Rect([r * const.ZOOM for r in self.world.rect]),
+            pygame.Rect([r * settings.MAGNIFICATION for r in self.world.rect]),
             1
         )
 
