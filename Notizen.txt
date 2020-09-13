@@ -39,6 +39,12 @@ Mitte vor dem Zoom == Mitte nach dem Zoom. Bedenke aber die Umrechnung der
 Mauskoordinaten in world-Koordinaten.
 
 
+Falls ich mal was mit Kollisionen machen will: Ich kann Rects auch in
+world Koordinaten nutzen. Dann müsste ich aber die world Koordinaten auf
+einer größeren Skala aufziehen. Die Tiles wären dann z.B. an (100, 200) statt
+(1, 2). Muss sein, weil Rects nur int kennen.
+
+
 TODO:
 * Probiere mal das logging Modul aus. Logge z.B. die Namen und Details der geladenen Levels. Ersetze print() dadurch beim debuggen.
 * Die Karte zoombar machen (Mausrad oder Bild hoch und Bild runter). Natürlich mit min und max Begrenzung der Zoomstufe.

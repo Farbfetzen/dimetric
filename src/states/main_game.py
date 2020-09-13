@@ -86,19 +86,24 @@ class MainGame(State):
         #     e.update(dt)
 
     def get_tile_at_mouse(self):
-        """Check which tile is at the mouse position. Also checks if
-        the mouse is over the raised part of a platform but not its base.
-        """
-        for dy in range(const.PLATFORM_HEIGHT, -1, -1):
+        # I want to detect a platform only when the mouse is over the raised
+        # part. The sides and base don't matter. I hope this will simplify
+        # snapping the towers to the platforms.
+
+        tiles = [None, None]
+        for i, dy in enumerate((const.PLATFORM_HEIGHT, 0)):
             tile_x, tile_y = self.world.small_display_to_world_pos(
                 self.mouse_pos.x,
                 self.mouse_pos.y + dy,
                 tile=True
             )
-            self.tile_at_mouse = self.world.get_tile_at(tile_x, tile_y)
-            if (self.tile_at_mouse is not None
-                    and self.tile_at_mouse.type == "platform"):
-                break  # Ignore tiles behind the platform
+            tiles[i] = self.world.get_tile_at(tile_x, tile_y)
+        if tiles[0] is not None and tiles[0].type == "platform":
+            self.tile_at_mouse = tiles[0]
+        elif tiles[1] is not None and tiles[1].type == "path":
+            self.tile_at_mouse = tiles[1]
+        else:
+            self.tile_at_mouse = None
 
     def draw(self):
         res.small_display.fill((0, 0, 0))
