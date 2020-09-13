@@ -95,9 +95,11 @@ class World:
                         path_end = pos
                 image = images[tile_type]
                 x, y = self.world_pos_to_world_surf(world_x, world_y)
-                x -= image.get_width() / 2
-                y -= image.get_height() - const.TILE_HEIGHT
-                tile = Tile(tile_type, image, world_x, world_y, (x, y))
+                # x and y locate the top corner of the base of the tile.
+                # Convert to topleft of the image:
+                top = x - image.get_width() / 2
+                left = y - (image.get_height() - const.TILE_HEIGHT)
+                tile = Tile(tile_type, image, world_x, world_y, (top, left))
                 self.tiles_nested[world_y].append(tile)
                 self.tiles.append(tile)
 
@@ -149,7 +151,7 @@ class World:
 
     def get_tile_at(self, x, y):
         if 0 <= x < self.sidelength and 0 <= y < self.sidelength:
-            return self.tiles_nested[y][x].type
+            return self.tiles_nested[y][x]
         return None
 
     def update(self, dt):

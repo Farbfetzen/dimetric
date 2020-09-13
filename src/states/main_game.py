@@ -32,6 +32,7 @@ class MainGame(State):
         self.mouse_pos = pygame.Vector2()
         self.mouse_pos_world = pygame.Vector2()
         self.mouse_rel = pygame.Vector2()
+        self.tile_at_mouse = None
 
         # Developer overlay:
         self.dev_overlay = False
@@ -80,8 +81,24 @@ class MainGame(State):
 
     def update(self, dt):
         self.world.update(dt)
+        self.get_tile_at_mouse()
         # for e in self.enemies:
         #     e.update(dt)
+
+    def get_tile_at_mouse(self):
+        """Check which tile is at the mouse position. Also checks if
+        the mouse is over the raised part of a platform but not its base.
+        """
+        for dy in range(const.PLATFORM_HEIGHT, -1, -1):
+            tile_x, tile_y = self.world.small_display_to_world_pos(
+                self.mouse_pos.x,
+                self.mouse_pos.y + dy,
+                tile=True
+            )
+            self.tile_at_mouse = self.world.get_tile_at(tile_x, tile_y)
+            if (self.tile_at_mouse is not None
+                    and self.tile_at_mouse.type == "platform"):
+                break  # Ignore tiles behind the platform
 
     def draw(self):
         res.small_display.fill((0, 0, 0))
@@ -124,19 +141,16 @@ class MainGame(State):
         )
         res.main_display.blit(fps_text, self.dev_margin)
 
-        # Check which tile is at the mouse position. Also checks if the mouse
-        # is over the raised part of a platform but not its base.
-        x, y = self.mouse_pos
-        for dy in range(const.PLATFORM_HEIGHT, -1, -1):
-            mouse_tile_x, mouse_tile_y = self.world.small_display_to_world_pos(
-                x, y + dy, tile=True
+        if self.tile_at_mouse is None:
+            tile_info = "tile at mouse: none"
+        else:
+            tile_info = (
+                f"tile at mouse: {self.tile_at_mouse.type}" +
+                f" ({self.tile_at_mouse.world_x}, " +
+                f"{self.tile_at_mouse.world_y})"
             )
-            tile_at_mouse = self.world.get_tile_at(mouse_tile_x, mouse_tile_y)
-            if tile_at_mouse == "platform":
-                # Ignore tiles behind the platform
-                break
         mouse_tile_text = self.dev_font.render(
-            f"tile at mouse: {tile_at_mouse} ({mouse_tile_x}, {mouse_tile_y})",
+            tile_info,
             False,
             self.dev_color
         )
