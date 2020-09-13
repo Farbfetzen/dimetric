@@ -35,7 +35,7 @@ class MainGame(State):
         self.tile_at_mouse = None
 
         # Developer overlay:
-        self.dev_overlay = False
+        self.dev_overlay = True
         self.dev_font = pygame.font.SysFont("monospace", 15)
         self.dev_color = (255, 255, 255)
         self.dev_line_height = self.dev_font.get_height()
@@ -82,6 +82,7 @@ class MainGame(State):
     def update(self, dt):
         self.world.update(dt)
         self.get_tile_at_mouse()
+        self.highlight_tile_at_mouse()
         # for e in self.enemies:
         #     e.update(dt)
 
@@ -104,6 +105,14 @@ class MainGame(State):
             self.tile_at_mouse = tiles[1]
         else:
             self.tile_at_mouse = None
+
+    def highlight_tile_at_mouse(self):
+        if self.tile_at_mouse is None:
+            self.world.highlight.layer = -1
+            return
+        self.world.highlight.layer = 1
+        self.world.highlight.world_pos.update(self.tile_at_mouse.world_pos)
+        self.world.highlight.surface_pos.update(self.tile_at_mouse.surface_pos)
 
     def draw(self):
         res.small_display.fill((0, 0, 0))
@@ -138,8 +147,8 @@ class MainGame(State):
         else:
             tile_info = (
                 f"tile at mouse: {self.tile_at_mouse.type}" +
-                f" ({self.tile_at_mouse.world_x}, " +
-                f"{self.tile_at_mouse.world_y})"
+                f" ({self.tile_at_mouse.world_pos.x:.0f}, " +
+                f"{self.tile_at_mouse.world_pos.y:.0f})"
             )
         mouse_tile_text = self.dev_font.render(
             tile_info,

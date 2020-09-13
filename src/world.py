@@ -16,7 +16,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from collections import namedtuple
 from math import floor
 
 import pygame
@@ -24,8 +23,20 @@ import pygame
 import src.constants as const
 
 
+class Tile:
+    def __init__(self, type, image, world_pos, surface_pos, layer=0):
+        # TODO: Learn about data classes, maybe they fit better here.
+        self.type = type
+        self.image = image
+        self.world_pos = world_pos
+        self.surface_pos = surface_pos
+        self.layer = layer
+        self.blit_info = (self.image, self.surface_pos)
+
+
 class World:
     def __init__(self, world_data, images):
+        # FIXME: This init is very long. Maybe break it up into smaller functions?
         self.name = world_data["name"]
         self.sidelength = len(world_data["map"])
 
@@ -57,7 +68,7 @@ class World:
         # parts of the map remain visible.
         # FIXME: This will probably have to be modified when I implement zooming.
         #  Test by zooming in really close or far away and then scrolling to
-        #  the edges.
+        #  the edges. Maybe I could adjust the map_scroll_limit rect when zooming?
         outer_margin_x = surf_width
         outer_margin_y = surf_height
         self.map_scroll_limit = pygame.Rect(
@@ -72,36 +83,35 @@ class World:
         self.scroll_direction = pygame.Vector2()
         self.scroll_distance = pygame.Vector2(const.WORLD_SCROLL_SPEED)
 
-        self.tiles = []  # Used for blitting
-        self.tiles_nested = []  # Useful for finding a tile by world coordinates
-        Tile = namedtuple(
-            "Tile",
-            ("type", "image", "world_x", "world_y", "topleft")
-        )
+        self.visible_objects = []  # Used for blitting
+        self.map_tiles = []  # Useful for finding a tile by world coordinates
+
         path_start = None
         path_end = None
-        self.path_raw = set()
+        self.path_raw = []
         for world_y, row in enumerate(world_data["map"]):
-            self.tiles_nested.append([])
+            self.map_tiles.append([])
             for world_x, symbol in enumerate(row):
                 tile_type = world_data["palette"][symbol]
+                world_pos = pygame.Vector2(world_x, world_y)
                 if tile_type == "path":
-                    pos = (world_x, world_y)
-                    self.path_raw.add(pos)
+                    self.path_raw.append(world_pos)
                     if symbol == "S":
-                        path_start = pos
-                        self.path_raw.remove(pos)
+                        path_start = world_pos
+                        self.path_raw.remove(world_pos)
                     elif symbol == "E":
-                        path_end = pos
+                        path_end = world_pos
                 image = images[tile_type]
                 x, y = self.world_pos_to_world_surf(world_x, world_y)
                 # x and y locate the top corner of the base of the tile.
                 # Convert to topleft of the image:
-                top = x - image.get_width() / 2
-                left = y - (image.get_height() - const.TILE_HEIGHT)
-                tile = Tile(tile_type, image, world_x, world_y, (top, left))
-                self.tiles_nested[world_y].append(tile)
-                self.tiles.append(tile)
+                surface_pos = pygame.Vector2(
+                    x - image.get_width() / 2,
+                    y - (image.get_height() - const.TILE_HEIGHT)
+                )
+                tile = Tile(tile_type, image, world_pos, surface_pos)
+                self.map_tiles[world_y].append(tile)
+                self.visible_objects.append(tile)
 
         if path_start is None or path_end is None:
             raise ValueError(f"Missing path start or end in map '{self.name}'.")
@@ -110,6 +120,7 @@ class World:
             x, y = self.path[-1]
             for neighbor in ((x+1, y), (x-1, y), (x, y+1), (x, y-1)):
                 if neighbor in self.path_raw:
+                    neighbor = pygame.Vector2(neighbor)
                     self.path.append(neighbor)
                     self.path_raw.remove(neighbor)
                     break
@@ -117,6 +128,22 @@ class World:
                 raise ValueError(f"Malformed path in map '{self.name}': Neighbor not found.")
         if self.path[-1] != path_end:
             raise ValueError(f"Malformed path in map '{self.name}': Ends at wrong position.")
+
+        # highlight:
+        image = images["highlight"]
+        x, y = self.world_pos_to_world_surf(0, 0)
+        surface_pos = pygame.Vector2(
+            x - image.get_width() / 2,
+            y - (image.get_height() - const.TILE_HEIGHT)
+        )
+        self.highlight = Tile(
+            "highlight",
+            image,
+            pygame.Vector2(0, 0),
+            surface_pos,
+            layer=-1
+        )
+        self.visible_objects.append(self.highlight)
 
     def world_pos_to_world_surf(self, world_x, world_y):
         # ATTENTION: Remember to account for the width and height of a sprite
@@ -151,7 +178,7 @@ class World:
 
     def get_tile_at(self, x, y):
         if 0 <= x < self.sidelength and 0 <= y < self.sidelength:
-            return self.tiles_nested[y][x]
+            return self.map_tiles[y][x]
         return None
 
     def update(self, dt):
@@ -173,7 +200,8 @@ class World:
             self.surf_pos.update(self.rect.topleft)
 
     def draw(self, target_surface):
-        blit_list = [(tile.image, tile.topleft) for tile in self.tiles]
+        self.surface.fill((0, 0, 0))
+        self.visible_objects.sort(key=lambda obj: (obj.world_pos.x, obj.world_pos.y, obj.layer))
+        blit_list = [tile.blit_info for tile in self.visible_objects]
         self.surface.blits(blit_list, False)
-
         target_surface.blit(self.surface, self.rect)
