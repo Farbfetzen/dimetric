@@ -158,14 +158,7 @@ class World:
                 self.scroll_direction.elementwise() * const.WORLD_SCROLL_SPEED * dt
             )
 
-    def scroll(self, rel, mouse=False):
-        if mouse:
-            # Multiply by ZOOM_FACTOR because the mouse moves in
-            # the main display but the map moves in small_display.
-            # TODO: Put this into the main_game state or somewhere else because
-            #  this should be done only once, not only for the world. This will
-            #  also affect the HUD, bulding, etc. And make it a Vector2.
-            rel = [r * const.ZOOM_FACTOR for r in rel]
+    def scroll(self, rel):
         self.surf_pos += rel
         self.rect.topleft = self.surf_pos
 

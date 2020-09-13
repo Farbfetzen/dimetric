@@ -31,6 +31,7 @@ class MainGame(State):
         # self.enemies = []
         self.mouse_pos = pygame.Vector2()
         self.mouse_pos_world = pygame.Vector2()
+        self.mouse_rel = pygame.Vector2()
 
         # Developer overlay:
         self.dev_overlay = False
@@ -67,7 +68,9 @@ class MainGame(State):
                     self.world.scroll_direction.y -= 1
             elif event.type == pygame.MOUSEMOTION and event.buttons[2]:
                 # buttons[2] is the right mouse button
-                self.world.scroll(event.rel, mouse=True)
+                self.mouse_rel.update(event.rel)
+                self.mouse_rel *= const.ZOOM_FACTOR
+                self.world.scroll(self.mouse_rel)
 
         # Convert mouse position to small_display coordinates:
         pos = pygame.mouse.get_pos()
