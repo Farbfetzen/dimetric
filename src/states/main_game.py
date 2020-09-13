@@ -36,7 +36,7 @@ class MainGame(State):
 
         # Developer overlay:
         self.dev_overlay = True
-        self.dev_font = pygame.font.SysFont("monospace", 15)
+        self.dev_font = pygame.font.SysFont("monospace", 18)
         self.dev_color = (255, 255, 255)
         self.dev_line_height = self.dev_font.get_height()
         self.dev_margin = pygame.Vector2(10, 10)
@@ -70,13 +70,13 @@ class MainGame(State):
             elif event.type == pygame.MOUSEMOTION and event.buttons[2]:
                 # buttons[2] is the right mouse button
                 self.mouse_rel.update(event.rel)
-                self.mouse_rel *= const.ZOOM_FACTOR
+                self.mouse_rel /= const.ZOOM
                 self.world.scroll(self.mouse_rel)
 
         # Convert mouse position to small_display coordinates:
         pos = pygame.mouse.get_pos()
-        self.mouse_pos.x = pos[0] * const.ZOOM_FACTOR
-        self.mouse_pos.y = pos[1] * const.ZOOM_FACTOR
+        self.mouse_pos.x = pos[0] / const.ZOOM
+        self.mouse_pos.y = pos[1] / const.ZOOM
         self.mouse_pos_world.update(self.world.small_display_to_world_pos(*self.mouse_pos))
 
     def update(self, dt):
@@ -119,11 +119,6 @@ class MainGame(State):
 
         self.world.draw(res.small_display)
 
-        # Draw to small_display before that is scaled up. This is why this
-        # line is outside draw_dev_overlay().
-        if self.dev_overlay:
-            pygame.draw.rect(res.small_display, self.dev_color, self.world.rect, 1)
-
         # for e in self.enemies:
         #     target_surface.blit(
         #         e.image,
@@ -135,6 +130,13 @@ class MainGame(State):
         #     )
 
     def draw_dev_overlay(self):
+        pygame.draw.rect(
+            res.main_display,
+            self.dev_color,
+            pygame.Rect([r * const.ZOOM for r in self.world.rect]),
+            1
+        )
+
         fps_text = self.dev_font.render(
             f"FPS: {int(res.clock.get_fps())}",
             False,

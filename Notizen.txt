@@ -50,7 +50,3 @@ TODO:
 * Die Karte zoombar machen (Mausrad oder Bild hoch und Bild runter). Natürlich mit min und max Begrenzung der Zoomstufe.
 * Mobs spawnen und den Pfad folgen lassen.
 * UI: Erstmal nur ein Button zum spawnen eines Mobs.
-* Highlighte die Platform unter der Maus. Hole die Logik dazu aus der dev
-  Funktion raus. Blitte einfach ein highlight sprite oben auf die Platform drauf.
-  Das wird nützlich sein später für das Bauen.
-  Denke ich brauche dafür auch ein neue Koordinate bzw. Priorität. Denn Tile und das dazugehörige Highlight haben die gleiche world Koordinate, aber das highlight muss nach dem Tile geblittet werden. Berücksichtige das bei der Sortierung.

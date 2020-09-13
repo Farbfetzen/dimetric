@@ -66,9 +66,6 @@ class World:
 
         # Collision rect for limiting the map scrolling. Makes sure that
         # parts of the map remain visible.
-        # FIXME: This will probably have to be modified when I implement zooming.
-        #  Test by zooming in really close or far away and then scrolling to
-        #  the edges. Maybe I could adjust the map_scroll_limit rect when zooming?
         outer_margin_x = surf_width
         outer_margin_y = surf_height
         self.map_scroll_limit = pygame.Rect(
@@ -200,8 +197,10 @@ class World:
             self.surf_pos.update(self.rect.topleft)
 
     def draw(self, target_surface):
-        self.surface.fill((0, 0, 0))
+        #self.surface.fill((0, 0, 0))
         self.visible_objects.sort(key=lambda obj: (obj.world_pos.x, obj.world_pos.y, obj.layer))
-        blit_list = [tile.blit_info for tile in self.visible_objects]
-        self.surface.blits(blit_list, False)
+        self.surface.blits(
+            (tile.blit_info for tile in self.visible_objects),
+            False
+        )
         target_surface.blit(self.surface, self.rect)
