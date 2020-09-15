@@ -18,14 +18,14 @@
 
 import pygame
 
-from src.resources import images
+from src import resources
 
 
 class Enemy:
     def __init__(self, enemy_type, path):
         self.type = enemy_type
         self.path = path
-        self.image = images[self.type]
+        self.image = resources.images[self.type]
 
         # FIXME: Achtung, ich muss hier unterscheiden zwischen width und height
         #     in world space und screen space! Das Rect ist für Kollisionen im

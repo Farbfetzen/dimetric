@@ -18,20 +18,21 @@
 
 import pygame
 
-import src.settings as settings
-import src.resources as res
+from src import settings
+from src import resources
 from src.states.state import State
-from src.enemy import Enemy
+from src import enemy
 
 
 class MainGame(State):
     def __init__(self, world_name):
         super().__init__()
-        self.world = res.worlds[world_name]
+        self.world = resources.worlds[world_name]
         # self.enemies = []
         self.mouse_pos = pygame.Vector2()
         self.mouse_pos_world = pygame.Vector2()
         self.mouse_rel = pygame.Vector2()
+        self.mouse_dy = tuple(enumerate((settings.PLATFORM_HEIGHT, 0)))
         self.tile_at_mouse = None
 
         # Developer overlay:
@@ -91,7 +92,7 @@ class MainGame(State):
         # snapping the towers to the platforms.
 
         tiles = [None, None]
-        for i, dy in enumerate((settings.PLATFORM_HEIGHT, 0)):
+        for i, dy in self.mouse_dy:
             tile_x, tile_y = self.world.small_display_to_world_pos(
                 self.mouse_pos.x,
                 self.mouse_pos.y + dy,
@@ -114,9 +115,9 @@ class MainGame(State):
         self.world.highlight.surface_pos.update(self.tile_at_mouse.surface_pos)
 
     def draw(self):
-        res.small_display.fill((0, 0, 0))
+        resources.small_display.fill((0, 0, 0))
 
-        self.world.draw(res.small_display)
+        self.world.draw(resources.small_display)
 
         # for e in self.enemies:
         #     target_surface.blit(
@@ -128,20 +129,20 @@ class MainGame(State):
         #         )
         #     )
 
-    def draw_dev_overlay(self):
+    def draw_dev_overlay(self, clock):
         pygame.draw.rect(
-            res.main_display,
+            resources.main_display,
             self.dev_color,
             pygame.Rect([r * settings.MAGNIFICATION for r in self.world.rect]),
             1
         )
 
         fps_text = self.dev_font.render(
-            f"FPS: {int(res.clock.get_fps())}",
+            f"FPS: {int(clock.get_fps())}",
             False,
             self.dev_color
         )
-        res.main_display.blit(fps_text, self.dev_margin)
+        resources.main_display.blit(fps_text, self.dev_margin)
 
         if self.tile_at_mouse is None:
             tile_info = "tile at mouse: none"
@@ -156,7 +157,7 @@ class MainGame(State):
             False,
             self.dev_color
         )
-        res.main_display.blit(
+        resources.main_display.blit(
             mouse_tile_text,
             (self.dev_margin.x, self.dev_margin.y * 3)
         )
@@ -167,7 +168,7 @@ class MainGame(State):
             False,
             self.dev_color
         )
-        res.main_display.blit(
+        resources.main_display.blit(
             mouse_pos_text,
             (self.dev_margin.x, self.dev_margin.y * 5)
         )
