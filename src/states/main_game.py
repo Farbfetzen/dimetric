@@ -41,7 +41,7 @@ class MainGame(State):
         self.dev_line_height = self.dev_font.get_height()
         self.dev_margin = pygame.Vector2(10, 10)
 
-    def process_events(self, events, mouse_pos):
+    def process_events(self, events):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -74,9 +74,8 @@ class MainGame(State):
                 self.world.scroll(self.mouse_rel)
 
         # Convert mouse position to small_display coordinates:
-        pos = pygame.mouse.get_pos()
-        self.mouse_pos.x = pos[0] / settings.MAGNIFICATION
-        self.mouse_pos.y = pos[1] / settings.MAGNIFICATION
+        self.mouse_pos.update(pygame.mouse.get_pos())
+        self.mouse_pos /= settings.MAGNIFICATION
         self.mouse_pos_world.update(self.world.small_display_to_world_pos(*self.mouse_pos))
 
     def update(self, dt):

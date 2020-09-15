@@ -33,10 +33,7 @@ def run():
         if pygame.event.get(pygame.QUIT):
             break
         else:
-            state.process_events(
-                pygame.event.get(),
-                pygame.mouse.get_pos()
-            )
+            state.process_events(pygame.event.get())
 
         if state.done:
             persistent_state_data = state.close()

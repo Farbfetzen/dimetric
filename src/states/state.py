@@ -37,7 +37,7 @@ class State:
         persistent_state_data = {"next_state_name": "quit"}
         return persistent_state_data
 
-    def process_events(self, events, mouse_pos):
+    def process_events(self, events):
         raise NotImplementedError
 
     def update(self, dt):
