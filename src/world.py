@@ -28,17 +28,12 @@ import src.settings as settings
 @dataclass
 class Tile:
     # TODO: Make this sortable by world_x, world_y and layer.
-    # TODO: Would blitting be faster if I used rects instead of Vector2 in the blit info?
     # TODO: Make this into a generic world object as a base for everything which is located in the world.
     type: str
     image: pygame.Surface
     world_pos: pygame.Vector2
     surface_pos: pygame.Vector2
     layer: int = 0
-    blit_info: Tuple[pygame.Surface, pygame.Vector2] = field(init=False)
-
-    def __post_init__(self):
-        self.blit_info = (self.image, self.surface_pos)
 
 
 class World:
@@ -205,8 +200,9 @@ class World:
     def draw(self, target_surface):
         # self.surface.fill((0, 0, 0))
         self.visible_objects.sort(key=lambda obj: (obj.world_pos.x, obj.world_pos.y, obj.layer))
-        self.surface.blits(
-            (tile.blit_info for tile in self.visible_objects),
-            False
-        )
+        for v_obj in self.visible_objects:
+            # noinspection PyTypeChecker
+            self.surface.blit(v_obj.image, v_obj.surface_pos)
+        # TODO: Check if surface.blits() is faster once there are more objects
+        #  on screen: enemies, towers, projectiles.
         target_surface.blit(self.surface, self.rect)
