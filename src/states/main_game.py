@@ -161,5 +161,16 @@ class MainGame(State):
             (self.dev_margin.x, self.dev_margin.y * 3)
         )
 
+        x, y = self.mouse_pos_world
+        mouse_pos_text = self.dev_font.render(
+            f"mouse position in world: ({x:.1f}, {y:.1f})",
+            False,
+            self.dev_color
+        )
+        res.main_display.blit(
+            mouse_pos_text,
+            (self.dev_margin.x, self.dev_margin.y * 5)
+        )
+
     # def next_wave(self):
     #     self.enemies.append(Enemy("cube", self.world.path))
