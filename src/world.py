@@ -17,8 +17,7 @@
 
 
 from math import floor
-from dataclasses import dataclass, field
-from typing import Tuple
+from dataclasses import dataclass
 
 import pygame
 
@@ -34,6 +33,10 @@ class Tile:
     world_pos: pygame.Vector2
     surface_pos: pygame.Vector2
     layer: int = 0
+
+    def __lt__(self, other):
+        return ((self.world_pos.x, self.world_pos.y, self.layer) <
+                (other.world_pos.x, other.world_pos.y, other.layer))
 
 
 class World:
@@ -199,7 +202,7 @@ class World:
 
     def draw(self, target_surface):
         # self.surface.fill((0, 0, 0))
-        self.visible_objects.sort(key=lambda obj: (obj.world_pos.x, obj.world_pos.y, obj.layer))
+        self.visible_objects.sort()
         for v_obj in self.visible_objects:
             # noinspection PyTypeChecker
             self.surface.blit(v_obj.image, v_obj.surface_pos)
