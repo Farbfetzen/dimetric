@@ -17,20 +17,27 @@
 
 
 from math import floor
+from dataclasses import dataclass, field
+from typing import Tuple
 
 import pygame
 
 import src.settings as settings
 
 
+@dataclass
 class Tile:
-    def __init__(self, type, image, world_pos, surface_pos, layer=0):
-        # TODO: Learn about data classes, maybe they fit better here.
-        self.type = type
-        self.image = image
-        self.world_pos = world_pos
-        self.surface_pos = surface_pos
-        self.layer = layer
+    # TODO: Make this sortable by world_x, world_y and layer.
+    # TODO: Would blitting be faster if I used rects instead of Vector2 in the blit info?
+    # TODO: Make this into a generic world object as a base for everything which is located in the world.
+    type: str
+    image: pygame.Surface
+    world_pos: pygame.Vector2
+    surface_pos: pygame.Vector2
+    layer: int = 0
+    blit_info: Tuple[pygame.Surface, pygame.Vector2] = field(init=False)
+
+    def __post_init__(self):
         self.blit_info = (self.image, self.surface_pos)
 
 
