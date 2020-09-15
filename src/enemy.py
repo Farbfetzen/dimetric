@@ -16,13 +16,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from typing import List
+
 import pygame
 
 from src import resources
 
 
 class Enemy:
-    def __init__(self, enemy_type, path):
+    def __init__(self, enemy_type: str, path: List[pygame.math.Vector2]) -> None:
         self.type = enemy_type
         self.path = path
         self.image = resources.images[self.type]
@@ -38,7 +40,7 @@ class Enemy:
         # Rect in world space, used for collision detection, not for blitting.
         self.rect = pygame.Rect(-1, -1, width, height_dimetric)
         print(self.rect)
-        self.rect.center = path[0]
+        self.rect.center = path[0]  # type: ignore
 
         self.hitpoints = 100
         self.speed = 1
@@ -48,5 +50,5 @@ class Enemy:
         print(self.rect.center)
         print(self.rect)
 
-    def update(self, dt):
+    def update(self, dt: float) -> None:
         pass

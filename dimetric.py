@@ -28,7 +28,7 @@ from src import resources
 from src.states.main_game import MainGame
 
 
-def run():
+def run() -> None:
     pygame.init()
     assert pygame.font.get_init(), "Font module not initialized!"
     resources.load_images()

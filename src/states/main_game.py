@@ -25,13 +25,13 @@ from src import enemy
 
 
 class MainGame(State):
-    def __init__(self, world_name):
+    def __init__(self, world_name) -> None:
         super().__init__()
         self.world = resources.worlds[world_name]
         # self.enemies = []
-        self.mouse_pos = pygame.Vector2()
+        self.mouse_pos = pygame.math.Vector2()
         self.mouse_pos_world = pygame.Vector2()
-        self.mouse_rel = pygame.Vector2()
+        self.mouse_rel = pygame.math.Vector2()
         self.mouse_dy = tuple(enumerate((settings.PLATFORM_HEIGHT, 0)))
         self.tile_at_mouse = None
 
@@ -42,7 +42,7 @@ class MainGame(State):
         self.dev_line_height = self.dev_font.get_height()
         self.dev_margin = pygame.Vector2(10, 10)
 
-    def process_events(self, events):
+    def process_events(self, events) -> None:
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -79,14 +79,14 @@ class MainGame(State):
         self.mouse_pos /= settings.MAGNIFICATION
         self.mouse_pos_world.update(self.world.small_display_to_world_pos(*self.mouse_pos))
 
-    def update(self, dt):
+    def update(self, dt) -> None:
         self.world.update(dt)
         self.get_tile_at_mouse()
         self.highlight_tile_at_mouse()
         # for e in self.enemies:
         #     e.update(dt)
 
-    def get_tile_at_mouse(self):
+    def get_tile_at_mouse(self) -> None:
         # I want to detect a platform only when the mouse is over the raised
         # part. The sides and base don't matter. I hope this will simplify
         # snapping the towers to the platforms.
@@ -106,7 +106,7 @@ class MainGame(State):
         else:
             self.tile_at_mouse = None
 
-    def highlight_tile_at_mouse(self):
+    def highlight_tile_at_mouse(self) -> None:
         if self.tile_at_mouse is None:
             self.world.highlight.layer = -1
             return
@@ -114,7 +114,7 @@ class MainGame(State):
         self.world.highlight.world_pos.update(self.tile_at_mouse.world_pos)
         self.world.highlight.surface_pos.update(self.tile_at_mouse.surface_pos)
 
-    def draw(self):
+    def draw(self) -> None:
         resources.small_display.fill((0, 0, 0))
 
         self.world.draw(resources.small_display)
@@ -129,7 +129,7 @@ class MainGame(State):
         #         )
         #     )
 
-    def draw_dev_overlay(self, clock):
+    def draw_dev_overlay(self, clock) -> None:
         pygame.draw.rect(
             resources.main_display,
             self.dev_color,

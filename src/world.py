@@ -18,6 +18,7 @@
 
 from math import floor
 from dataclasses import dataclass
+from typing import List, Tuple, Optional
 
 import pygame
 
@@ -34,13 +35,13 @@ class Tile:
     surface_pos: pygame.Vector2
     layer: int = 0
 
-    def __lt__(self, other):
+    def __lt__(self, other: "Tile") -> bool:  # FIXME: Is the annotation for "other" correct?
         return ((self.world_pos.x, self.world_pos.y, self.layer) <
                 (other.world_pos.x, other.world_pos.y, other.layer))
 
 
 class World:
-    def __init__(self, world_data, images):
+    def __init__(self, world_data: dict, images: dict) -> None:
         # FIXME: This init is very long. Maybe break it up into smaller functions?
         self.name = world_data["name"]
         self.sidelength = len(world_data["map"])
@@ -63,7 +64,10 @@ class World:
         self.offset_y = self.margin_y
 
         self.rect = self.surface.get_rect()
-        self.rect.center = (settings.SMALL_DISPLAY_WIDTH / 2, settings.SMALL_DISPLAY_HEIGHT / 2)
+        self.rect.center = (  # type: ignore  # mypy thinks these are floats
+            settings.SMALL_DISPLAY_WIDTH // 2,
+            settings.SMALL_DISPLAY_HEIGHT // 2
+        )
         # Use surf_pos to track the floating point position because
         # rects can only hold integers.
         self.surf_pos = pygame.Vector2(self.rect.topleft)
@@ -84,7 +88,7 @@ class World:
         self.scroll_direction = pygame.Vector2()
 
         self.visible_objects = []  # Used for blitting
-        self.map_tiles = []  # Useful for finding a tile by world coordinates
+        self.map_tiles: List[List[Tile]] = []  # Useful for finding a tile by world coordinates
 
         path_start = None
         path_end = None
@@ -117,12 +121,12 @@ class World:
             raise ValueError(f"Missing path start or end in map '{self.name}'.")
         self.path = [path_start]
         while self.path_raw:
-            x, y = self.path[-1]
+            x, y = self.path[-1]  # type: ignore  # mypy thinks Vector2 is not iterable
             for neighbor in ((x+1, y), (x-1, y), (x, y+1), (x, y-1)):
                 if neighbor in self.path_raw:
-                    neighbor = pygame.Vector2(neighbor)
-                    self.path.append(neighbor)
-                    self.path_raw.remove(neighbor)
+                    neighbor_ = pygame.Vector2(neighbor)
+                    self.path.append(neighbor_)
+                    self.path_raw.remove(neighbor_)
                     break
             else:
                 raise ValueError(f"Malformed path in map '{self.name}': Neighbor not found.")
@@ -145,14 +149,14 @@ class World:
         )
         self.visible_objects.append(self.highlight)
 
-    def world_pos_to_world_surf(self, world_x, world_y):
+    def world_pos_to_world_surf(self, world_x, world_y) -> Tuple[float, float]:
         # ATTENTION: Remember to account for the width and height of a sprite
         #   before blitting.
         x = (world_x - world_y) * settings.TILE_WIDTH_HALF + self.offset_x
         y = (world_x + world_y) * settings.TILE_HEIGHT_HALF + self.offset_y
         return x, y
 
-    def small_display_to_world_pos(self, x, y, tile=False):
+    def small_display_to_world_pos(self, x, y, tile=False) -> Tuple[float, float]:
         # Adapted from the code example in wikipedia:
         # https://en.wikipedia.org/wiki/Isometric_video_game_graphics#Mapping_screen_to_world_coordinates
 
@@ -176,18 +180,18 @@ class World:
 
         return world_x, world_y
 
-    def get_tile_at(self, x, y):
+    def get_tile_at(self, x: int, y: int) -> Optional[Tile]:
         if 0 <= x < self.sidelength and 0 <= y < self.sidelength:
             return self.map_tiles[y][x]
         return None
 
-    def update(self, dt):
+    def update(self, dt: float) -> None:
         if self.scroll_direction != (0, 0):
             self.scroll(
                 self.scroll_direction.elementwise() * settings.WORLD_SCROLL_SPEED * dt
             )
 
-    def scroll(self, rel):
+    def scroll(self, rel) -> None:
         self.surf_pos += rel
         self.rect.topleft = self.surf_pos
 
@@ -199,7 +203,7 @@ class World:
             self.rect.clamp_ip(self.map_scroll_limit)
             self.surf_pos.update(self.rect.topleft)
 
-    def draw(self, target_surface):
+    def draw(self, target_surface: pygame.Surface) -> None:
         # self.surface.fill((0, 0, 0))
         self.visible_objects.sort()
         for v_obj in self.visible_objects:
