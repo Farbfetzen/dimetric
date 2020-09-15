@@ -21,7 +21,7 @@ from dataclasses import dataclass
 
 import pygame
 
-import src.settings as settings
+from src import settings
 
 
 @dataclass

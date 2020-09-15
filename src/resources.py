@@ -15,37 +15,32 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 import os
 import pygame
 import json
 
-import src.settings as settings
-import src.world
-
-
-def _load_images():
-    images_ = {}
-    for filename in os.listdir("images"):
-        image = pygame.image.load(os.path.join("images", filename)).convert()
-        image.set_colorkey(settings.COLORKEY)
-        name = os.path.splitext(filename)[0]
-        images_[name] = image
-    return images_
-
-
-def _build_worlds(images_):
-    worlds_ = {}
-    for filename in os.listdir("worlds"):
-        with open(os.path.join("worlds", filename), "r") as file:
-            world_data = json.load(file)
-            worlds_[world_data["name"]] = src.world.World(world_data, images_)
-    return worlds_
+from src import settings
+from src import world
 
 
 # The display must be created before loading images:
 main_display = pygame.display.set_mode(settings.MAIN_DISPLAY_SIZE)
 small_display = pygame.Surface(settings.SMALL_DISPLAY_SIZE)
-clock = pygame.time.Clock()
+images = {}
+worlds = {}
 
-images = _load_images()
-worlds = _build_worlds(images)
+
+def load_images():
+    for filename in os.listdir("images"):
+        image = pygame.image.load(os.path.join("images", filename)).convert()
+        image.set_colorkey(settings.COLORKEY)
+        name = os.path.splitext(filename)[0]
+        images[name] = image
+
+
+def load_worlds():
+    for filename in os.listdir("worlds"):
+        with open(os.path.join("worlds", filename), "r") as file:
+            world_data = json.load(file)
+            worlds[world_data["name"]] = world.World(world_data, images)
