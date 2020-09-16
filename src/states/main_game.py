@@ -30,8 +30,7 @@ class MainGame(State):
         self.world = None
         # self.enemies = []
         self.mouse_pos = pygame.math.Vector2()
-        self.mouse_pos_world = pygame.Vector2()
-        self.mouse_rel = pygame.Vector2()
+        self.mouse_pos_world = pygame.math.Vector2()
         self.mouse_rel = pygame.math.Vector2()
         self.mouse_dy = tuple(enumerate((constants.PLATFORM_HEIGHT, 0)))
         self.tile_at_mouse = None
