@@ -25,7 +25,7 @@ import pygame
 
 from src import settings
 from src import resources
-from src.states.main_game import MainGame
+from src import states
 
 
 def run():
@@ -33,7 +33,7 @@ def run():
     assert pygame.font.get_init(), "Font module not initialized!"
     resources.load_images()
     resources.load_worlds()
-    game_states = {"MainGame": MainGame("test")}
+    game_states = {"MainGame": states.MainGame("test")}
     state = game_states["MainGame"]
     clock = pygame.time.Clock()
 

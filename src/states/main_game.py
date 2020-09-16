@@ -24,6 +24,11 @@ from src.states.state import State
 from src import enemy
 
 
+# ATTENTION: Handle sqitching levels (worlds) by just making a new instance
+#  of this game state with  a new world name. This is easier than reusing and
+#  cleaning the same instance every time.
+
+
 class MainGame(State):
     def __init__(self, world_name):
         super().__init__()
