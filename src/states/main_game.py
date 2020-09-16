@@ -24,21 +24,20 @@ from src.states.state import State
 from src import enemy
 
 
-# ATTENTION: Handle sqitching levels (worlds) by just making a new instance
-#  of this game state with  a new world name. This is easier than reusing and
-#  cleaning the same instance every time.
-
-
 class MainGame(State):
-    def __init__(self, world_name):
+    def __init__(self):
         super().__init__()
-        self.world = resources.worlds[world_name]
+        self.world = None
         # self.enemies = []
         self.mouse_pos = pygame.Vector2()
         self.mouse_pos_world = pygame.Vector2()
         self.mouse_rel = pygame.Vector2()
         self.mouse_dy = tuple(enumerate((constants.PLATFORM_HEIGHT, 0)))
         self.tile_at_mouse = None
+
+    def start(self, persistent_state_data):
+        super().start(persistent_state_data)
+        self.world = resources.worlds[persistent_state_data["world_name"]]
 
     def process_events(self, events):
         for event in events:

@@ -35,8 +35,9 @@ def run():
     small_display = pygame.Surface(constants.SMALL_DISPLAY_SIZE)
     resources.load_images()
     resources.load_worlds()
-    game_states = {"MainGame": states.MainGame("test")}
+    game_states = {"MainGame": states.MainGame()}
     state = game_states["MainGame"]
+    state.start({"world_name": "test"})
     clock = pygame.time.Clock()
 
     while True:
