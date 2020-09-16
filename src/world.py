@@ -17,27 +17,12 @@
 
 
 from math import floor
-from dataclasses import dataclass
 from typing import List, Tuple, Optional
 
 import pygame
 
 from src import settings
-
-
-@dataclass
-class Tile:
-    # TODO: Make this sortable by world_x, world_y and layer.
-    # TODO: Make this into a generic world object as a base for everything which is located in the world.
-    type: str
-    image: pygame.Surface
-    world_pos: pygame.Vector2
-    surface_pos: pygame.Vector2
-    layer: int = 0
-
-    def __lt__(self, other: "Tile") -> bool:  # FIXME: Is the annotation for "other" correct?
-        return ((self.world_pos.x, self.world_pos.y, self.layer) <
-                (other.world_pos.x, other.world_pos.y, other.layer))
+from src.world_object import WorldObject
 
 
 class World:
@@ -88,7 +73,7 @@ class World:
         self.scroll_direction = pygame.Vector2()
 
         self.visible_objects = []  # Used for blitting
-        self.map_tiles: List[List[Tile]] = []  # Useful for finding a tile by world coordinates
+        self.map_tiles: List[List[WorldObject]] = []  # Useful for finding a tile by world coordinates
 
         path_start = None
         path_end = None
@@ -113,7 +98,7 @@ class World:
                     x - image.get_width() / 2,
                     y - (image.get_height() - settings.TILE_HEIGHT)
                 )
-                tile = Tile(tile_type, image, world_pos, surface_pos)
+                tile = WorldObject(tile_type, image, world_pos, surface_pos)
                 self.map_tiles[world_y].append(tile)
                 self.visible_objects.append(tile)
 
@@ -140,7 +125,7 @@ class World:
             x - image.get_width() / 2,
             y - (image.get_height() - settings.TILE_HEIGHT)
         )
-        self.highlight = Tile(
+        self.highlight = WorldObject(
             "highlight",
             image,
             pygame.Vector2(0, 0),
@@ -180,7 +165,7 @@ class World:
 
         return world_x, world_y
 
-    def get_tile_at(self, x: int, y: int) -> Optional[Tile]:
+    def get_tile_at(self, x: int, y: int) -> Optional[WorldObject]:
         if 0 <= x < self.sidelength and 0 <= y < self.sidelength:
             return self.map_tiles[y][x]
         return None
