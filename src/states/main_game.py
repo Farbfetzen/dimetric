@@ -16,6 +16,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from typing import Any, Dict, TYPE_CHECKING, Optional
+
 import pygame
 
 from src import constants
@@ -23,11 +25,14 @@ from src import resources
 from src.states.state import State
 from src import enemy
 
+if TYPE_CHECKING:
+    from src.world import World
+
 
 class MainGame(State):
     def __init__(self) -> None:
         super().__init__()
-        self.world = None
+        self.world: Optional[World] = None
         # self.enemies = []
         self.mouse_pos = pygame.math.Vector2()
         self.mouse_pos_world = pygame.math.Vector2()
@@ -35,11 +40,11 @@ class MainGame(State):
         self.mouse_dy = tuple(enumerate((constants.PLATFORM_HEIGHT, 0)))
         self.tile_at_mouse = None
 
-    def start(self, persistent_state_data):
+    def start(self, persistent_state_data: Dict[str, Any]) -> None:
         super().start(persistent_state_data)
         self.world = resources.worlds[persistent_state_data["world_name"]]
 
-    def process_events(self, events) -> None:
+    def process_events(self, events: list) -> None:
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -160,7 +165,7 @@ class MainGame(State):
 
         x, y = self.mouse_pos_world
         mouse_pos_text = self.dev_font.render(
-            f"mouse position in world: ({x:.1f}, {y:.1f})",
+            f"mouse position in world: ({x:.1f}, {y:.1f})",  # type: ignore
             False,
             self.dev_color
         )

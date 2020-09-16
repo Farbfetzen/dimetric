@@ -30,8 +30,8 @@ import pygame
 class WorldObject:
     type: str
     image: pygame.Surface
-    world_pos: pygame.Vector2
-    surface_pos: pygame.Vector2
+    world_pos: pygame.math.Vector2
+    surface_pos: pygame.math.Vector2
     layer: int = 0
 
     def __lt__(self, other: WorldObject) -> bool:

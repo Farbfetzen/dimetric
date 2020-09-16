@@ -16,6 +16,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from typing import Any, Dict
+
 import pygame
 
 
@@ -31,7 +33,7 @@ class State:
         self.dev_color = (255, 255, 255)
         self.dev_margin = pygame.Vector2(10, 10)
 
-    def start(self, persistent_state_data: dict) -> None:
+    def start(self, persistent_state_data: Dict[str, Any]) -> None:
         """Start or resume a state.
         Use the information provided by the previous state to set up
         this state.
@@ -53,5 +55,5 @@ class State:
     def update(self, dt: float) -> None:
         raise NotImplementedError
 
-    def draw(self, target_surface) -> None:
+    def draw(self, target_surface: pygame.Surface) -> None:
         raise NotImplementedError

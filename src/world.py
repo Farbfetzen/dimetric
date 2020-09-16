@@ -17,7 +17,7 @@
 
 
 from math import floor
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Sequence, Union
 
 import pygame
 
@@ -70,7 +70,7 @@ class World:
         self.map_scroll_limit.center = self.rect.center
 
         # Scroll can be -1, 0 or 1. Meaning left/up, none or right/down.
-        self.scroll_direction = pygame.Vector2()
+        self.scroll_direction = pygame.math.Vector2()
 
         self.visible_objects = []  # Used for blitting
         self.map_tiles: List[List[WorldObject]] = []  # Useful for finding a tile by world coordinates
@@ -134,14 +134,19 @@ class World:
         )
         self.visible_objects.append(self.highlight)
 
-    def world_pos_to_world_surf(self, world_x, world_y) -> Tuple[float, float]:
+    def world_pos_to_world_surf(self,
+                                world_x: float,
+                                world_y: float) -> Tuple[float, float]:
         # ATTENTION: Remember to account for the width and height of a sprite
         #   before blitting.
         x = (world_x - world_y) * constants.TILE_WIDTH_HALF + self.offset_x
         y = (world_x + world_y) * constants.TILE_HEIGHT_HALF + self.offset_y
         return x, y
 
-    def small_display_to_world_pos(self, x, y, tile=False) -> Tuple[float, float]:
+    def small_display_to_world_pos(self,
+                                   x: float,
+                                   y: float,
+                                   tile: bool = False) -> Tuple[float, float]:
         # Adapted from the code example in wikipedia:
         # https://en.wikipedia.org/wiki/Isometric_video_game_graphics#Mapping_screen_to_world_coordinates
 
@@ -172,13 +177,14 @@ class World:
 
     def update(self, dt: float) -> None:
         if self.scroll_direction != (0, 0):
-            self.scroll(
-                self.scroll_direction.elementwise() * constants.WORLD_SCROLL_SPEED * dt
-            )
+            rel = (self.scroll_direction.elementwise()
+                   * constants.WORLD_SCROLL_SPEED  # type: ignore
+                   * dt)
+            self.scroll(rel)
 
     def scroll(self, rel) -> None:
         self.surf_pos += rel
-        self.rect.topleft = self.surf_pos
+        self.rect.topleft = self.surf_pos  # type: ignore
 
         if not self.map_scroll_limit.contains(self.rect):
             # Limit scrolling such that the map does not disappear completely

@@ -17,6 +17,17 @@ Fang einfach mal an type hints hinzuzufügen und dann erhöhe langsam die
 Strenge der Optionen in der ini.
 
 
+Frage bei pygame auf GitHub nach, ob man Vector2 zu einem Sequence[float] machen könnte.
+Ich habe nämlich die Zeile:
+self.surface.blit(image, surface_pos)
+wobei surface_pos ein Vector2 ist. Mypy meint dann
+error: Argument 2 to "blit" of "Surface" has incompatible type "Vector2"; expected "Union[Sequence[float], Rect]"
+Vector2 ist auch nicht iterable:
+x, y = position  # position is Vector2
+'pygame.math.Vector2' object is not iterable
+Aber vorher die Fehler separieren und ein reprex bauem.
+
+
 Koordinaten:
 world:
 (0, 0)(1, 0)
