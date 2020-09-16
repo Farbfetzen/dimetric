@@ -28,7 +28,7 @@ from src import resources
 from src import states
 
 
-def run():
+def run() -> None:
     pygame.init()
     assert pygame.font.get_init(), "Font module not initialized!"
     main_display = pygame.display.set_mode(constants.MAIN_DISPLAY_SIZE)

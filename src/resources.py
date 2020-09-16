@@ -28,7 +28,7 @@ images = {}
 worlds = {}
 
 
-def load_images():
+def load_images() -> None:
     for filename in os.listdir("images"):
         image = pygame.image.load(os.path.join("images", filename)).convert()
         image.set_colorkey(constants.COLORKEY)
@@ -36,7 +36,7 @@ def load_images():
         images[name] = image
 
 
-def load_worlds():
+def load_worlds() -> None:
     for filename in os.listdir("worlds"):
         with open(os.path.join("worlds", filename), "r") as file:
             world_data = json.load(file)

@@ -20,7 +20,7 @@ import pygame
 
 
 class State:
-    def __init__(self):
+    def __init__(self) -> None:
         self.done = False
 
         self.dev_overlay_visible = True
@@ -31,14 +31,14 @@ class State:
         self.dev_color = (255, 255, 255)
         self.dev_margin = pygame.Vector2(10, 10)
 
-    def start(self, persistent_state_data):
+    def start(self, persistent_state_data: dict) -> None:
         """Start or resume a state.
         Use the information provided by the previous state to set up
         this state.
         """
         self.done = False
 
-    def close(self):
+    def close(self) -> dict:
         """Quit or suspend a state.
         Use this for cleanup. Save relevant data in persistent_state_data to
         pass it to the next state. Set next_state_name to "quit" to
@@ -47,11 +47,11 @@ class State:
         persistent_state_data = {"next_state_name": "quit"}
         return persistent_state_data
 
-    def process_events(self, events):
+    def process_events(self, events: list) -> None:
         raise NotImplementedError
 
-    def update(self, dt):
+    def update(self, dt: float) -> None:
         raise NotImplementedError
 
-    def draw(self, target_surface):
+    def draw(self, target_surface) -> None:
         raise NotImplementedError
