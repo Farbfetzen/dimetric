@@ -20,7 +20,7 @@ import os
 import pygame
 import json
 
-from src import settings
+from src import constants
 from src import world
 
 
@@ -31,7 +31,7 @@ worlds = {}
 def load_images():
     for filename in os.listdir("images"):
         image = pygame.image.load(os.path.join("images", filename)).convert()
-        image.set_colorkey(settings.COLORKEY)
+        image.set_colorkey(constants.COLORKEY)
         name = os.path.splitext(filename)[0]
         images[name] = image
 

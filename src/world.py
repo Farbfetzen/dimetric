@@ -21,7 +21,7 @@ from dataclasses import dataclass
 
 import pygame
 
-from src import settings
+from src import constants
 
 
 @dataclass
@@ -51,10 +51,10 @@ class World:
                 raise ValueError(f"Map '{self.name}' is not square.")
 
         # Add a margin of some tile sizes so other stuff fits on the world surface, too.
-        self.margin_x = settings.TILE_WIDTH
-        self.margin_y = settings.TILE_HEIGHT * 2
-        surf_width = self.sidelength * settings.TILE_WIDTH + self.margin_x * 2
-        surf_height = self.sidelength * settings.TILE_HEIGHT + self.margin_y * 2
+        self.margin_x = constants.TILE_WIDTH
+        self.margin_y = constants.TILE_HEIGHT * 2
+        surf_width = self.sidelength * constants.TILE_WIDTH + self.margin_x * 2
+        surf_height = self.sidelength * constants.TILE_HEIGHT + self.margin_y * 2
         self.surface = pygame.Surface((surf_width, surf_height))
 
         # Center the map on the world surface. Offset is the position of
@@ -63,7 +63,7 @@ class World:
         self.offset_y = self.margin_y
 
         self.rect = self.surface.get_rect()
-        self.rect.center = (settings.SMALL_DISPLAY_WIDTH / 2, settings.SMALL_DISPLAY_HEIGHT / 2)
+        self.rect.center = (constants.SMALL_DISPLAY_WIDTH / 2, constants.SMALL_DISPLAY_HEIGHT / 2)
         # Use surf_pos to track the floating point position because
         # rects can only hold integers.
         self.surf_pos = pygame.Vector2(self.rect.topleft)
@@ -75,8 +75,8 @@ class World:
         self.map_scroll_limit = pygame.Rect(
             0,
             0,
-            settings.SMALL_DISPLAY_WIDTH + outer_margin_x,
-            settings.SMALL_DISPLAY_HEIGHT + outer_margin_y
+            constants.SMALL_DISPLAY_WIDTH + outer_margin_x,
+            constants.SMALL_DISPLAY_HEIGHT + outer_margin_y
         )
         self.map_scroll_limit.center = self.rect.center
 
@@ -107,7 +107,7 @@ class World:
                 # Convert to topleft of the image:
                 surface_pos = pygame.Vector2(
                     x - image.get_width() / 2,
-                    y - (image.get_height() - settings.TILE_HEIGHT)
+                    y - (image.get_height() - constants.TILE_HEIGHT)
                 )
                 tile = Tile(tile_type, image, world_pos, surface_pos)
                 self.map_tiles[world_y].append(tile)
@@ -134,7 +134,7 @@ class World:
         x, y = self.world_pos_to_world_surf(0, 0)
         surface_pos = pygame.Vector2(
             x - image.get_width() / 2,
-            y - (image.get_height() - settings.TILE_HEIGHT)
+            y - (image.get_height() - constants.TILE_HEIGHT)
         )
         self.highlight = Tile(
             "highlight",
@@ -148,8 +148,8 @@ class World:
     def world_pos_to_world_surf(self, world_x, world_y):
         # ATTENTION: Remember to account for the width and height of a sprite
         #   before blitting.
-        x = (world_x - world_y) * settings.TILE_WIDTH_HALF + self.offset_x
-        y = (world_x + world_y) * settings.TILE_HEIGHT_HALF + self.offset_y
+        x = (world_x - world_y) * constants.TILE_WIDTH_HALF + self.offset_x
+        y = (world_x + world_y) * constants.TILE_HEIGHT_HALF + self.offset_y
         return x, y
 
     def small_display_to_world_pos(self, x, y, tile=False):
@@ -161,8 +161,8 @@ class World:
         x = x - self.rect.x - self.margin_x
         y = y - self.rect.y - self.margin_y
 
-        virt_x = x / settings.TILE_WIDTH
-        virt_y = y / settings.TILE_HEIGHT
+        virt_x = x / constants.TILE_WIDTH
+        virt_y = y / constants.TILE_HEIGHT
         world_x = virt_y + (virt_x - self.sidelength / 2)
         world_y = virt_y - (virt_x - self.sidelength / 2)
 
@@ -184,7 +184,7 @@ class World:
     def update(self, dt):
         if self.scroll_direction != (0, 0):
             self.scroll(
-                self.scroll_direction.elementwise() * settings.WORLD_SCROLL_SPEED * dt
+                self.scroll_direction.elementwise() * constants.WORLD_SCROLL_SPEED * dt
             )
 
     def scroll(self, rel):

@@ -16,10 +16,20 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import pygame
+
+
 class State:
     def __init__(self):
         self.done = False
-        self.dev_overlay_visible = False
+
+        self.dev_overlay_visible = True
+        # These must be defined here and not in constants.py because they need
+        # pygame to be initialized for the fonts to work,
+        self.dev_font = pygame.font.SysFont("monospace", 18)
+        self.dev_line_hight = self.dev_font.get_height()
+        self.dev_color = (255, 255, 255)
+        self.dev_margin = pygame.Vector2(10, 10)
 
     def start(self, persistent_state_data):
         """Start or resume a state.

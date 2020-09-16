@@ -18,7 +18,7 @@
 
 import pygame
 
-from src import settings
+from src import constants
 from src import resources
 from src.states.state import State
 from src import enemy
@@ -37,15 +37,8 @@ class MainGame(State):
         self.mouse_pos = pygame.Vector2()
         self.mouse_pos_world = pygame.Vector2()
         self.mouse_rel = pygame.Vector2()
-        self.mouse_dy = tuple(enumerate((settings.PLATFORM_HEIGHT, 0)))
+        self.mouse_dy = tuple(enumerate((constants.PLATFORM_HEIGHT, 0)))
         self.tile_at_mouse = None
-
-        # Developer overlay:
-        self.dev_overlay_visible = True
-        self.dev_font = pygame.font.SysFont("monospace", 18)
-        self.dev_color = (255, 255, 255)
-        self.dev_line_height = self.dev_font.get_height()
-        self.dev_margin = pygame.Vector2(10, 10)
 
     def process_events(self, events):
         for event in events:
@@ -76,12 +69,12 @@ class MainGame(State):
             elif event.type == pygame.MOUSEMOTION and event.buttons[2]:
                 # buttons[2] is the right mouse button
                 self.mouse_rel.update(event.rel)
-                self.mouse_rel /= settings.MAGNIFICATION
+                self.mouse_rel /= constants.MAGNIFICATION
                 self.world.scroll(self.mouse_rel)
 
         # Convert mouse position to small_display coordinates:
         self.mouse_pos.update(pygame.mouse.get_pos())
-        self.mouse_pos /= settings.MAGNIFICATION
+        self.mouse_pos /= constants.MAGNIFICATION
         self.mouse_pos_world.update(self.world.small_display_to_world_pos(*self.mouse_pos))
 
     def update(self, dt):
@@ -138,7 +131,7 @@ class MainGame(State):
         pygame.draw.rect(
             target_surface,
             self.dev_color,
-            pygame.Rect([r * settings.MAGNIFICATION for r in self.world.rect]),
+            pygame.Rect([r * constants.MAGNIFICATION for r in self.world.rect]),
             1
         )
 
