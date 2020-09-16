@@ -31,6 +31,8 @@ from src import states
 def run():
     pygame.init()
     assert pygame.font.get_init(), "Font module not initialized!"
+    main_display = pygame.display.set_mode(settings.MAIN_DISPLAY_SIZE)
+    small_display = pygame.Surface(settings.SMALL_DISPLAY_SIZE)
     resources.load_images()
     resources.load_worlds()
     game_states = {"MainGame": states.MainGame("test")}
@@ -56,14 +58,14 @@ def run():
 
         state.update(dt)
 
-        state.draw()
+        state.draw(small_display)
         pygame.transform.scale(
-            resources.small_display,
+            small_display,
             settings.MAIN_DISPLAY_SIZE,
-            resources.main_display
+            main_display
         )
-        if state.dev_overlay:
-            state.draw_dev_overlay(clock)
+        if state.dev_overlay_visible:
+            state.draw_dev_overlay(main_display, clock)
         pygame.display.flip()
 
 

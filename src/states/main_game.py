@@ -41,7 +41,7 @@ class MainGame(State):
         self.tile_at_mouse = None
 
         # Developer overlay:
-        self.dev_overlay = True
+        self.dev_overlay_visible = True
         self.dev_font = pygame.font.SysFont("monospace", 18)
         self.dev_color = (255, 255, 255)
         self.dev_line_height = self.dev_font.get_height()
@@ -63,7 +63,7 @@ class MainGame(State):
                 elif event.key == pygame.K_DOWN:
                     self.world.scroll_direction.y += 1
                 elif event.key == pygame.K_F1:
-                    self.dev_overlay = not self.dev_overlay
+                    self.dev_overlay_visible = not self.dev_overlay_visible
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT:
                     self.world.scroll_direction.x += 1
@@ -119,10 +119,10 @@ class MainGame(State):
         self.world.highlight.world_pos.update(self.tile_at_mouse.world_pos)
         self.world.highlight.surface_pos.update(self.tile_at_mouse.surface_pos)
 
-    def draw(self):
-        resources.small_display.fill((0, 0, 0))
+    def draw(self, target_surface):
+        target_surface.fill((0, 0, 0))
 
-        self.world.draw(resources.small_display)
+        self.world.draw(target_surface)
 
         # for e in self.enemies:
         #     target_surface.blit(
@@ -134,9 +134,9 @@ class MainGame(State):
         #         )
         #     )
 
-    def draw_dev_overlay(self, clock):
+    def draw_dev_overlay(self, target_surface, clock):
         pygame.draw.rect(
-            resources.main_display,
+            target_surface,
             self.dev_color,
             pygame.Rect([r * settings.MAGNIFICATION for r in self.world.rect]),
             1
@@ -147,7 +147,7 @@ class MainGame(State):
             False,
             self.dev_color
         )
-        resources.main_display.blit(fps_text, self.dev_margin)
+        target_surface.blit(fps_text, self.dev_margin)
 
         if self.tile_at_mouse is None:
             tile_info = "tile at mouse: none"
@@ -162,7 +162,7 @@ class MainGame(State):
             False,
             self.dev_color
         )
-        resources.main_display.blit(
+        target_surface.blit(
             mouse_tile_text,
             (self.dev_margin.x, self.dev_margin.y * 3)
         )
@@ -173,7 +173,7 @@ class MainGame(State):
             False,
             self.dev_color
         )
-        resources.main_display.blit(
+        target_surface.blit(
             mouse_pos_text,
             (self.dev_margin.x, self.dev_margin.y * 5)
         )

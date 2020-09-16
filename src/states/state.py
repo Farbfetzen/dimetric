@@ -19,7 +19,7 @@
 class State:
     def __init__(self):
         self.done = False
-        self.dev_overlay = False
+        self.dev_overlay_visible = False
 
     def start(self, persistent_state_data):
         """Start or resume a state.
@@ -43,5 +43,5 @@ class State:
     def update(self, dt):
         raise NotImplementedError
 
-    def draw(self):
+    def draw(self, target_surface):
         raise NotImplementedError

@@ -24,9 +24,6 @@ from src import settings
 from src import world
 
 
-# The display must be created before loading images:
-main_display = pygame.display.set_mode(settings.MAIN_DISPLAY_SIZE)
-small_display = pygame.Surface(settings.SMALL_DISPLAY_SIZE)
 images = {}
 worlds = {}
 
