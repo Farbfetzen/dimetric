@@ -25,21 +25,24 @@ from src import enemy
 
 
 class MainGame(State):
-    def __init__(self, world_name):
-        super().__init__()
+    def __init__(self, event_manager, world_name):
+        super().__init__(event_manager)
         self.world = resources.worlds[world_name]
         # self.enemies = []
-        self.mouse_pos = pygame.Vector2()
         self.mouse_pos_world = pygame.Vector2()
         self.mouse_rel = pygame.Vector2()
         self.mouse_dy = tuple(enumerate((constants.PLATFORM_HEIGHT, 0)))
         self.tile_at_mouse = None
 
-    def process_events(self, events):
-        for event in events:
+    def process_events(self):
+        for event in self.event_manager.events:
+            if event.type == pygame.QUIT:
+                self.close()
+                return
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self.done = True
+                    self.close()
+                    return
                 # elif event.key == pygame.K_s:
                 #     self.next_wave()
                 elif event.key == pygame.K_LEFT:
@@ -63,14 +66,14 @@ class MainGame(State):
                     self.world.scroll_direction.y -= 1
             elif event.type == pygame.MOUSEMOTION and event.buttons[2]:
                 # buttons[2] is the right mouse button
+                # No integer division because mouse_rel needs to stay float.
                 self.mouse_rel.update(event.rel)
                 self.mouse_rel /= constants.MAGNIFICATION
                 self.world.scroll(self.mouse_rel)
 
-        # Convert mouse position to small_display coordinates:
-        self.mouse_pos.update(pygame.mouse.get_pos())
-        self.mouse_pos //= constants.MAGNIFICATION
-        self.mouse_pos_world.update(self.world.small_display_to_world_pos(*self.mouse_pos))
+        self.mouse_pos_world.update(
+            self.world.small_display_to_world_pos(*self.mouse_pos)
+        )
 
     def update(self, dt):
         self.world.update(dt)

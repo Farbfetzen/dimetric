@@ -47,7 +47,13 @@ def load_options():
         #  does not fit just overwrite it with the default and log the incident.
         #  This is not that important but would be an interesting exercise.
     else:
-        with open("options.json", "w") as file:
-            json.dump(default_options, file, indent=4, sort_keys=True)
+        save_options(default_options)
         opt = default_options
     options.update(opt)
+
+
+def save_options(opt=None):
+    if opt is None:
+        opt = options
+    with open("options.json", "w") as file:
+        json.dump(opt, file, indent=4, sort_keys=True)

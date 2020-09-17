@@ -6,6 +6,12 @@ Gifs und Videos: obs?
 Programme empfohlen von DaFluffyPotato: https://www.youtube.com/watch?v=ung_U17kxDI
 
 
+Wie mit pygame.QUIT umgehen? In den meisten Menüs einfach das Spiel beenden.
+In den Optionsmenüs fragen, ob Einstellungen gespeichert werden sollen, falls
+ungespeicherte existieren. Während des Spielens fragen, ob der Spielstand
+gespeichert werden soll.
+
+
 Denke darüber nach, wie die state machine verbessert werden kann. Ich meine
 speziell den main_game state. Es macht nicht viel Sinn nur eine Instanz zu
 haben. Die müsste ich dann bei jeder Levelauswahl neustarten/bereinigen.

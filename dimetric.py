@@ -27,7 +27,7 @@ from src import constants
 from src import options
 from src import resources
 from src.states import game_states
-from src.input_manager import InputManager
+from src.event_manager import EventManager
 
 
 def run():
@@ -38,8 +38,8 @@ def run():
     options.load_options()
     resources.load_images()
     resources.load_worlds()
-    state = game_states["MainGame"]("test")
-    input_manager = InputManager()
+    event_manager = EventManager()
+    state = game_states["MainGame"](event_manager, "test")
     clock = pygame.time.Clock()
 
     while True:
@@ -47,17 +47,13 @@ def run():
         # (e.g. from moving the pygame window) by limiting to 0.1 s.
         dt = min(clock.tick(constants.FPS) / 1000, 0.1)
 
-        events = input_manager.update()
-        if events == "quit":
-            # TODO: If there are unsaved changes, ask if they should be
-            #  saved, discarded or if the exit should be canceled.
-            break
-        state.process_events(events)
+        event_manager.update()
+        state.process_events()
 
-        if state.done:
+        if state.is_done:
             # TODO: Make it possible to resume a state instance from a stack
             #  instead of starting a new instance.
-            persistent_state_data = state.close()
+            persistent_state_data = state.persistent_state_data
             next_state_name = persistent_state_data["next_state_name"]
             if next_state_name == "quit":
                 # TODO: If there are unsaved changes, ask if they should be
@@ -65,9 +61,9 @@ def run():
                 break
             elif next_state_name == "MainGame":
                 world_name = persistent_state_data["world_name"]
-                state = game_states[next_state_name](world_name)
+                state = game_states[next_state_name](event_manager, world_name)
             else:
-                state = game_states[next_state_name]()
+                state = game_states[next_state_name](event_manager)
             state.resume(persistent_state_data)
 
         state.update(dt)

@@ -20,8 +20,11 @@ import pygame
 
 
 class State:
-    def __init__(self):
-        self.done = False
+    def __init__(self, event_manager):
+        self.event_manager = event_manager
+        self.mouse_pos = event_manager.mouse_pos
+        self.is_done = False
+        self.persistent_state_data = {"next_state_name": "quit"}
 
         self.dev_overlay_visible = True
         self.dev_font = pygame.font.SysFont("monospace", 18)
@@ -34,7 +37,8 @@ class State:
         Use the information provided by the previous state to modify
         this state.
         """
-        self.done = False
+        self.persistent_state_data = persistent_state_data
+        self.is_done = False
 
     def close(self):
         """Quit or suspend a state.
@@ -42,10 +46,9 @@ class State:
         pass it to the next state. Set next_state_name to "quit" to
         immediately quit the app.
         """
-        persistent_state_data = {"next_state_name": "quit"}
-        return persistent_state_data
+        self.is_done = True
 
-    def process_events(self, events):
+    def process_events(self):
         raise NotImplementedError
 
     def update(self, dt):
