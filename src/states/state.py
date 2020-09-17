@@ -16,31 +16,27 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from typing import Any, Dict
-
 import pygame
 
 
 class State:
-    def __init__(self) -> None:
+    def __init__(self):
         self.done = False
 
         self.dev_overlay_visible = True
-        # These must be defined here and not in constants.py because they need
-        # pygame to be initialized for the fonts to work,
         self.dev_font = pygame.font.SysFont("monospace", 18)
         self.dev_line_hight = self.dev_font.get_height()
         self.dev_color = (255, 255, 255)
         self.dev_margin = pygame.Vector2(10, 10)
 
-    def resume(self, persistent_state_data: Dict[str, Any]) -> None:
-        """Start or resume a state.
-        Use the information provided by the previous state to set up
+    def resume(self, persistent_state_data):
+        """Resume an already instantiated state.
+        Use the information provided by the previous state to modify
         this state.
         """
         self.done = False
 
-    def close(self) -> Dict[str, Any]:
+    def close(self):
         """Quit or suspend a state.
         Use this for cleanup. Save relevant data in persistent_state_data to
         pass it to the next state. Set next_state_name to "quit" to
@@ -49,11 +45,11 @@ class State:
         persistent_state_data = {"next_state_name": "quit"}
         return persistent_state_data
 
-    def process_events(self, events: list) -> None:
+    def process_events(self, events):
         raise NotImplementedError
 
-    def update(self, dt: float) -> None:
+    def update(self, dt):
         raise NotImplementedError
 
-    def draw(self, target_surface: pygame.surface.Surface) -> None:
+    def draw(self, target_surface):
         raise NotImplementedError

@@ -16,8 +16,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from typing import List, TYPE_CHECKING, Optional
-
 import pygame
 
 from src import constants
@@ -25,22 +23,19 @@ from src import resources
 from src.states.state import State
 from src import enemy
 
-if TYPE_CHECKING:
-    from src.world_object import WorldObject
-
 
 class MainGame(State):
-    def __init__(self, world_name: str) -> None:
+    def __init__(self, world_name):
         super().__init__()
         self.world = resources.worlds[world_name]
         # self.enemies = []
-        self.mouse_pos = pygame.math.Vector2()
-        self.mouse_pos_world = pygame.math.Vector2()
-        self.mouse_rel = pygame.math.Vector2()
+        self.mouse_pos = pygame.Vector2()
+        self.mouse_pos_world = pygame.Vector2()
+        self.mouse_rel = pygame.Vector2()
         self.mouse_dy = tuple(enumerate((constants.PLATFORM_HEIGHT, 0)))
-        self.tile_at_mouse: Optional[WorldObject] = None
+        self.tile_at_mouse = None
 
-    def process_events(self, events: list) -> None:
+    def process_events(self, events):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -77,19 +72,19 @@ class MainGame(State):
         self.mouse_pos //= constants.MAGNIFICATION
         self.mouse_pos_world.update(self.world.small_display_to_world_pos(*self.mouse_pos))
 
-    def update(self, dt: float) -> None:
+    def update(self, dt):
         self.world.update(dt)
         self.get_tile_at_mouse()
         self.highlight_tile_at_mouse()
         # for e in self.enemies:
         #     e.update(dt)
 
-    def get_tile_at_mouse(self) -> None:
+    def get_tile_at_mouse(self):
         # I want to detect a platform only when the mouse is over the raised
         # part. The sides and base don't matter. I hope this will simplify
         # snapping the towers to the platforms.
 
-        tiles: List[Optional[WorldObject]] = [None, None]
+        tiles = [None, None]
         for i, dy in self.mouse_dy:
             tile_pos_x, tile_pos_y = self.world.small_display_to_tile_pos(
                 self.mouse_pos.x,
@@ -103,7 +98,7 @@ class MainGame(State):
         else:
             self.tile_at_mouse = None
 
-    def highlight_tile_at_mouse(self) -> None:
+    def highlight_tile_at_mouse(self):
         if self.tile_at_mouse is None:
             self.world.highlight.layer = -1
             return
@@ -111,7 +106,7 @@ class MainGame(State):
         self.world.highlight.world_pos.update(self.tile_at_mouse.world_pos)
         self.world.highlight.surface_pos.update(self.tile_at_mouse.surface_pos)
 
-    def draw(self, target_surface: pygame.surface.Surface) -> None:
+    def draw(self, target_surface):
         target_surface.fill((0, 0, 0))
         self.world.draw(target_surface)
 
@@ -125,18 +120,11 @@ class MainGame(State):
         #         )
         #     )
 
-    def draw_dev_overlay(self,
-                         target_surface: pygame.surface.Surface,
-                         clock: pygame.time.Clock) -> None:
+    def draw_dev_overlay(self, target_surface, clock):
         pygame.draw.rect(
             target_surface,
             self.dev_color,
-            pygame.Rect(
-                self.world.rect.x * constants.MAGNIFICATION,
-                self.world.rect.y * constants.MAGNIFICATION,
-                self.world.rect.width * constants.MAGNIFICATION,
-                self.world.rect.height * constants.MAGNIFICATION
-            ),
+            pygame.Rect([r * constants.MAGNIFICATION for r in self.world.rect]),
             1
         )
 
@@ -167,7 +155,7 @@ class MainGame(State):
 
         x, y = self.mouse_pos_world
         mouse_pos_text = self.dev_font.render(
-            f"mouse position in world: ({x:.1f}, {y:.1f})",  # type: ignore
+            f"mouse position in world: ({x:.1f}, {y:.1f})",
             False,
             self.dev_color
         )
