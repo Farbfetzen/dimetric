@@ -16,11 +16,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-# Import annotations from __future__ because one of the methods of WorldObject
-# uses the WorldObject type. This import will probably not be necessary
-# in Python >= 3.10. See https://stackoverflow.com/a/33533514
-from __future__ import annotations
-
 from dataclasses import dataclass
 
 import pygame
@@ -30,10 +25,10 @@ import pygame
 class WorldObject:
     type: str
     image: pygame.Surface
-    world_pos: pygame.math.Vector2
-    surface_pos: pygame.math.Vector2
+    world_pos: pygame.Vector2
+    surface_pos: pygame.Vector2
     layer: int = 0
 
-    def __lt__(self, other: WorldObject) -> bool:
+    def __lt__(self, other):
         return ((self.world_pos.x, self.world_pos.y, self.layer) <
                 (other.world_pos.x, other.world_pos.y, other.layer))

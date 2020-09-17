@@ -28,7 +28,7 @@ from src import resources
 from src.states import game_states
 
 
-def run() -> None:
+def run():
     pygame.init()
     assert pygame.font.get_init(), "Font module not initialized!"
     main_display = pygame.display.set_mode(constants.MAIN_DISPLAY_SIZE)
@@ -58,8 +58,6 @@ def run() -> None:
                 world_name = persistent_state_data["world_name"]
                 state = game_states[next_state_name](world_name)
             else:
-                # mypy complains about too few arguments but this error will
-                # go away once there is more than the MainGame state.
                 state = game_states[next_state_name]()
             state.resume(persistent_state_data)
 
