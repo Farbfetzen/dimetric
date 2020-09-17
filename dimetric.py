@@ -24,8 +24,10 @@ os.environ["SDL_VIDEO_CENTERED"] = "1"
 import pygame
 
 from src import constants
+from src import options
 from src import resources
 from src.states import game_states
+from src.input_manager import InputManager
 
 
 def run():
@@ -33,9 +35,11 @@ def run():
     assert pygame.font.get_init(), "Font module not initialized!"
     main_display = pygame.display.set_mode(constants.MAIN_DISPLAY_SIZE)
     small_display = pygame.Surface(constants.SMALL_DISPLAY_SIZE)
+    options.load_options()
     resources.load_images()
     resources.load_worlds()
     state = game_states["MainGame"]("test")
+    input_manager = InputManager()
     clock = pygame.time.Clock()
 
     while True:
@@ -43,9 +47,12 @@ def run():
         # (e.g. from moving the pygame window) by limiting to 0.1 s.
         dt = min(clock.tick(constants.FPS) / 1000, 0.1)
 
-        if pygame.event.get(pygame.QUIT):
+        events = input_manager.update()
+        if events == "quit":
+            # TODO: If there are unsaved changes, ask if they should be
+            #  saved, discarded or if the exit should be canceled.
             break
-        state.process_events(pygame.event.get())
+        state.process_events(events)
 
         if state.done:
             # TODO: Make it possible to resume a state instance from a stack
@@ -53,6 +60,8 @@ def run():
             persistent_state_data = state.close()
             next_state_name = persistent_state_data["next_state_name"]
             if next_state_name == "quit":
+                # TODO: If there are unsaved changes, ask if they should be
+                #  saved, discarded or if the exit should be canceled.
                 break
             elif next_state_name == "MainGame":
                 world_name = persistent_state_data["world_name"]
