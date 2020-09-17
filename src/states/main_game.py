@@ -16,7 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from typing import Any, Dict, TYPE_CHECKING, Optional
+from typing import List, TYPE_CHECKING, Optional
 
 import pygame
 
@@ -26,23 +26,19 @@ from src.states.state import State
 from src import enemy
 
 if TYPE_CHECKING:
-    from src.world import World
+    from src.world_object import WorldObject
 
 
 class MainGame(State):
-    def __init__(self) -> None:
+    def __init__(self, world_name: str) -> None:
         super().__init__()
-        self.world: Optional[World] = None
+        self.world = resources.worlds[world_name]
         # self.enemies = []
         self.mouse_pos = pygame.math.Vector2()
         self.mouse_pos_world = pygame.math.Vector2()
         self.mouse_rel = pygame.math.Vector2()
         self.mouse_dy = tuple(enumerate((constants.PLATFORM_HEIGHT, 0)))
-        self.tile_at_mouse = None
-
-    def start(self, persistent_state_data: Dict[str, Any]) -> None:
-        super().start(persistent_state_data)
-        self.world = resources.worlds[persistent_state_data["world_name"]]
+        self.tile_at_mouse: Optional[WorldObject] = None
 
     def process_events(self, events: list) -> None:
         for event in events:
@@ -78,10 +74,10 @@ class MainGame(State):
 
         # Convert mouse position to small_display coordinates:
         self.mouse_pos.update(pygame.mouse.get_pos())
-        self.mouse_pos /= constants.MAGNIFICATION
+        self.mouse_pos //= constants.MAGNIFICATION
         self.mouse_pos_world.update(self.world.small_display_to_world_pos(*self.mouse_pos))
 
-    def update(self, dt) -> None:
+    def update(self, dt: float) -> None:
         self.world.update(dt)
         self.get_tile_at_mouse()
         self.highlight_tile_at_mouse()
@@ -93,14 +89,13 @@ class MainGame(State):
         # part. The sides and base don't matter. I hope this will simplify
         # snapping the towers to the platforms.
 
-        tiles = [None, None]
+        tiles: List[Optional[WorldObject]] = [None, None]
         for i, dy in self.mouse_dy:
-            tile_x, tile_y = self.world.small_display_to_world_pos(
+            tile_pos_x, tile_pos_y = self.world.small_display_to_tile_pos(
                 self.mouse_pos.x,
-                self.mouse_pos.y + dy,
-                tile=True
+                self.mouse_pos.y + dy
             )
-            tiles[i] = self.world.get_tile_at(tile_x, tile_y)
+            tiles[i] = self.world.get_tile_at(tile_pos_x, tile_pos_y)
         if tiles[0] is not None and tiles[0].type == "platform":
             self.tile_at_mouse = tiles[0]
         elif tiles[1] is not None and tiles[1].type == "path":
@@ -116,7 +111,7 @@ class MainGame(State):
         self.world.highlight.world_pos.update(self.tile_at_mouse.world_pos)
         self.world.highlight.surface_pos.update(self.tile_at_mouse.surface_pos)
 
-    def draw(self, target_surface) -> None:
+    def draw(self, target_surface: pygame.surface.Surface) -> None:
         target_surface.fill((0, 0, 0))
         self.world.draw(target_surface)
 
@@ -130,11 +125,18 @@ class MainGame(State):
         #         )
         #     )
 
-    def draw_dev_overlay(self, target_surface, clock) -> None:
+    def draw_dev_overlay(self,
+                         target_surface: pygame.surface.Surface,
+                         clock: pygame.time.Clock) -> None:
         pygame.draw.rect(
             target_surface,
             self.dev_color,
-            pygame.Rect([r * constants.MAGNIFICATION for r in self.world.rect]),
+            pygame.Rect(
+                self.world.rect.x * constants.MAGNIFICATION,
+                self.world.rect.y * constants.MAGNIFICATION,
+                self.world.rect.width * constants.MAGNIFICATION,
+                self.world.rect.height * constants.MAGNIFICATION
+            ),
             1
         )
 

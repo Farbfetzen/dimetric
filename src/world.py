@@ -55,7 +55,7 @@ class World:
         )
         # Use surf_pos to track the floating point position because
         # rects can only hold integers.
-        self.surf_pos = pygame.Vector2(self.rect.topleft)
+        self.surf_pos = pygame.math.Vector2(self.rect.topleft)
 
         # Collision rect for limiting the map scrolling. Makes sure that
         # parts of the map remain visible.
@@ -145,8 +145,7 @@ class World:
 
     def small_display_to_world_pos(self,
                                    x: float,
-                                   y: float,
-                                   tile: bool = False) -> Tuple[float, float]:
+                                   y: float) -> Tuple[float, float]:
         # Adapted from the code example in wikipedia:
         # https://en.wikipedia.org/wiki/Isometric_video_game_graphics#Mapping_screen_to_world_coordinates
 
@@ -159,16 +158,17 @@ class World:
         virt_y = y / constants.TILE_HEIGHT
         world_x = virt_y + (virt_x - self.sidelength / 2)
         world_y = virt_y - (virt_x - self.sidelength / 2)
+        return world_x, world_y
 
+    def small_display_to_tile_pos(self,
+                                  x: float,
+                                  y: float) -> Tuple[int, int]:
         # Remember: Coordinates are floats. If you want to allow negative
         # tile positions then you must use math.floor() and not int().
         # int() rounds towards zero which would introduce an off-by-one error
         # for negative tile positions.
-        if tile:
-            world_x = floor(world_x)
-            world_y = floor(world_y)
-
-        return world_x, world_y
+        world_x, world_y = self.small_display_to_world_pos(x, y)
+        return floor(world_x), floor(world_y)
 
     def get_tile_at(self, x: int, y: int) -> Optional[WorldObject]:
         if 0 <= x < self.sidelength and 0 <= y < self.sidelength:
@@ -182,9 +182,9 @@ class World:
                    * dt)
             self.scroll(rel)
 
-    def scroll(self, rel) -> None:
+    def scroll(self, rel: pygame.math.Vector2) -> None:
         self.surf_pos += rel
-        self.rect.topleft = self.surf_pos  # type: ignore
+        self.rect.topleft = self.surf_pos
 
         if not self.map_scroll_limit.contains(self.rect):
             # Limit scrolling such that the map does not disappear completely
@@ -194,7 +194,7 @@ class World:
             self.rect.clamp_ip(self.map_scroll_limit)
             self.surf_pos.update(self.rect.topleft)
 
-    def draw(self, target_surface: pygame.Surface) -> None:
+    def draw(self, target_surface: pygame.surface.Surface) -> None:
         # self.surface.fill((0, 0, 0))
         self.visible_objects.sort()
         for v_obj in self.visible_objects:

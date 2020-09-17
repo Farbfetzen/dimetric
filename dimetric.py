@@ -25,7 +25,7 @@ import pygame
 
 from src import constants
 from src import resources
-from src import states
+from src.states import game_states
 
 
 def run() -> None:
@@ -35,9 +35,7 @@ def run() -> None:
     small_display = pygame.Surface(constants.SMALL_DISPLAY_SIZE)
     resources.load_images()
     resources.load_worlds()
-    game_states = {"MainGame": states.MainGame()}
-    state = game_states["MainGame"]
-    state.start({"world_name": "test"})
+    state = game_states["MainGame"]("test")
     clock = pygame.time.Clock()
 
     while True:
@@ -50,12 +48,20 @@ def run() -> None:
         state.process_events(pygame.event.get())
 
         if state.done:
+            # TODO: Make it possible to resume a state instance from a stack
+            #  instead of starting a new instance.
             persistent_state_data = state.close()
             next_state_name = persistent_state_data["next_state_name"]
             if next_state_name == "quit":
                 break
-            state = game_states[next_state_name]
-            state.start(persistent_state_data)
+            elif next_state_name == "MainGame":
+                world_name = persistent_state_data["world_name"]
+                state = game_states[next_state_name](world_name)
+            else:
+                # mypy complains about too few arguments but this error will
+                # go away once there is more than the MainGame state.
+                state = game_states[next_state_name]()
+            state.resume(persistent_state_data)
 
         state.update(dt)
 
