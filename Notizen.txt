@@ -69,11 +69,6 @@ Je nach Schwierigkeitsgrad oder Spielmodus sind die Waves anders zusammengesetzt
 Ich sollte das in einer Textdatei konfigurieren.:
 Gegnertyp, Anzahl, Abstand, Trefferpunkte, Geschwindigkeit, etc.
 
-1. Tiles und Objekte in der Welt werden auf world_surf geblittet.
-2. world_surf wird auf small_display geblittet, mit Versatz je nach scrolling.
-3. UI wird auch auf small_display geblittet.
-4. small_display wird vergrößert und ins main_display geblittet.
-
 
 Map Zoom:
 Mache es so, wie in Terra Nil. Behalte die Scrollgeschwindigkeit bei, sowohl 
@@ -93,4 +88,5 @@ TODO:
 * Mobs spawnen und den Pfad folgen lassen.
 * UI: Erstmal nur ein Button zum spawnen eines Mobs.
 * Hauptmenü, Optionsmenü, etc.
-
+* Rudimentäres Hauptmenü: "start game" und "quit"
+* Übergänge zwischen Menü und main game: ausblenden und einblenden, vllt. jeweils halbe Sekunde
