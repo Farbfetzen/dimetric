@@ -156,14 +156,11 @@ class World:
         return world_x, world_y
 
     def small_display_to_tile_pos(self, x, y):
-        # Remember: Coordinates are floats. If you want to allow negative
-        # tile positions then you must use math.floor() and not int().
-        # int() rounds towards zero which would introduce an off-by-one error
-        # for negative tile positions.
-        # But negative tile positions are not something I want in this game,
-        # so int() is fine.
+        # Important to use math.floor() instead of int() because int() rounds
+        # towards zero which would introduce an off-by-one error along the
+        # top edges of the map.
         world_x, world_y = self.small_display_to_world_pos(x, y)
-        return int(world_x), int(world_y)
+        return floor(world_x), floor(world_y)
 
     def get_tile_at(self, x, y):
         if 0 <= x < self.sidelength and 0 <= y < self.sidelength:
