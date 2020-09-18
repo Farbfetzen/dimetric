@@ -29,9 +29,16 @@ from src import options
 class EventManager:
     def __init__(self):
         self.events = []
-        self.mouse_pos = pygame.Vector2()  # Always update, never replace!
+        self.mouse_pos = pygame.Vector2()  # Always update, never replace.
 
-        # TODO: Get the keys from the options.
+        controls = options.options["controls"]
+        self.k_escape = pygame.K_ESCAPE
+        self.k_scroll_left = controls["scroll_left"]
+        self.k_scroll_right = controls["scroll_right"]
+        self.k_scroll_up = controls["scroll_up"]
+        self.k_scroll_down = controls["scroll_down"]
+        self.mouse_scroll_button_index = controls["mouse_scroll_button_index"]
+        self.k_dev = pygame.K_F1
 
     def update(self):
         self.events = pygame.event.get()

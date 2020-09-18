@@ -40,34 +40,34 @@ class MainGame(State):
                 self.close()
                 return
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+                if event.key == self.event_manager.k_escape:
                     self.close()
                     return
                 # elif event.key == pygame.K_s:
                 #     self.next_wave()
-                elif event.key == pygame.K_LEFT:
+                elif event.key == self.event_manager.k_scroll_left:
                     self.world.scroll_direction.x -= 1
-                elif event.key == pygame.K_RIGHT:
+                elif event.key == self.event_manager.k_scroll_right:
                     self.world.scroll_direction.x += 1
-                elif event.key == pygame.K_UP:
+                elif event.key == self.event_manager.k_scroll_up:
                     self.world.scroll_direction.y -= 1
-                elif event.key == pygame.K_DOWN:
+                elif event.key == self.event_manager.k_scroll_down:
                     self.world.scroll_direction.y += 1
-                elif event.key == pygame.K_F1:
+                elif event.key == self.event_manager.k_dev:
                     self.dev_overlay_visible = not self.dev_overlay_visible
             elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
+                if event.key == self.event_manager.k_scroll_left:
                     self.world.scroll_direction.x += 1
-                elif event.key == pygame.K_RIGHT:
+                elif event.key == self.event_manager.k_scroll_right:
                     self.world.scroll_direction.x -= 1
-                elif event.key == pygame.K_UP:
+                elif event.key == self.event_manager.k_scroll_up:
                     self.world.scroll_direction.y += 1
-                elif event.key == pygame.K_DOWN:
+                elif event.key == self.event_manager.k_scroll_down:
                     self.world.scroll_direction.y -= 1
-            elif event.type == pygame.MOUSEMOTION and event.buttons[2]:
-                # buttons[2] is the right mouse button
-                # No integer division because mouse_rel needs to stay float.
+            elif (event.type == pygame.MOUSEMOTION
+                  and event.buttons[self.event_manager.mouse_scroll_button_index]):
                 self.mouse_rel.update(event.rel)
+                # No integer division because mouse_rel needs to stay float.
                 self.mouse_rel /= constants.MAGNIFICATION
                 self.world.scroll(self.mouse_rel)
 
@@ -86,7 +86,6 @@ class MainGame(State):
         # I want to detect a platform only when the mouse is over the raised
         # part. The sides and base don't matter. I hope this will simplify
         # snapping the towers to the platforms.
-
         tiles = [None, None]
         for i, dy in self.mouse_dy:
             tile_pos_x, tile_pos_y = self.world.small_display_to_tile_pos(
