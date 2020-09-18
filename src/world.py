@@ -36,16 +36,18 @@ class World:
                 raise ValueError(f"Map '{self.name}' is not square.")
 
         # Add a margin of some tile sizes so other stuff fits on the world surface, too.
-        self.margin_x = constants.TILE_WIDTH
-        self.margin_y = constants.TILE_HEIGHT * 2
+        self.margin_x = constants.TILE_WIDTH * 2
+        self.margin_bottom = constants.TILE_HEIGHT * 3
+        self.margin_top = constants.TILE_HEIGHT * 6
         surf_width = self.sidelength * constants.TILE_WIDTH + self.margin_x * 2
-        surf_height = self.sidelength * constants.TILE_HEIGHT + self.margin_y * 2
+        surf_height = (self.sidelength * constants.TILE_HEIGHT
+                       + self.margin_top + self.margin_bottom)
         self.surface = pygame.Surface((surf_width, surf_height))
 
-        # Center the map on the world surface. Offset is the position of
+        # Position the map on the world surface. Offset is the position of
         # (0, 0) world coordinates on the world surface.
         self.offset_x = surf_width // 2
-        self.offset_y = self.margin_y
+        self.offset_y = self.margin_top
 
         self.rect = self.surface.get_rect()
         self.rect.center = (
@@ -147,7 +149,7 @@ class World:
         # Get x and y relative to the topleft corner of the bounding rectangle
         # of the map (not the rect of the map surface):
         x = x - self.rect.x - self.margin_x
-        y = y - self.rect.y - self.margin_y
+        y = y - self.rect.y - self.margin_top
 
         virt_x = x / constants.TILE_WIDTH
         virt_y = y / constants.TILE_HEIGHT
