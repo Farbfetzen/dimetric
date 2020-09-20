@@ -24,19 +24,26 @@ from src import resources
 
 class EventManager:
     def __init__(self):
-        self.events = []
-        self.mouse_pos = pygame.Vector2()  # Always update, never replace.
-
         controls = resources.options["controls"]
         self.k_escape = pygame.K_ESCAPE
         self.k_scroll_left = pygame.key.key_code(controls["scroll_left"])
         self.k_scroll_right = pygame.key.key_code(controls["scroll_right"])
         self.k_scroll_up = pygame.key.key_code(controls["scroll_up"])
         self.k_scroll_down = pygame.key.key_code(controls["scroll_down"])
-        self.mouse_scroll_button_index = controls["mouse_scroll_button_index"]
+        self.mouse_map_scroll_button_index = controls["mouse_scroll_button_index"]
         self.k_dev = pygame.key.key_code(controls["dev"])
 
-    def update(self):
-        self.events = pygame.event.get()
-        self.mouse_pos.update(pygame.mouse.get_pos())
-        self.mouse_pos //= constants.MAGNIFICATION
+    def process_events(self, state):
+        # Looping through the events here and sending them to the game states
+        # may make it easier to implement multiple concurrently active states
+        # in the future. In that case this method would accept a list of states
+        # and send each event to all states. If one state found it useful then
+        # the other states should not get the event.
+        state.mouse_pos.update(self.adjust_mouse(*pygame.mouse.get_pos()))
+        for event in pygame.event.get():
+            state.process_event(event, self)
+
+    @staticmethod
+    def adjust_mouse(x, y):
+        # Mouse position and movement should be in small_display coordinates.
+        return x / constants.MAGNIFICATION, y / constants.MAGNIFICATION

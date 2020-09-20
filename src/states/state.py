@@ -20,9 +20,8 @@ import pygame
 
 
 class State:
-    def __init__(self, event_manager):
-        self.event_manager = event_manager
-        self.mouse_pos = event_manager.mouse_pos
+    def __init__(self):
+        self.mouse_pos = pygame.Vector2()
         self.is_done = False
         self.persistent_state_data = {"next_state_name": "quit"}
 
@@ -48,7 +47,7 @@ class State:
         """
         self.is_done = True
 
-    def process_events(self):
+    def process_event(self, event, event_manager):
         raise NotImplementedError
 
     def update(self, dt):

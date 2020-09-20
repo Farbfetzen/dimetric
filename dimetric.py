@@ -38,7 +38,7 @@ def run():
     resources.load_images()
     resources.load_worlds()
     event_manager = EventManager()
-    state = game_states["MainGame"](event_manager, "test")
+    state = game_states["MainGame"]("test")
     clock = pygame.time.Clock()
 
     while True:
@@ -46,8 +46,7 @@ def run():
         # (e.g. from moving the pygame window) by limiting to 0.1 s.
         dt = min(clock.tick(constants.FPS) / 1000, 0.1)
 
-        event_manager.update()
-        state.process_events()
+        event_manager.process_events(state)
 
         if state.is_done:
             # TODO: Make it possible to resume a state instance from a stack
@@ -60,9 +59,9 @@ def run():
                 break
             elif next_state_name == "MainGame":
                 world_name = persistent_state_data["world_name"]
-                state = game_states[next_state_name](event_manager, world_name)
+                state = game_states[next_state_name](world_name)
             else:
-                state = game_states[next_state_name](event_manager)
+                state = game_states[next_state_name]()
             state.resume(persistent_state_data)
 
         state.update(dt)

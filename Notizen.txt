@@ -89,5 +89,5 @@ TODO:
 * Mobs spawnen und den Pfad folgen lassen.
 * UI: Erstmal nur ein Button zum spawnen eines Mobs.
 * Hauptmenü, Optionsmenü, etc.
-* Rudimentäres Hauptmenü: "start game" und "quit"
+* Rudimentäres Hauptmenü: "start game" und "quit" Teste pygame_gui.
 * Übergänge zwischen Menü und main game: ausblenden und einblenden, vllt. jeweils halbe Sekunde

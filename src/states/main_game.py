@@ -25,8 +25,8 @@ from src import enemy
 
 
 class MainGame(State):
-    def __init__(self, event_manager, world_name):
-        super().__init__(event_manager)
+    def __init__(self, world_name):
+        super().__init__()
         self.world = resources.worlds[world_name]
         # self.enemies = []
         self.mouse_pos_world = pygame.Vector2()
@@ -34,48 +34,44 @@ class MainGame(State):
         self.mouse_dy = tuple(enumerate((constants.PLATFORM_HEIGHT, 0)))
         self.tile_at_mouse = None
 
-    def process_events(self):
-        for event in self.event_manager.events:
-            if event.type == pygame.QUIT:
+    def process_event(self, event, event_manager):
+        if event.type == pygame.QUIT:
+            self.close()
+            return
+        elif event.type == pygame.KEYDOWN:
+            if event.key == event_manager.k_escape:
                 self.close()
                 return
-            if event.type == pygame.KEYDOWN:
-                if event.key == self.event_manager.k_escape:
-                    self.close()
-                    return
-                # elif event.key == self.event_manager.k_next_wave:
-                #     self.next_wave()
-                elif event.key == self.event_manager.k_scroll_left:
-                    self.world.scroll_direction.x -= 1
-                elif event.key == self.event_manager.k_scroll_right:
-                    self.world.scroll_direction.x += 1
-                elif event.key == self.event_manager.k_scroll_up:
-                    self.world.scroll_direction.y -= 1
-                elif event.key == self.event_manager.k_scroll_down:
-                    self.world.scroll_direction.y += 1
-                elif event.key == self.event_manager.k_dev:
-                    self.dev_overlay_visible = not self.dev_overlay_visible
-            elif event.type == pygame.KEYUP:
-                if event.key == self.event_manager.k_scroll_left:
-                    self.world.scroll_direction.x += 1
-                elif event.key == self.event_manager.k_scroll_right:
-                    self.world.scroll_direction.x -= 1
-                elif event.key == self.event_manager.k_scroll_up:
-                    self.world.scroll_direction.y += 1
-                elif event.key == self.event_manager.k_scroll_down:
-                    self.world.scroll_direction.y -= 1
-            elif (event.type == pygame.MOUSEMOTION
-                  and event.buttons[self.event_manager.mouse_scroll_button_index]):
-                self.mouse_rel.update(event.rel)
-                # No integer division because mouse_rel needs to stay float.
-                self.mouse_rel /= constants.MAGNIFICATION
-                self.world.scroll(self.mouse_rel)
+            # elif event.key == self.event_manager.k_next_wave:
+            #     self.next_wave()
+            elif event.key == event_manager.k_scroll_left:
+                self.world.scroll_direction.x -= 1
+            elif event.key == event_manager.k_scroll_right:
+                self.world.scroll_direction.x += 1
+            elif event.key == event_manager.k_scroll_up:
+                self.world.scroll_direction.y -= 1
+            elif event.key == event_manager.k_scroll_down:
+                self.world.scroll_direction.y += 1
+            elif event.key == event_manager.k_dev:
+                self.dev_overlay_visible = not self.dev_overlay_visible
+        elif event.type == pygame.KEYUP:
+            if event.key == event_manager.k_scroll_left:
+                self.world.scroll_direction.x += 1
+            elif event.key == event_manager.k_scroll_right:
+                self.world.scroll_direction.x -= 1
+            elif event.key == event_manager.k_scroll_up:
+                self.world.scroll_direction.y += 1
+            elif event.key == event_manager.k_scroll_down:
+                self.world.scroll_direction.y -= 1
+        elif (event.type == pygame.MOUSEMOTION
+              and event.buttons[event_manager.mouse_map_scroll_button_index]):
+            self.mouse_rel.update(event_manager.adjust_mouse(*event.rel))
+            self.world.scroll(self.mouse_rel)
 
+    def update(self, dt):
         self.mouse_pos_world.update(
             self.world.small_display_to_world_pos(*self.mouse_pos)
         )
-
-    def update(self, dt):
         self.world.update(dt)
         self.get_tile_at_mouse()
         self.highlight_tile_at_mouse()
