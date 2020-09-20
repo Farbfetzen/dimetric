@@ -1,4 +1,4 @@
-"""Load images, worlds, config etc. and make them accessible."""
+"""Load images, worlds, options etc. and make them accessible."""
 
 # Copyright (C) 2020  Sebastian Henz
 #
@@ -17,8 +17,8 @@
 
 
 import os
-import pygame
 import json
+import pygame
 
 from src import constants
 from src import world
@@ -26,6 +26,16 @@ from src import world
 
 images = {}
 worlds = {}
+options = {}
+default_options = {
+    "controls": {
+        "scroll_left": pygame.K_LEFT,
+        "scroll_right": pygame.K_RIGHT,
+        "scroll_up": pygame.K_UP,
+        "scroll_down": pygame.K_DOWN,
+        "mouse_scroll_button_index": 2
+    }
+}
 
 
 def load_images():
@@ -41,3 +51,20 @@ def load_worlds():
         with open(os.path.join("worlds", filename), "r") as file:
             world_data = json.load(file)
             worlds[world_data["name"]] = world.World(world_data, images)
+
+
+def load_options():
+    if os.path.isfile("options.json"):
+        with open("options.json", "r") as file:
+            opt = json.load(file)
+    else:
+        save_options(default_options)
+        opt = default_options
+    options.update(opt)
+
+
+def save_options(opt=None):
+    if opt is None:
+        opt = options
+    with open("options.json", "w") as file:
+        json.dump(opt, file, indent=4, sort_keys=True)

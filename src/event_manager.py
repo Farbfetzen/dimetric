@@ -19,19 +19,15 @@
 import pygame
 
 from src import constants
-from src import options
+from src import resources
 
-
-# TODO: import the controls from the options and make them easily available to
-#  the game states so each state can check of one of its relevant events
-#  was triggered.
 
 class EventManager:
     def __init__(self):
         self.events = []
         self.mouse_pos = pygame.Vector2()  # Always update, never replace.
 
-        controls = options.options["controls"]
+        controls = resources.options["controls"]
         self.k_escape = pygame.K_ESCAPE
         self.k_scroll_left = controls["scroll_left"]
         self.k_scroll_right = controls["scroll_right"]

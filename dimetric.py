@@ -24,7 +24,6 @@ os.environ["SDL_VIDEO_CENTERED"] = "1"
 import pygame
 
 from src import constants
-from src import options
 from src import resources
 from src.states import game_states
 from src.event_manager import EventManager
@@ -35,7 +34,7 @@ def run():
     assert pygame.font.get_init(), "Font module not initialized!"
     main_display = pygame.display.set_mode(constants.MAIN_DISPLAY_SIZE)
     small_display = pygame.Surface(constants.SMALL_DISPLAY_SIZE)
-    options.load_options()
+    resources.load_options()
     resources.load_images()
     resources.load_worlds()
     event_manager = EventManager()
