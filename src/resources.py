@@ -55,13 +55,13 @@ def load_worlds():
 
 
 def load_options():
-    if os.path.isfile("options.json"):
+    try:
         with open("options.json", "r") as file:
-            opt = json.load(file)
-    else:
+            options.update(json.load(file))
+    except FileNotFoundError as e:
+        # TODO: log error
         save_options(default_options)
-        opt = default_options
-    options.update(opt)
+        options.update(default_options)
 
 
 def save_options(opt=None):
