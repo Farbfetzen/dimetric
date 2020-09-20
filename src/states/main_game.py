@@ -43,7 +43,7 @@ class MainGame(State):
                 if event.key == self.event_manager.k_escape:
                     self.close()
                     return
-                # elif event.key == pygame.K_s:
+                # elif event.key == self.event_manager.k_next_wave:
                 #     self.next_wave()
                 elif event.key == self.event_manager.k_scroll_left:
                     self.world.scroll_direction.x -= 1

@@ -29,11 +29,12 @@ worlds = {}
 options = {}
 default_options = {
     "controls": {
-        "scroll_left": pygame.K_LEFT,
-        "scroll_right": pygame.K_RIGHT,
-        "scroll_up": pygame.K_UP,
-        "scroll_down": pygame.K_DOWN,
-        "mouse_scroll_button_index": 2
+        "scroll_left": "left",
+        "scroll_right": "right",
+        "scroll_up": "up",
+        "scroll_down": "down",
+        "mouse_scroll_button_index": 2,
+        "dev": "f1"
     }
 }
 
