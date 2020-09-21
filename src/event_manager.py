@@ -1,5 +1,3 @@
-"""Manage the inputs and events for the game."""
-
 # Copyright (C) 2020  Sebastian Henz
 #
 # This program is free software: you can redistribute it and/or modify
