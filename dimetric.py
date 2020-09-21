@@ -38,7 +38,7 @@ def run():
     resources.load_images()
     resources.load_worlds()
     event_manager = EventManager()
-    state = game_states["MainGame"]("test")
+    state = game_states["MainMenu"]()
     clock = pygame.time.Clock()
 
     while True:

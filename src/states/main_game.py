@@ -33,13 +33,10 @@ class MainGame(State):
         self.tile_at_mouse = None
 
     def process_event(self, event, event_manager):
-        if event.type == pygame.QUIT:
-            self.close()
-            return
-        elif event.type == pygame.KEYDOWN:
+        super().process_event(event, event_manager)
+        if event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_escape:
-                self.close()
-                return
+                self.close("MainMenu")
             # elif event.key == self.event_manager.k_next_wave:
             #     self.next_wave()
             elif event.key == event_manager.k_scroll_left:
@@ -50,8 +47,6 @@ class MainGame(State):
                 self.world.scroll_direction.y -= 1
             elif event.key == event_manager.k_scroll_down:
                 self.world.scroll_direction.y += 1
-            elif event.key == event_manager.k_dev:
-                self.dev_overlay_visible = not self.dev_overlay_visible
         elif event.type == pygame.KEYUP:
             if event.key == event_manager.k_scroll_left:
                 self.world.scroll_direction.x += 1
@@ -117,19 +112,7 @@ class MainGame(State):
         #     )
 
     def draw_dev_overlay(self, target_surface, clock):
-        pygame.draw.rect(
-            target_surface,
-            self.dev_color,
-            pygame.Rect([r * constants.MAGNIFICATION for r in self.world.rect]),
-            1
-        )
-
-        fps_text = self.dev_font.render(
-            f"FPS: {int(clock.get_fps())}",
-            False,
-            self.dev_color
-        )
-        target_surface.blit(fps_text, self.dev_margin)
+        super().draw_dev_overlay(target_surface, clock)
 
         if self.tile_at_mouse is None:
             tile_info = "tile at mouse: none"
@@ -158,6 +141,13 @@ class MainGame(State):
         target_surface.blit(
             mouse_pos_text,
             (self.dev_margin.x, self.dev_margin.y * 5)
+        )
+
+        pygame.draw.rect(
+            target_surface,
+            self.dev_color,
+            pygame.Rect([r * constants.MAGNIFICATION for r in self.world.rect]),
+            1
         )
 
     # def next_wave(self):
