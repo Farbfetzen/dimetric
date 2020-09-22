@@ -50,7 +50,8 @@ def run():
 
         if state.is_done:
             # TODO: Make it possible to resume a state instance from a stack
-            #  instead of starting a new instance.
+            #  instead of starting a new instance. At the moment states are
+            #  always new instances.
             persistent_state_data = state.persistent_state_data
             next_state_name = persistent_state_data["next_state_name"]
             if next_state_name == "quit":

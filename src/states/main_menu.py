@@ -18,49 +18,48 @@ import pygame
 
 from src import constants
 from src import states
+from src import button
 
 
 class MainMenu(states.State):
     def __init__(self):
         super().__init__()
 
-        # TODO: Make a button class. This here is just quick and dirty.
-        self.start_rect = pygame.Rect(0, 0, 100, 50)
-        self.start_surf = pygame.Surface(self.start_rect.size)
-        self.start_surf.fill((0, 0, 0))
-        pygame.draw.rect(self.start_surf, self.dev_color, self.start_rect, 1)
-        start_text = self.dev_font.render("new game", False, self.dev_color)
-        start_text_rect = start_text.get_rect()
-        start_text_rect.center = self.start_rect.center
-        self.start_surf.blit(start_text, start_text_rect)
-        self.start_rect.center = constants.SMALL_DISPLAY_WIDTH // 2, 50
+        self.buttons = (
+            button.Button(
+                "new game",
+                (100, 50),
+                (constants.SMALL_DISPLAY_WIDTH // 2, 50),
+                self.new_game,
+            ),
+            button.Button(
+                "quit",
+                (100, 50),
+                (constants.SMALL_DISPLAY_WIDTH // 2, 200),
+                self.close
+            )
+        )
 
-        self.quit_rect = pygame.Rect(0, 0, 100, 50)
-        self.quit_surf = pygame.Surface(self.quit_rect.size)
-        self.quit_surf.fill((0, 0, 0))
-        pygame.draw.rect(self.quit_surf, self.dev_color, self.quit_rect, 1)
-        quit_text = self.dev_font.render("quit", False, self.dev_color)
-        quit_text_rect = quit_text.get_rect()
-        quit_text_rect.center = self.quit_rect.center
-        self.quit_surf.blit(quit_text, quit_text_rect)
-        self.quit_rect.center = constants.SMALL_DISPLAY_WIDTH // 2, 200
+    def new_game(self):
+        self.persistent_state_data["world_name"] = "test"
+        self.close("MainGame")
 
     def process_event(self, event, event_manager):
         super().process_event(event, event_manager)
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             x, y = event_manager.adjust_mouse(*event.pos)
-            if self.start_rect.collidepoint(x, y):
-                self.persistent_state_data["world_name"] = "test"
-                self.close("MainGame")
-            elif self.quit_rect.collidepoint(x, y):
-                self.close()
+            for b in self.buttons:
+                if b.rect.collidepoint(x, y):
+                    b.action()
+                    break
 
     def update(self, dt):
-        pass
+        for b in self.buttons:
+            b.update(self.mouse_pos)
 
     def draw(self, target_surface):
         target_surface.fill((0, 0, 0))
-        target_surface.blit(self.start_surf, self.start_rect)
-        target_surface.blit(self.quit_surf, self.quit_rect)
+        for b in self.buttons:
+            target_surface.blit(b.image, b.rect)
 
 
