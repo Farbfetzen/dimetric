@@ -18,11 +18,11 @@ import pygame
 
 from src import constants
 from src import resources
-from src.states.state import State
+from src import states
 from src import enemy
 
 
-class MainGame(State):
+class MainGame(states.State):
     def __init__(self, world_name):
         super().__init__()
         self.world = resources.worlds[world_name]

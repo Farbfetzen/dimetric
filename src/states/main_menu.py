@@ -17,10 +17,10 @@
 import pygame
 
 from src import constants
-from src.states.state import State
+from src import states
 
 
-class MainMenu(State):
+class MainMenu(states.State):
     def __init__(self):
         super().__init__()
 
