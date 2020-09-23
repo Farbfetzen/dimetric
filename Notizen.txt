@@ -91,10 +91,11 @@ TODO:
   geladenen Levels. Ersetze print() dadurch beim debuggen.
 * Mobs spawnen und den Pfad folgen lassen.
 * UI: Erstmal nur ein Button zum spawnen eines Mobs.
-* Hauptmenü, Optionsmenü, etc.
 * Übergänge zwischen Menü und main game: ausblenden und einblenden, vllt. jeweils
   halbe Sekunde. Aber zwischen den Menüs keine Übergänge.
 * Optionsmenü zum Ändern der Keybindings.
 * Pausenmenü: Während das Spiel läuft Esc drücken, damit ein kleines Pausenmenü
   auftaucht (resume, quit, options). Wenn das Spiel fortgesetzt werden soll,
   muss die vorherige Instanz weitergeführt werden. Keine neue Instanz erschaffen!
+* pygame.freetype für Schrift verwenden. Siehe die Beispiele in der Doku
+  zum rendern. Biete immer mehrere Schriftarten an: ("inconsolata", "consola", "monospace")

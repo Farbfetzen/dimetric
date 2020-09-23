@@ -16,11 +16,11 @@
 
 import pygame
 
-from src import states
+from src.states import state
 from src import button
 
 
-class OptionsMenu(states.State):
+class OptionsMenu(state.State):
     def __init__(self):
         super().__init__()
 
@@ -32,7 +32,7 @@ class OptionsMenu(states.State):
         super().process_event(event, event_manager)
         if event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_escape:
-                self.close("MainMenu")
+                self.close("main menu")
 
     def update(self, dt):
         for b in self.buttons:

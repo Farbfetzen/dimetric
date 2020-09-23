@@ -62,6 +62,12 @@ def load_options():
         options.update(default_options)
 
 
+def load_all():
+    load_options()
+    load_images()
+    load_worlds()
+
+
 def save_options(opt=None):
     if opt is None:
         opt = options

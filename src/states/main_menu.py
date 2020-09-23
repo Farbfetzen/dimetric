@@ -17,11 +17,11 @@
 import pygame
 
 from src import constants
-from src import states
+from src.states import state
 from src import button
 
 
-class MainMenu(states.State):
+class MainMenu(state.State):
     def __init__(self):
         super().__init__()
 
@@ -69,7 +69,7 @@ class MainMenu(states.State):
 
     def new_game(self):
         self.persistent_state_data["world_name"] = "test"
-        self.close("MainGame")
+        self.close("main game")
 
     def goto_options(self):
-        self.close("OptionsMenu")
+        self.close("options menu")

@@ -18,11 +18,11 @@ import pygame
 
 from src import constants
 from src import resources
-from src import states
+from src.states import state
 from src import enemy
 
 
-class MainGame(states.State):
+class MainGame(state.State):
     def __init__(self, world_name):
         super().__init__()
         self.world = resources.worlds[world_name]
@@ -36,7 +36,7 @@ class MainGame(states.State):
         super().process_event(event, event_manager)
         if event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_escape:
-                self.close("MainMenu")
+                self.close("main menu")
             # elif event.key == self.event_manager.k_next_wave:
             #     self.next_wave()
             elif event.key == event_manager.k_scroll_left:
