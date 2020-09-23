@@ -25,7 +25,7 @@ import pygame
 
 from src import constants
 from src import resources
-from src.states import game_states
+from src.states.state_manager import StateManager
 from src.event_manager import EventManager
 
 
@@ -38,35 +38,18 @@ def run():
     resources.load_images()
     resources.load_worlds()
     event_manager = EventManager()
-    state = game_states["MainMenu"]()
+    state_manager = StateManager("main menu")
     clock = pygame.time.Clock()
-
-    while True:
+    running = True
+    while running:
         # delta time of previous tick in seconds. Protect against hiccups
         # (e.g. from moving the pygame window) by limiting to 0.1 s.
         dt = min(clock.tick(constants.FPS) / 1000, 0.1)
-
+        # TODO: Mache einfach eine Klasse App oder Game,
+        #   welche den state manager und die main loop enthält. Und zwar in
+        #   dieser Datei hier, nicht in src/states.
         event_manager.process_events(state)
-
-        if state.is_done:
-            # TODO: Make it possible to resume a state instance from a stack
-            #  instead of starting a new instance. At the moment states are
-            #  always new instances.
-            persistent_state_data = state.persistent_state_data
-            next_state_name = persistent_state_data["next_state_name"]
-            if next_state_name == "quit":
-                # TODO: If there are unsaved changes, ask if they should be
-                #  saved, discarded or if the exit should be canceled.
-                break
-            elif next_state_name == "MainGame":
-                world_name = persistent_state_data["world_name"]
-                state = game_states[next_state_name](world_name)
-            else:
-                state = game_states[next_state_name]()
-            state.resume(persistent_state_data)
-
         state.update(dt)
-
         state.draw(small_display)
         pygame.transform.scale(
             small_display,
