@@ -58,7 +58,7 @@ class State:
                 self.dev_overlay_visible = not self.dev_overlay_visible
 
     def update(self, dt):
-        raise NotImplementedError
+        pass
 
     def draw(self, target_surface):
         raise NotImplementedError
