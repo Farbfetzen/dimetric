@@ -16,47 +16,23 @@
 
 import pygame
 
-from src import constants
 from src import states
 from src import button
 
 
-class MainMenu(states.State):
+class OptionsMenu(states.State):
     def __init__(self):
         super().__init__()
 
-        self.buttons = (
-            button.Button(
-                "New Game",
-                (100, 50),
-                (constants.SMALL_DISPLAY_WIDTH // 2, 50),
-                self.new_game
-            ),
-            button.Button(
-                "Options",
-                (100, 50),
-                (constants.SMALL_DISPLAY_WIDTH // 2, constants.SMALL_DISPLAY_HEIGHT // 2),
-                self.goto_options
-            ),
-            button.Button(
-                "Quit",
-                (100, 50),
-                (constants.SMALL_DISPLAY_WIDTH // 2, 200),
-                self.close
-            )
-        )
+        # TODO: Create text fields and input fields which allow users to
+        #  modify keybindings.
+        self.buttons = ()
 
     def process_event(self, event, event_manager):
         super().process_event(event, event_manager)
         if event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_escape:
-                self.close()
-        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            x, y = event_manager.adjust_mouse(*event.pos)
-            for b in self.buttons:
-                if b.rect.collidepoint(x, y):
-                    b.action()
-                    break
+                self.close("MainMenu")
 
     def update(self, dt):
         for b in self.buttons:
@@ -66,10 +42,3 @@ class MainMenu(states.State):
         target_surface.fill((0, 0, 0))
         for b in self.buttons:
             target_surface.blit(b.image, b.rect)
-
-    def new_game(self):
-        self.persistent_state_data["world_name"] = "test"
-        self.close("MainGame")
-
-    def goto_options(self):
-        self.close("OptionsMenu")

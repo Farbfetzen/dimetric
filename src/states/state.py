@@ -21,7 +21,7 @@ class State:
     def __init__(self):
         self.mouse_pos = pygame.Vector2()
         self.is_done = False
-        self.persistent_state_data = {"next_state_name": "quit"}
+        self.persistent_state_data = {}
 
         self.dev_overlay_visible = True
         self.dev_font = pygame.font.SysFont("monospace", 18)

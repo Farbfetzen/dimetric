@@ -43,5 +43,7 @@ class EventManager:
 
     @staticmethod
     def adjust_mouse(x, y):
-        # Mouse position and movement should be in small_display coordinates.
+        """ Convert mouse position and relative movement to
+        small_display coordinates.
+        """
         return x / constants.MAGNIFICATION, y / constants.MAGNIFICATION
