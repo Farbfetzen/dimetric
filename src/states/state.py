@@ -24,9 +24,13 @@ class State:
         self.persistent_state_data = {}
 
         self.dev_overlay_visible = True
-        self.dev_font = pygame.font.SysFont("monospace", 18)
-        self.dev_line_hight = self.dev_font.get_height()
+        self.dev_font = pygame.freetype.SysFont(
+            "inconsolata, consolas, monospace",
+            18
+        )
+        self.dev_line_hight = self.dev_font.get_sized_height()
         self.dev_color = (255, 255, 255)
+        self.dev_font.fgcolor = self.dev_color
         self.dev_margin = pygame.Vector2(10, 10)
 
     def resume(self, persistent_state_data):
@@ -64,9 +68,8 @@ class State:
         raise NotImplementedError
 
     def draw_dev_overlay(self, target_surface, clock):
-        fps_text = self.dev_font.render(
-            f"FPS: {int(clock.get_fps())}",
-            False,
-            self.dev_color
+        self.dev_font.render_to(
+            target_surface,
+            self.dev_margin,
+            f"FPS: {int(clock.get_fps())}"
         )
-        target_surface.blit(fps_text, self.dev_margin)

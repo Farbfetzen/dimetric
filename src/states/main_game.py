@@ -114,6 +114,9 @@ class MainGame(states.State):
     def draw_dev_overlay(self, target_surface, clock):
         super().draw_dev_overlay(target_surface, clock)
 
+        # FIXME: Rendering is rather slow. Reuse the surfaces, use render()
+        #  instead of render_to(), and only render a new text if the info
+        #  has changed.
         if self.tile_at_mouse is None:
             tile_info = "tile at mouse: none"
         else:
@@ -122,25 +125,17 @@ class MainGame(states.State):
                 f" ({self.tile_at_mouse.world_pos.x:.0f}, " +
                 f"{self.tile_at_mouse.world_pos.y:.0f})"
             )
-        mouse_tile_text = self.dev_font.render(
-            tile_info,
-            False,
-            self.dev_color
-        )
-        target_surface.blit(
-            mouse_tile_text,
-            (self.dev_margin.x, self.dev_margin.y * 3)
+        self.dev_font.render_to(
+            target_surface,
+            (self.dev_margin.x, self.dev_margin.y * 3),
+            tile_info
         )
 
         x, y = self.mouse_pos_world
-        mouse_pos_text = self.dev_font.render(
-            f"mouse position in world: ({x:.1f}, {y:.1f})",
-            False,
-            self.dev_color
-        )
-        target_surface.blit(
-            mouse_pos_text,
-            (self.dev_margin.x, self.dev_margin.y * 5)
+        self.dev_font.render_to(
+            target_surface,
+            (self.dev_margin.x, self.dev_margin.y * 5),
+            f"mouse position in world: ({x:.1f}, {y:.1f})"
         )
 
         pygame.draw.rect(
