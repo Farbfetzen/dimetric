@@ -65,6 +65,7 @@ in umgekehrte x-Richtung blitten muss, damit sich hohe tiles nicht überlappen.
 So muss ich einfach nach aufsteigendem x und y sortieren und die Reihenfolge
 der Blits ist korrekt.
 
+
 Je nach Schwierigkeitsgrad oder Spielmodus sind die Waves anders zusammengesetzt.
 Ich sollte das in einer Textdatei konfigurieren.:
 Gegnertyp, Anzahl, Abstand, Trefferpunkte, Geschwindigkeit, etc.
@@ -84,6 +85,9 @@ einer größeren Skala aufziehen. Die Tiles wären dann z.B. an (100, 200) statt
 
 
 Optionsmenü simpel und flach halten. Nur eine Seite. Wie in StardewValley oder der R gui.
+
+
+Ich sollte vielleicht ein oder zwei fonts mitliefern, wenn möglich.
 
 
 TODO:

@@ -30,9 +30,8 @@ class Button:
         pygame.draw.rect(self.hover_image, (255, 255, 255), self.rect, 1)
         self.image = self.idle_image
 
-        font = pygame.font.SysFont("monospace", 18)
-        text_surf = font.render(text, False, (255, 255, 255))
-        text_rect = text_surf.get_rect()
+        font = pygame.freetype.SysFont("sans", 15, bold=True)
+        text_surf, text_rect = font.render(text, (255, 255, 255))
         text_rect.center = self.rect.center
         self.idle_image.blit(text_surf, text_rect)
         self.hover_image.blit(text_surf, text_rect)
