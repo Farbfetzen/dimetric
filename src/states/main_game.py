@@ -18,13 +18,13 @@ import pygame
 
 from src import constants
 from src import resources
-from src.states import state
+from src.states.state import State, StateDevOverlay
 from src import enemy
 
 
-class MainGame(state.State):
+class MainGame(State):
     def __init__(self, world_name):
-        super().__init__()
+        super().__init__(MainGameDevOverlay)
         self.world = resources.worlds[world_name]
         # self.enemies = []
         self.mouse_pos_world = pygame.Vector2()
@@ -111,39 +111,58 @@ class MainGame(state.State):
         #         )
         #     )
 
-    def draw_dev_overlay(self, target_surface, clock):
-        super().draw_dev_overlay(target_surface, clock)
+    # def next_wave(self):
+    #     self.enemies.append(Enemy("cube", self.world.path))
 
-        # FIXME: Rendering is rather slow. Reuse the surfaces, use render()
-        #  instead of render_to(), and only render a new text if the info
-        #  has changed.
-        if self.tile_at_mouse is None:
-            tile_info = "tile at mouse: none"
+
+class MainGameDevOverlay(StateDevOverlay):
+    def __init__(self, state):
+        super().__init__(state)
+
+        self.tile_info_text = ""
+        self.tile_info_surf = None
+        self.tile_info_rect = None
+
+        self.mouse_pos_text = ""
+        self.mouse_pos_surf = None
+        self.mouse_pos_rect = None
+
+    def update(self, clock):
+        super().update(clock)
+
+        if self.state.tile_at_mouse is None:
+            new_tile_info_text = "tile at mouse: none"
         else:
-            tile_info = (
-                f"tile at mouse: {self.tile_at_mouse.type}" +
-                f" ({self.tile_at_mouse.world_pos.x:.0f}, " +
-                f"{self.tile_at_mouse.world_pos.y:.0f})"
+            new_tile_info_text = (
+                f"tile at mouse: {self.state.tile_at_mouse.type}" +
+                f" ({self.state.tile_at_mouse.world_pos.x:.0f}, " +
+                f"{self.state.tile_at_mouse.world_pos.y:.0f})"
             )
-        self.dev_font.render_to(
-            target_surface,
-            (self.dev_margin.x, self.dev_margin.y * 3),
-            tile_info
-        )
+        if new_tile_info_text != self.tile_info_text:
+            self.tile_info_text = new_tile_info_text
+            self.tile_info_surf, self.tile_info_rect = self.dev_font.render(
+                self.tile_info_text
+            )
+            self.tile_info_rect.topleft = (self.dev_margin.x, self.dev_margin.y * 3)
 
-        x, y = self.mouse_pos_world
-        self.dev_font.render_to(
-            target_surface,
-            (self.dev_margin.x, self.dev_margin.y * 5),
-            f"mouse position in world: ({x:.1f}, {y:.1f})"
-        )
+        x, y = self.state.mouse_pos_world
+        new_mouse_pos_text = f"mouse position in world: ({x:.1f}, {y:.1f})"
+        if new_mouse_pos_text != self.mouse_pos_text:
+            self.mouse_pos_text = new_mouse_pos_text
+            self.mouse_pos_surf, self.mouse_pos_rect = self.dev_font.render(
+                self.mouse_pos_text
+            )
+            self.mouse_pos_rect.topleft = (self.dev_margin.x, self.dev_margin.y * 5)
+
+    def draw(self, target_surface):
+        super().draw(target_surface)
+
+        target_surface.blit(self.tile_info_surf, self.tile_info_rect)
+        target_surface.blit(self.mouse_pos_surf, self.mouse_pos_rect)
 
         pygame.draw.rect(
             target_surface,
             self.dev_color,
-            pygame.Rect([r * constants.MAGNIFICATION for r in self.world.rect]),
+            pygame.Rect([r * constants.MAGNIFICATION for r in self.state.world.rect]),
             1
         )
-
-    # def next_wave(self):
-    #     self.enemies.append(Enemy("cube", self.world.path))

@@ -101,5 +101,6 @@ TODO:
 * Pausenmenü: Während das Spiel läuft Esc drücken, damit ein kleines Pausenmenü
   auftaucht (resume, quit, options). Wenn das Spiel fortgesetzt werden soll,
   muss die vorherige Instanz weitergeführt werden. Keine neue Instanz erschaffen!
-* pygame.freetype für Schrift verwenden. Siehe die Beispiele in der Doku
-  zum rendern. Biete immer mehrere Schriftarten an: ("inconsolata", "consola", "monospace")
+* Die Debug-Info im Main Game hüpft. Scheint als hätte ich nicht die ganze Höhe
+  ausgenutzt? Oder das Zentrieren ist schuld.
+

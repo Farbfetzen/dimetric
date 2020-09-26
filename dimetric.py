@@ -84,8 +84,9 @@ class Game:
                 constants.MAIN_DISPLAY_SIZE,
                 self.main_display
             )
-            if self.state.dev_overlay_visible:
-                self.state.draw_dev_overlay(self.main_display, clock)
+            if self.state.dev_overlay.is_visible:
+                self.state.dev_overlay.update(clock)
+                self.state.dev_overlay.draw(self.main_display)
             pygame.display.flip()
 
 

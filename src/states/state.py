@@ -18,20 +18,14 @@ import pygame
 
 
 class State:
-    def __init__(self):
+    def __init__(self, dev_overlay=None):
+        if dev_overlay is None:
+            self.dev_overlay = StateDevOverlay(self)
+        else:
+            self.dev_overlay = dev_overlay(self)
         self.mouse_pos = pygame.Vector2()
         self.is_done = False
         self.persistent_state_data = {}
-
-        self.dev_overlay_visible = True
-        self.dev_font = pygame.freetype.SysFont(
-            "inconsolata, consolas, monospace",
-            18
-        )
-        self.dev_line_hight = self.dev_font.get_sized_height()
-        self.dev_color = (255, 255, 255)
-        self.dev_font.fgcolor = self.dev_color
-        self.dev_margin = pygame.Vector2(10, 10)
 
     def resume(self, persistent_state_data):
         """Resume an already instantiated state.
@@ -39,7 +33,7 @@ class State:
         this state.
         """
         self.persistent_state_data = persistent_state_data
-        self.dev_overlay_visible = persistent_state_data["dev_overlay_visible"]
+        self.dev_overlay.is_visible = persistent_state_data["dev_overlay_visible"]
         self.is_done = False
 
     def close(self, next_state_name=None):
@@ -51,7 +45,7 @@ class State:
         if next_state_name is None:
             next_state_name = "quit"
         self.persistent_state_data["next_state_name"] = next_state_name
-        self.persistent_state_data["dev_overlay_visible"] = self.dev_overlay_visible
+        self.persistent_state_data["dev_overlay_visible"] = self.dev_overlay.is_visible
         self.is_done = True
 
     def process_event(self, event, event_manager):
@@ -59,7 +53,7 @@ class State:
             self.close()
         elif event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_dev:
-                self.dev_overlay_visible = not self.dev_overlay_visible
+                self.dev_overlay.is_visible = not self.dev_overlay.is_visible
 
     def update(self, dt):
         pass
@@ -67,9 +61,30 @@ class State:
     def draw(self, target_surface):
         raise NotImplementedError
 
-    def draw_dev_overlay(self, target_surface, clock):
-        self.dev_font.render_to(
-            target_surface,
-            self.dev_margin,
-            f"FPS: {int(clock.get_fps())}"
+
+class StateDevOverlay:
+    def __init__(self, state):
+        self.state = state
+        self.is_visible = True
+        self.dev_font = pygame.freetype.SysFont(
+            "inconsolata, consolas, monospace",
+            19
         )
+        self.dev_line_hight = self.dev_font.get_sized_height()
+        self.dev_color = (255, 255, 255)
+        self.dev_font.fgcolor = self.dev_color
+        self.dev_margin = pygame.Vector2(10, 10)
+
+        self.fps_text = ""
+        self.fps_surf = None
+        self.fps_rect = None
+
+    def update(self, clock):
+        new_fps_text = f"FPS: {int(clock.get_fps())}"
+        if new_fps_text != self.fps_text:
+            self.fps_text = new_fps_text
+            self.fps_text, self.fps_rect = self.dev_font.render(self.fps_text)
+            self.fps_rect.topleft = self.dev_margin
+
+    def draw(self, target_surface):
+        target_surface.blit(self.fps_text, self.fps_rect)
