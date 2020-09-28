@@ -71,6 +71,20 @@ class MainGame(State):
         # for e in self.enemies:
         #     e.update(dt)
 
+    def draw(self, target_surface):
+        target_surface.fill((0, 0, 0))
+        self.world.draw(target_surface)
+
+        # for e in self.enemies:
+        #     target_surface.blit(
+        #         e.image,
+        #         world_to_screen(
+        #             e.rect.x, e.rect.y,
+        #             0, e.offset_y,
+        #             self.camera_offset_x, self.camera_offset_y
+        #         )
+        #     )
+
     def get_tile_at_mouse(self):
         # I want to detect a platform only when the mouse is over the raised
         # part. The sides and base don't matter. I hope this will simplify
@@ -96,20 +110,6 @@ class MainGame(State):
         self.world.highlight.layer = 1
         self.world.highlight.world_pos.update(self.tile_at_mouse.world_pos)
         self.world.highlight.surface_pos.update(self.tile_at_mouse.surface_pos)
-
-    def draw(self, target_surface):
-        target_surface.fill((0, 0, 0))
-        self.world.draw(target_surface)
-
-        # for e in self.enemies:
-        #     target_surface.blit(
-        #         e.image,
-        #         world_to_screen(
-        #             e.rect.x, e.rect.y,
-        #             0, e.offset_y,
-        #             self.camera_offset_x, self.camera_offset_y
-        #         )
-        #     )
 
     def pause(self):
         self.persistent_state_data["main game cache"] = self

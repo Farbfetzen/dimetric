@@ -98,12 +98,5 @@ TODO:
 * Übergänge zwischen Menü und main game: ausblenden und einblenden, vllt. jeweils
   halbe Sekunde. Aber zwischen den Menüs keine Übergänge.
 * Optionsmenü zum Ändern der Keybindings.
-* Pausenmenü: Während das Spiel läuft Esc drücken, damit ein kleines Pausenmenü
-  auftaucht (resume, quit, options). Wenn das Spiel fortgesetzt werden soll,
-  muss die vorherige Instanz weitergeführt werden. Keine neue Instanz erschaffen!
 * Die Debug-Info im Main Game hüpft. Scheint als hätte ich nicht die ganze Höhe
   ausgenutzt? Oder das Zentrieren ist schuld.
-* States sollten alle die gleiche Struktur haben. Die Reihenfolge der Methoden
-  sollte gleich sein. Natürlich zuerst die Methoden, die auch in der Superklasse
-  sind.
-
