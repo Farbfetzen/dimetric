@@ -18,7 +18,7 @@ import pygame
 
 from src import constants
 from src.states.state import State
-from src import button
+from src.button import Button
 
 
 class MainMenu(State):
@@ -26,19 +26,19 @@ class MainMenu(State):
         super().__init__(game)
 
         self.buttons = (
-            button.Button(
+            Button(
                 "New Game",
                 (100, 50),
                 (constants.SMALL_DISPLAY_WIDTH // 2, 50),
                 self.new_game
             ),
-            button.Button(
+            Button(
                 "Options",
                 (100, 50),
                 (constants.SMALL_DISPLAY_WIDTH // 2, constants.SMALL_DISPLAY_HEIGHT // 2),
                 self.goto_options
             ),
-            button.Button(
+            Button(
                 "Quit",
                 (100, 50),
                 (constants.SMALL_DISPLAY_WIDTH // 2, 200),

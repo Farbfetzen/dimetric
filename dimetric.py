@@ -68,9 +68,10 @@ class Game:
         clock = pygame.time.Clock()
 
         while self.running:
-            # delta time of previous tick in seconds. Protect against hiccups
-            # (e.g. from moving the pygame window) by limiting to 0.1 s.
-            dt = min(clock.tick(constants.FPS) / 1000, 0.1)
+            # delta time of previous tick in seconds.
+            # Protect against hiccups (e.g. from moving the pygame window)
+            # by limiting to 100 milliseconds.
+            dt = min(clock.tick(constants.FPS), 100) / 1000
 
             event_manager.process_events(self.state)
             self.state.update(dt)
