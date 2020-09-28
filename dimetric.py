@@ -50,7 +50,6 @@ class Game:
         if next_state_name == "main game":
             if "main game cache" in persistent_state_data:
                 self.state = persistent_state_data["main game cache"]
-                del persistent_state_data["main game cache"]
             else:
                 world_name = persistent_state_data["world name"]
                 self.state = self.states[next_state_name](self, world_name)

@@ -32,6 +32,10 @@ class MainGame(State):
         self.mouse_dy = tuple(enumerate((constants.PLATFORM_HEIGHT, 0)))
         self.tile_at_mouse = None
 
+    def resume(self, persistent_state_data):
+        super().resume(persistent_state_data)
+        persistent_state_data.pop("main game cache", None)
+
     def process_event(self, event, event_manager):
         super().process_event(event, event_manager)
         if event.type == pygame.KEYDOWN:
