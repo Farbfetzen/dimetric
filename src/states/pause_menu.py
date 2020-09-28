@@ -26,38 +26,34 @@ class PauseMenu(State):
     def __init__(self, game):
         super().__init__(game)
 
+        # Copy the small display so that the main game is visible
+        # in the background:
+        self.surface = self.game.small_display.copy()
+
         self.rect = pygame.Rect(
             0,
             0,
             constants.SMALL_DISPLAY_WIDTH // 3,
             constants.SMALL_DISPLAY_HEIGHT // 2
         )
-        self.surface = pygame.Surface(self.rect.size)
-        self.surface.fill((0, 0, 0))
+        self.rect.center = self.surface.get_rect().center
+        pygame.draw.rect(self.surface, (0, 0, 0), self.rect)
         pygame.draw.rect(self.surface, (255, 255, 255), self.rect, 1)
 
         self.buttons = (
             Button(
                 "Resume",
                 (50, 25),
-                (self.rect.centerx, 25),
+                (self.rect.centerx, self.rect.y + 25),
                 self.resume_game
             ),
             Button(
                 "Quit",
                 (50, 25),
-                (self.rect.centerx, self.rect.height - 25),
+                (self.rect.centerx, self.rect.bottom - 25),
                 self.close
             )
         )
-
-        self.rect.center = (
-            constants.SMALL_DISPLAY_WIDTH // 2,
-            constants.SMALL_DISPLAY_HEIGHT // 2
-        )
-        for b in self.buttons:
-            b.rect.x += self.rect.x
-            b.rect.y += self.rect.y
 
     def process_event(self, event, event_manager):
         super().process_event(event, event_manager)
@@ -77,8 +73,8 @@ class PauseMenu(State):
 
     def draw(self, target_surface):
         for b in self.buttons:
-            self.surface.blit(b.image, b.blit_pos)
-        target_surface.blit(self.surface, self.rect)
+            self.surface.blit(b.image, b.rect)
+        target_surface.blit(self.surface, (0, 0))
 
     def resume_game(self):
         self.close("main game")
