@@ -37,8 +37,9 @@ class PauseMenu(State):
             constants.SMALL_DISPLAY_HEIGHT // 2
         )
         self.rect.center = self.surface.get_rect().center
-        pygame.draw.rect(self.surface, (0, 0, 0), self.rect)
-        pygame.draw.rect(self.surface, (255, 255, 255), self.rect, 1)
+        radius = 10
+        pygame.draw.rect(self.surface, (0, 0, 0), self.rect, border_radius=radius)
+        pygame.draw.rect(self.surface, (250, 250, 250), self.rect, 1, border_radius=radius)
 
         self.buttons = (
             Button(
@@ -53,6 +54,8 @@ class PauseMenu(State):
                 (self.rect.centerx, self.rect.bottom - 25),
                 self.close
             )
+            # TODO: make "quit" return to main menu
+            # TODO: add button for option menu
         )
 
     def process_event(self, event, event_manager):

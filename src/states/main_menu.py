@@ -63,7 +63,7 @@ class MainMenu(State):
             b.update(self.mouse_pos)
 
     def draw(self, target_surface):
-        target_surface.fill((0, 0, 0))
+        target_surface.fill((100, 100, 100))  # DEBUG: red to check if rounded buttons work
         for b in self.buttons:
             target_surface.blit(b.image, b.rect)
 

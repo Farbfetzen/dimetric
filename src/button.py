@@ -25,14 +25,37 @@ class Button:
         self.rect = pygame.Rect((0, 0), size)
         self.rect.center = position
         self.idle_image = pygame.Surface(size)
-        self.idle_image.fill(constants.BUTTON_BACKGROUND_COLOR)
+        self.idle_image.fill(constants.COLORKEY)
+        self.idle_image.set_colorkey(constants.COLORKEY)
         self.hover_image = self.idle_image.copy()
-        self.hover_image.fill(constants.BUTTON_BACKGROUND_COLOR_HOVER)
         self.image_rect = self.idle_image.get_rect()
-        pygame.draw.rect(self.idle_image, constants.BUTTON_OUTLINE_COLOR,
-                         self.image_rect, 1)
-        pygame.draw.rect(self.hover_image, constants.BUTTON_OUTLINE_COLOR,
-                         self.image_rect, 1)
+        self.radius = 7
+        pygame.draw.rect(
+            self.idle_image,
+            constants.BUTTON_BACKGROUND_COLOR,
+            self.image_rect,
+            border_radius=self.radius
+        )
+        pygame.draw.rect(
+            self.idle_image,
+            constants.BUTTON_OUTLINE_COLOR,
+            self.image_rect,
+            1,
+            border_radius=self.radius
+        )
+        pygame.draw.rect(
+            self.hover_image,
+            constants.BUTTON_BACKGROUND_COLOR_HOVER,
+            self.image_rect,
+            border_radius=self.radius
+        )
+        pygame.draw.rect(
+            self.hover_image,
+            constants.BUTTON_OUTLINE_COLOR,
+            self.image_rect,
+            1,
+            border_radius=self.radius
+        )
         self.image = self.idle_image
         self.font = pygame.freetype.SysFont("sans", 15, bold=True)
         self.font.fgcolor = constants.BUTTON_FONT_COLOR

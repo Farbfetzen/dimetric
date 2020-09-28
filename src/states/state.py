@@ -70,7 +70,7 @@ class StateDevOverlay:
             19
         )
         self.dev_line_hight = self.dev_font.get_sized_height()
-        self.dev_color = (255, 255, 255)
+        self.dev_color = (250, 250, 250)
         self.dev_font.fgcolor = self.dev_color
         self.dev_margin = pygame.Vector2(10, 10)
 
