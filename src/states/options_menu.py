@@ -21,8 +21,8 @@ from src import button
 
 
 class OptionsMenu(State):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, game):
+        super().__init__(game)
 
         # TODO: Create text fields and input fields which allow users to
         #  modify keybindings.

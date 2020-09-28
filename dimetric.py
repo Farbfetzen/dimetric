@@ -42,26 +42,26 @@ class Game:
             "options menu": states.OptionsMenu,
             "main game": states.MainGame
         }
-        self.state = self.states[initial_state_name]()
+        self.state = self.states[initial_state_name](self)
 
-    def change_states(self):
+    def change_states(self, next_state_name):
         # TODO: Some states must be interruptible without losing data. E.G. the
         #  main game instance should continue after pausing without creating
         #  a new instance. Maybe just put a pointer to it into the persistent
         #  data. Or save it in here.
         persistent_state_data = self.state.persistent_state_data
-        next_state_name = persistent_state_data["next_state_name"]
-        if next_state_name == "quit":
-            # TODO: If there are unsaved changes, ask if they should be
-            #  saved, discarded or if the exit should be canceled. That
-            #  popup will be its own state. And that one may exit the game.
-            self.running = False
-        elif next_state_name == "main game":
+        if next_state_name == "main game":
             world_name = persistent_state_data["world_name"]
-            self.state = self.states[next_state_name](world_name)
+            self.state = self.states[next_state_name](self, world_name)
         else:
-            self.state = self.states[next_state_name]()
+            self.state = self.states[next_state_name](self)
         self.state.resume(persistent_state_data)
+
+    def quit(self):
+        # TODO: If there are unsaved changes, ask if they should be
+        #  saved, discarded or if the exit should be canceled. That
+        #  popup will be its own state. And that one may then exit the game.
+        self.running = False
 
     def run(self):
         event_manager = EventManager()
@@ -71,9 +71,6 @@ class Game:
             # delta time of previous tick in seconds. Protect against hiccups
             # (e.g. from moving the pygame window) by limiting to 0.1 s.
             dt = min(clock.tick(constants.FPS) / 1000, 0.1)
-
-            if self.state.is_done:
-                self.change_states()
 
             event_manager.process_events(self.state)
             self.state.update(dt)

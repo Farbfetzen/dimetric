@@ -22,8 +22,8 @@ from src import button
 
 
 class MainMenu(State):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, game):
+        super().__init__(game)
 
         self.buttons = (
             button.Button(

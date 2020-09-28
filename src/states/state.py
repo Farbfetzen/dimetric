@@ -18,7 +18,8 @@ import pygame
 
 
 class State:
-    def __init__(self, dev_overlay=None):
+    def __init__(self, game, dev_overlay=None):
+        self.game = game
         if dev_overlay is None:
             self.dev_overlay = StateDevOverlay(self)
         else:
@@ -43,10 +44,10 @@ class State:
         immediately quit the app.
         """
         if next_state_name is None:
-            next_state_name = "quit"
-        self.persistent_state_data["next_state_name"] = next_state_name
+            self.game.quit()
+            return
         self.persistent_state_data["dev_overlay_visible"] = self.dev_overlay.is_visible
-        self.is_done = True
+        self.game.change_states(next_state_name)
 
     def process_event(self, event, event_manager):
         if event.type == pygame.QUIT:

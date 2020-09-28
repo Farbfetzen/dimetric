@@ -23,8 +23,8 @@ from src import enemy
 
 
 class MainGame(State):
-    def __init__(self, world_name):
-        super().__init__(MainGameDevOverlay)
+    def __init__(self, game, world_name):
+        super().__init__(game, MainGameDevOverlay)
         self.world = resources.worlds[world_name]
         # self.enemies = []
         self.mouse_pos_world = pygame.Vector2()
