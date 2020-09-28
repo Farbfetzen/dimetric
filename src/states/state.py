@@ -25,7 +25,6 @@ class State:
         else:
             self.dev_overlay = dev_overlay(self)
         self.mouse_pos = pygame.Vector2()
-        self.is_done = False
         self.persistent_state_data = {}
 
     def resume(self, persistent_state_data):
@@ -35,7 +34,6 @@ class State:
         """
         self.persistent_state_data = persistent_state_data
         self.dev_overlay.is_visible = persistent_state_data["dev_overlay_visible"]
-        self.is_done = False
 
     def close(self, next_state_name=None):
         """Quit or suspend a state.
