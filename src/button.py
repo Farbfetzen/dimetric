@@ -24,6 +24,7 @@ class Button:
         self.action = action
         self.rect = pygame.Rect((0, 0), size)
         self.rect.center = position
+        self.blit_pos = pygame.Vector2(self.rect.topleft)
         self.idle_image = pygame.Surface(size)
         self.idle_image.fill(constants.BUTTON_BACKGROUND_COLOR)
         self.hover_image = self.idle_image.copy()

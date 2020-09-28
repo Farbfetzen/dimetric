@@ -35,20 +35,35 @@ class PauseMenu(State):
         self.surface = pygame.Surface(self.rect.size)
         self.surface.fill((0, 0, 0))
         pygame.draw.rect(self.surface, (255, 255, 255), self.rect, 1)
+
+        self.buttons = (
+            Button(
+                "Resume",
+                (50, 25),
+                (self.rect.centerx, 25),
+                self.resume_game
+            ),
+            Button(
+                "Quit",
+                (50, 25),
+                (self.rect.centerx, self.rect.height - 25),
+                self.close
+            )
+        )
+
         self.rect.center = (
             constants.SMALL_DISPLAY_WIDTH // 2,
             constants.SMALL_DISPLAY_HEIGHT // 2
         )
-
-        self.buttons = (
-
-        )
+        for b in self.buttons:
+            b.rect.x += self.rect.x
+            b.rect.y += self.rect.y
 
     def process_event(self, event, event_manager):
         super().process_event(event, event_manager)
         if event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_escape:
-                self.close("main game")
+                self.resume_game()
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             x, y = event_manager.adjust_mouse(*event.pos)
             for b in self.buttons:
@@ -62,5 +77,8 @@ class PauseMenu(State):
 
     def draw(self, target_surface):
         for b in self.buttons:
-            self.surface.blit(b.image, b.rect)
+            self.surface.blit(b.image, b.blit_pos)
         target_surface.blit(self.surface, self.rect)
+
+    def resume_game(self):
+        self.close("main game")
