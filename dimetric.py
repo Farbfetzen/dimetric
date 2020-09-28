@@ -40,19 +40,20 @@ class Game:
         self.states = {
             "main menu": states.MainMenu,
             "options menu": states.OptionsMenu,
-            "main game": states.MainGame
+            "main game": states.MainGame,
+            "pause menu": states.PauseMenu
         }
         self.state = self.states[initial_state_name](self)
 
     def change_states(self, next_state_name):
-        # TODO: Some states must be interruptible without losing data. E.G. the
-        #  main game instance should continue after pausing without creating
-        #  a new instance. Maybe just put a pointer to it into the persistent
-        #  data. Or save it in here.
         persistent_state_data = self.state.persistent_state_data
         if next_state_name == "main game":
-            world_name = persistent_state_data["world_name"]
-            self.state = self.states[next_state_name](self, world_name)
+            if "main game cache" in persistent_state_data:
+                self.state = persistent_state_data["main game cache"]
+                del persistent_state_data["main game cache"]
+            else:
+                world_name = persistent_state_data["world name"]
+                self.state = self.states[next_state_name](self, world_name)
         else:
             self.state = self.states[next_state_name](self)
         self.state.resume(persistent_state_data)

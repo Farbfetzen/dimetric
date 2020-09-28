@@ -16,41 +16,39 @@
 
 import pygame
 
-from src import constants
+
 from src.states.state import State
 from src.button import Button
+from src import constants
 
 
-class MainMenu(State):
+class PauseMenu(State):
     def __init__(self, game):
         super().__init__(game)
 
+        self.rect = pygame.Rect(
+            0,
+            0,
+            constants.SMALL_DISPLAY_WIDTH // 3,
+            constants.SMALL_DISPLAY_HEIGHT // 2
+        )
+        self.surface = pygame.Surface(self.rect.size)
+        self.surface.fill((0, 0, 0))
+        pygame.draw.rect(self.surface, (255, 255, 255), self.rect, 1)
+        self.rect.center = (
+            constants.SMALL_DISPLAY_WIDTH // 2,
+            constants.SMALL_DISPLAY_HEIGHT // 2
+        )
+
         self.buttons = (
-            Button(
-                "New Game",
-                (100, 50),
-                (constants.SMALL_DISPLAY_WIDTH // 2, 50),
-                self.new_game
-            ),
-            Button(
-                "Options",
-                (100, 50),
-                (constants.SMALL_DISPLAY_WIDTH // 2, constants.SMALL_DISPLAY_HEIGHT // 2),
-                self.goto_options
-            ),
-            Button(
-                "Quit",
-                (100, 50),
-                (constants.SMALL_DISPLAY_WIDTH // 2, 200),
-                self.close
-            )
+
         )
 
     def process_event(self, event, event_manager):
         super().process_event(event, event_manager)
         if event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_escape:
-                self.close()
+                self.close("main game")
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             x, y = event_manager.adjust_mouse(*event.pos)
             for b in self.buttons:
@@ -63,13 +61,6 @@ class MainMenu(State):
             b.update(self.mouse_pos)
 
     def draw(self, target_surface):
-        target_surface.fill((0, 0, 0))
         for b in self.buttons:
-            target_surface.blit(b.image, b.rect)
-
-    def new_game(self):
-        self.persistent_state_data["world name"] = "test"
-        self.close("main game")
-
-    def goto_options(self):
-        self.close("options menu")
+            self.surface.blit(b.image, b.rect)
+        target_surface.blit(self.surface, self.rect)

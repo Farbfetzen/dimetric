@@ -36,7 +36,7 @@ class MainGame(State):
         super().process_event(event, event_manager)
         if event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_escape:
-                self.close("main menu")
+                self.pause()
             # elif event.key == self.event_manager.k_next_wave:
             #     self.next_wave()
             elif event.key == event_manager.k_scroll_left:
@@ -110,6 +110,10 @@ class MainGame(State):
         #             self.camera_offset_x, self.camera_offset_y
         #         )
         #     )
+
+    def pause(self):
+        self.persistent_state_data["main game cache"] = self
+        self.close("pause menu")
 
     # def next_wave(self):
     #     self.enemies.append(Enemy("cube", self.world.path))
