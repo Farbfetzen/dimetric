@@ -59,6 +59,8 @@ class MainMenu(State):
 
     def new_game(self):
         self.persistent_state_data["world name"] = "test"
+        # Make sure the main game is a fresh instance:
+        self.persistent_state_data.pop("main game cache", None)
         self.close("main game")
 
     def goto_options(self):

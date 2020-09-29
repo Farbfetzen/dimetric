@@ -19,7 +19,6 @@ import json
 import pygame
 
 from src import constants
-from src import world
 
 
 images = {}
@@ -49,7 +48,7 @@ def load_worlds():
     for filename in os.listdir("worlds"):
         with open(os.path.join("worlds", filename), "r") as file:
             world_data = json.load(file)
-            worlds[world_data["name"]] = world.World(world_data, images)
+            worlds[world_data["name"]] = world_data
 
 
 def load_options():

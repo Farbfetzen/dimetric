@@ -19,12 +19,14 @@ from math import floor
 import pygame
 
 from src import constants
+from src import resources
 from src.world_object import WorldObject
 
 
 class World:
-    def __init__(self, world_data, images):
-        self.name = world_data["name"]
+    def __init__(self, name):
+        self.name = name
+        world_data = resources.worlds[self.name]
         self.sidelength = len(world_data["map"])
 
         # Check if map is square:
@@ -41,12 +43,12 @@ class World:
         self.init_surface()
         self.visible_objects = []
         self.map_tiles = []
-        self.init_tiles(world_data, images)
+        self.init_tiles(world_data, resources.images)
         self.path = []
         self.init_path(world_data)
 
         # highlight:
-        image = images["highlight"]
+        image = resources.images["highlight"]
         surface_pos = pygame.Vector2(self.world_pos_to_world_surf(0, 0))
         surface_pos.x -= image.get_width() / 2
         surface_pos.y -= (image.get_height() - constants.TILE_HEIGHT)

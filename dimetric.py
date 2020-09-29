@@ -55,7 +55,7 @@ class Game:
                 self.state = self.states[next_state_name](self, world_name)
         else:
             self.state = self.states[next_state_name](self)
-        self.state.resume(persistent_state_data)
+        self.state.start(persistent_state_data)
 
     def quit(self):
         # TODO: If there are unsaved changes, ask if they should be

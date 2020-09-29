@@ -31,7 +31,7 @@ class State:
         self.persistent_state_data = {}
         self.buttons = ()
 
-    def resume(self, persistent_state_data):
+    def start(self, persistent_state_data):
         """Resume an already instantiated state.
         Use the information provided by the previous state to modify
         this state.

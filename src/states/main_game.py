@@ -17,25 +17,25 @@
 import pygame
 
 from src import constants
-from src import resources
 from src.states.state import State, StateDevOverlay
 from src.helpers import main_to_small_display
+from src.world import World
 from src import enemy
 
 
 class MainGame(State):
     def __init__(self, game, world_name):
         super().__init__(game, MainGameDevOverlay)
-        self.world = resources.worlds[world_name]
+        self.world = World(world_name)
         # self.enemies = []
         self.mouse_pos_world = pygame.Vector2()
         self.mouse_rel = pygame.Vector2()
         self.mouse_dy = tuple(enumerate((constants.PLATFORM_HEIGHT, 0)))
         self.tile_at_mouse = None
 
-    def resume(self, persistent_state_data):
-        super().resume(persistent_state_data)
-        persistent_state_data.pop("main game cache", None)
+    def start(self, persistent_state_data):
+        super().start(persistent_state_data)
+        self.persistent_state_data.pop("main game cache", None)
 
     def process_event(self, event, event_manager):
         super().process_event(event, event_manager)
