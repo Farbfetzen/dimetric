@@ -17,6 +17,9 @@
 import pygame
 
 
+from src.helpers import main_to_small_display_int
+
+
 class State:
     def __init__(self, game, dev_overlay=None):
         self.game = game
@@ -26,6 +29,7 @@ class State:
             self.dev_overlay = dev_overlay(self)
         self.mouse_pos = pygame.Vector2()
         self.persistent_state_data = {}
+        self.buttons = ()
 
     def resume(self, persistent_state_data):
         """Resume an already instantiated state.
@@ -34,6 +38,14 @@ class State:
         """
         self.persistent_state_data = persistent_state_data
         self.dev_overlay.is_visible = persistent_state_data["dev_overlay_visible"]
+
+        # Make sure button image == hover image when starting the state without
+        # moving the mouse. This is necessary because in most states the mouse
+        # position is only updated during the event loop:
+        mouse_pos_int = main_to_small_display_int(*pygame.mouse.get_pos())
+        for b in self. buttons:
+            if b.collidepoint(mouse_pos_int):
+                break
 
     def close(self, next_state_name=None):
         """Quit or suspend a state.
@@ -53,6 +65,16 @@ class State:
         elif event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_dev:
                 self.dev_overlay.is_visible = not self.dev_overlay.is_visible
+        elif ((event.type == pygame.MOUSEMOTION
+               or event.type == pygame.MOUSEBUTTONDOWN)
+              and self.buttons):
+            mouse_pos = main_to_small_display_int(*event.pos)
+            for b in self.buttons:
+                if (b.collidepoint(mouse_pos)
+                        and event.type == pygame.MOUSEBUTTONDOWN
+                        and event.button == 1):
+                    b.action()
+                    break
 
     def update(self, dt):
         pass

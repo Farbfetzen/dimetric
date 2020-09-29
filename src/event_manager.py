@@ -16,8 +16,8 @@
 
 import pygame
 
-from src import constants
 from src import resources
+from src import helpers
 
 
 class EventManager:
@@ -37,13 +37,8 @@ class EventManager:
         # in the future. In that case this method would accept a list of states
         # and send each event to all states. If one state found it useful then
         # the other states should not get the event.
-        state.mouse_pos.update(self.adjust_mouse(*pygame.mouse.get_pos()))
+        state.mouse_pos.update(
+            helpers.main_to_small_display_int(*pygame.mouse.get_pos())
+        )
         for event in pygame.event.get():
             state.process_event(event, self)
-
-    @staticmethod
-    def adjust_mouse(x, y):
-        """ Convert mouse position and relative movement to
-        small_display coordinates.
-        """
-        return x / constants.MAGNIFICATION, y / constants.MAGNIFICATION

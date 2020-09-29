@@ -19,6 +19,7 @@ import pygame
 from src import constants
 from src import resources
 from src.states.state import State, StateDevOverlay
+from src.helpers import main_to_small_display
 from src import enemy
 
 
@@ -62,7 +63,7 @@ class MainGame(State):
                 self.world.scroll_direction.y -= 1
         elif (event.type == pygame.MOUSEMOTION
               and event.buttons[event_manager.mouse_map_scroll_button_index]):
-            self.mouse_rel.update(event_manager.adjust_mouse(*event.rel))
+            self.mouse_rel.update(main_to_small_display(*event.rel))
             self.world.scroll(self.mouse_rel)
 
     def update(self, dt):

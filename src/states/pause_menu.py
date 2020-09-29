@@ -63,16 +63,6 @@ class PauseMenu(State):
         if event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_escape:
                 self.resume_game()
-        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            x, y = event_manager.adjust_mouse(*event.pos)
-            for b in self.buttons:
-                if b.rect.collidepoint(x, y):
-                    b.action()
-                    break
-
-    def update(self, dt):
-        for b in self.buttons:
-            b.update(self.mouse_pos)
 
     def draw(self, target_surface):
         for b in self.buttons:

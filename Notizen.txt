@@ -103,11 +103,3 @@ TODO:
 * Colorkey Pink setzen, damit es nicht Gefahr läuft Teile des antialiased
   Bereichs der Schrift transparent zu machen. Danach die Schrift wieder auf
   (255, 255, 255) setzen.
-* Bessere Mauskollision mit den Buttons durch Nutzung von mask.get_at().
-  Natürlich vorher erstmal rect.collidepoint. Den Code für die Kollision in
-  den button selbst einbauen, dann muss ich das nicht in den states wiederholen.
-  Ziel: Die ausgesparten Teile der runden Ecken dürfen nicht klickbar sein.
-  Statt der Mask kann ich auch schauen, ob der Pixel an der Mausposition die
-  Colorkey-Farbe hat. Muss mal testen, was schneller ist.
-  Beachte: Vorher die Mausposition in Position auf der Surface umrechnen. Und
-  die Maske kann ich mit Hilfe des Colorkeys erzeugen.

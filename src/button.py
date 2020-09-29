@@ -80,8 +80,15 @@ class Button:
         self.idle_image.blit(text_surf, self.text_rect)
         self.hover_image.blit(text_surf, self.text_rect)
 
-    def update(self, mouse_pos):
-        if self.rect.collidepoint(mouse_pos.x, mouse_pos.y):
-            self.image = self.hover_image
-        else:
-            self.image = self.idle_image
+    def collidepoint(self, pos):
+        if self.rect.collidepoint(pos):
+            # Don't collide if the mouse is outside the rounded corners:
+            # TODO: Check if it would be better to use mask.get_at()
+            #  instead of surface.get_at().
+            pos = (pos[0] - self.rect.x,
+                   pos[1] - self.rect.y)
+            if self.image.get_at(pos) != constants.COLORKEY:
+                self.image = self.hover_image
+                return True
+        self.image = self.idle_image
+        return False

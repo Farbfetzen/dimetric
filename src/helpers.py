@@ -14,26 +14,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-import pygame
-
-from src.states.state import State
-from src import button
+from src.constants import MAGNIFICATION
 
 
-class OptionsMenu(State):
-    def __init__(self, game):
-        super().__init__(game)
+def main_to_small_display(x, y):
+    """ Convert a position to small_display coordinates. """
+    return x / MAGNIFICATION, y / MAGNIFICATION
 
-        # TODO: Create text fields and input fields which allow users to
-        #  modify keybindings.
 
-    def process_event(self, event, event_manager):
-        super().process_event(event, event_manager)
-        if event.type == pygame.KEYDOWN:
-            if event.key == event_manager.k_escape:
-                self.close("main menu")
-
-    def draw(self, target_surface):
-        target_surface.fill((0, 0, 0))
-        for b in self.buttons:
-            target_surface.blit(b.image, b.rect)
+def main_to_small_display_int(x, y):
+    """ Convert position and to integer small_display coordinates. """
+    return x // MAGNIFICATION, y // MAGNIFICATION
