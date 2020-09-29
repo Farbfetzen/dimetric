@@ -52,9 +52,8 @@ class PauseMenu(State):
                 "Quit",
                 (50, 25),
                 (self.rect.centerx, self.rect.bottom - 25),
-                self.close
+                self.goto_main_menu
             )
-            # TODO: make "quit" return to main menu
             # TODO: add button for option menu
         )
 
@@ -71,3 +70,8 @@ class PauseMenu(State):
 
     def resume_game(self):
         self.close("main game")
+
+    def goto_main_menu(self):
+        # TODO: Warn that unsaved changes will be lost. Ask if user wants to
+        #  save them.
+        self.close("main menu")
