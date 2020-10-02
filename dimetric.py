@@ -44,12 +44,14 @@ class Game:
         self.active_dev_overlay = self.active_scenes[-1].dev_overlay
         self.dev_overlay_visible = True
         self.persistent_scene_data = {}
+        self.active_scenes[-1].start()
 
-    def change_scenes(self, remove, new_scene_name=None):
+    def change_scenes(self, remove, new_scene_name=""):
         for r in remove:
             self.active_scenes.remove(r)
-        if new_scene_name is None:
+        if not new_scene_name:
             if not self.active_scenes:
+                print(new_scene_name)
                 self.quit()
         else:
             if new_scene_name == "main game":

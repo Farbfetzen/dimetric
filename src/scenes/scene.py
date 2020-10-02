@@ -40,7 +40,7 @@ class Scene:
             if b.collidepoint(mouse_x, mouse_y):
                 break
 
-    def close(self, new_scene_name=None, remove_self=True, remove_all=False):
+    def close(self, new_scene_name="", remove_self=True, remove_all=False):
         """Quit or suspend a scene. Use this for cleanup."""
         if new_scene_name == "quit":
             self.game.quit()
