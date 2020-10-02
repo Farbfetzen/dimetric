@@ -17,12 +17,12 @@
 import pygame
 
 
-from src.states.state import State
+from src.scenes.scene import Scene
 from src.button import Button
 from src import constants
 
 
-class PauseMenu(State):
+class PauseMenu(Scene):
     def __init__(self, game):
         super().__init__(game)
 

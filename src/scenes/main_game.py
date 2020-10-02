@@ -17,13 +17,13 @@
 import pygame
 
 from src import constants
-from src.states.state import State, StateDevOverlay
+from src.scenes.scene import Scene, DevOverlay
 from src.helpers import main_to_small_display
 from src.world import World
 from src import enemy
 
 
-class MainGame(State):
+class MainGame(Scene):
     def __init__(self, game, world_name):
         super().__init__(game, MainGameDevOverlay)
         self.world = World(world_name)
@@ -33,9 +33,9 @@ class MainGame(State):
         self.mouse_dy = tuple(enumerate((constants.PLATFORM_HEIGHT, 0)))
         self.tile_at_mouse = None
 
-    def start(self, persistent_state_data):
-        super().start(persistent_state_data)
-        self.persistent_state_data.pop("main game cache", None)
+    def start(self, persistent_scene_data):
+        super().start(persistent_scene_data)
+        self.persistent_scene_data.pop("main game cache", None)
 
     def process_event(self, event, event_manager):
         super().process_event(event, event_manager)
@@ -117,16 +117,16 @@ class MainGame(State):
         self.world.highlight.surface_pos.update(self.tile_at_mouse.surface_pos)
 
     def pause(self):
-        self.persistent_state_data["main game cache"] = self
+        self.persistent_scene_data["main game cache"] = self
         self.close("pause menu")
 
     # def next_wave(self):
     #     self.enemies.append(Enemy("cube", self.world.path))
 
 
-class MainGameDevOverlay(StateDevOverlay):
-    def __init__(self, state):
-        super().__init__(state)
+class MainGameDevOverlay(DevOverlay):
+    def __init__(self, scene):
+        super().__init__(scene)
 
         self.tile_info_text = ""
         self.tile_info_surf = None
@@ -139,13 +139,13 @@ class MainGameDevOverlay(StateDevOverlay):
     def update(self, clock):
         super().update(clock)
 
-        if self.state.tile_at_mouse is None:
+        if self.scene.tile_at_mouse is None:
             new_tile_info_text = "tile at mouse: none"
         else:
             new_tile_info_text = (
-                f"tile at mouse: {self.state.tile_at_mouse.type}" +
-                f" ({self.state.tile_at_mouse.world_pos.x:.0f}, " +
-                f"{self.state.tile_at_mouse.world_pos.y:.0f})"
+                f"tile at mouse: {self.scene.tile_at_mouse.type}" +
+                f" ({self.scene.tile_at_mouse.world_pos.x:.0f}, " +
+                f"{self.scene.tile_at_mouse.world_pos.y:.0f})"
             )
         if new_tile_info_text != self.tile_info_text:
             self.tile_info_text = new_tile_info_text
@@ -154,7 +154,7 @@ class MainGameDevOverlay(StateDevOverlay):
             )
             self.tile_info_rect.topleft = (self.dev_margin.x, self.dev_margin.y * 3)
 
-        x, y = self.state.mouse_pos_world
+        x, y = self.scene.mouse_pos_world
         new_mouse_pos_text = f"mouse position in world: ({x:.1f}, {y:.1f})"
         if new_mouse_pos_text != self.mouse_pos_text:
             self.mouse_pos_text = new_mouse_pos_text
@@ -172,6 +172,6 @@ class MainGameDevOverlay(StateDevOverlay):
         pygame.draw.rect(
             target_surface,
             self.dev_color,
-            pygame.Rect([r * constants.MAGNIFICATION for r in self.state.world.rect]),
+            pygame.Rect([r * constants.MAGNIFICATION for r in self.scene.world.rect]),
             1
         )

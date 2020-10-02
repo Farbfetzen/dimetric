@@ -16,11 +16,11 @@
 
 import pygame
 
-from src.states.state import State
+from src.scenes.scene import Scene
 from src import button
 
 
-class OptionsMenu(State):
+class OptionsMenu(Scene):
     def __init__(self, game):
         super().__init__(game)
 

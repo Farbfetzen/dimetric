@@ -17,11 +17,11 @@
 import pygame
 
 from src import constants
-from src.states.state import State
+from src.scenes.scene import Scene
 from src.button import Button
 
 
-class MainMenu(State):
+class MainMenu(Scene):
     def __init__(self, game):
         super().__init__(game)
 
@@ -58,9 +58,9 @@ class MainMenu(State):
             target_surface.blit(b.image, b.rect)
 
     def new_game(self):
-        self.persistent_state_data["world name"] = "test"
+        self.persistent_scene_data["world name"] = "test"
         # Make sure the main game is a fresh instance:
-        self.persistent_state_data.pop("main game cache", None)
+        self.persistent_scene_data.pop("main game cache", None)
         self.close("main game")
 
     def goto_options(self):

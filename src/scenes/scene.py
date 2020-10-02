@@ -20,44 +20,43 @@ import pygame
 from src.helpers import main_to_small_display_int
 
 
-class State:
+class Scene:
     def __init__(self, game, dev_overlay=None):
         self.game = game
         if dev_overlay is None:
-            self.dev_overlay = StateDevOverlay(self)
+            self.dev_overlay = DevOverlay(self)
         else:
             self.dev_overlay = dev_overlay(self)
         self.mouse_pos = pygame.Vector2()
-        self.persistent_state_data = {}
+        self.persistent_scene_data = {}
         self.buttons = ()
 
-    def start(self, persistent_state_data):
-        """Resume an already instantiated state.
-        Use the information provided by the previous state to modify
-        this state.
+    def start(self, persistent_scene_data):
+        """Resume an already instantiated scene.
+        Use the information provided by the previous scene to modify
+        this scene.
         """
-        self.persistent_state_data = persistent_state_data
-        self.dev_overlay.is_visible = persistent_state_data["dev_overlay_visible"]
+        self.persistent_scene_data = persistent_scene_data
+        self.dev_overlay.is_visible = persistent_scene_data["dev_overlay_visible"]
 
-        # Make sure button image == hover image when starting the state without
-        # moving the mouse. This is necessary because in most states the mouse
+        # Make sure button image == hover image when starting the scene without
+        # moving the mouse. This is necessary because in most scenes the mouse
         # position is only updated during the event loop:
         mouse_pos_int = main_to_small_display_int(*pygame.mouse.get_pos())
         for b in self. buttons:
             if b.collidepoint(mouse_pos_int):
                 break
 
-    def close(self, next_state_name=None):
-        """Quit or suspend a state.
-        Use this for cleanup. Save relevant data in persistent_state_data to
-        pass it to the next state. Set next_state_name to "quit" to
-        immediately quit the app.
+    def close(self, next_scene_name=None):
+        """Quit or suspend a scene.
+        Use this for cleanup. Save relevant data in persistent_scene_data to
+        pass it to the next scene.
         """
-        if next_state_name is None:
+        if next_scene_name is None:
             self.game.quit()
             return
-        self.persistent_state_data["dev_overlay_visible"] = self.dev_overlay.is_visible
-        self.game.change_states(next_state_name)
+        self.persistent_scene_data["dev_overlay_visible"] = self.dev_overlay.is_visible
+        self.game.change_scenes(next_scene_name)
 
     def process_event(self, event, event_manager):
         if event.type == pygame.QUIT:
@@ -83,9 +82,9 @@ class State:
         raise NotImplementedError
 
 
-class StateDevOverlay:
-    def __init__(self, state):
-        self.state = state
+class DevOverlay:
+    def __init__(self, scene):
+        self.scene = scene
         self.is_visible = True
         self.dev_font = pygame.freetype.SysFont(
             "inconsolata, consolas, monospace",

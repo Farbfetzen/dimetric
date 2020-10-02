@@ -12,24 +12,11 @@ ungespeicherte existieren. Während des Spielens fragen, ob der Spielstand
 gespeichert werden soll.
 
 
-Denke darüber nach, wie die state machine verbessert werden kann. Ich meine
-speziell den main_game state. Es macht nicht viel Sinn nur eine Instanz zu
-haben. Die müsste ich dann bei jeder Levelauswahl neustarten/bereinigen.
-Stattdessen kann ich einfach eine neue nehmen. Das löst auch das Problem,
-dass sich mypy über  self.world = None beschwert. Und anstatt der start()
-Methode kann ich eine resume() Methode benutzen. Die nimmt dann die persistent
-data auf.Nützlich zum Beispiel für wenn ich das main_game kurz mit einem
-Pausenmenü unterbreche und dann zum main_game zurückkehre.
-Ich könnte in der run() Funktion eine Liste oder ein Dict mit aktiven states
-nutzen. Das wäre dann was anderes als das Dict mit den Klassen.
-
-
 typing:
 Type hinting war ein interessantes Experiment. Aber in diesem Projekt bringt
 es mir nichts. Es macht den Code nur schwerer lesbar und verkompliziert alles.
 Und mit Pygame gibt es auch ein paar Probleme, weil das scheinbar noch nicht
 so weit ist. Ich werde die hints in kürze alle rauswerfen.
-
 Damit mypy sich nicht über Pygame beschwert, muss die leere Datei
 site-packages/pygame/py.typed  existieren. In zukünftigen Versionen von Pygame
 wird die vermutlich automatisch erzeugt werden. Bis dahin muss ich sie selbst

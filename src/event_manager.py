@@ -31,14 +31,14 @@ class EventManager:
         self.mouse_map_scroll_button_index = controls["mouse_scroll_button_index"]
         self.k_dev = pygame.key.key_code(controls["dev"])
 
-    def process_events(self, state):
-        # Looping through the events here and sending them to the game states
-        # may make it easier to implement multiple concurrently active states
-        # in the future. In that case this method would accept a list of states
-        # and send each event to all states. If one state found it useful then
-        # the other states should not get the event.
-        state.mouse_pos.update(
+    def process_events(self, scene):
+        # Looping through the events here and sending them to the game scenes
+        # may make it easier to implement multiple concurrently active scenes
+        # in the future. In that case this method would accept a list of scenes
+        # and send each event to all scenes. If one scene found it useful then
+        # the other scenes should not get the event.
+        scene.mouse_pos.update(
             helpers.main_to_small_display_int(*pygame.mouse.get_pos())
         )
         for event in pygame.event.get():
-            state.process_event(event, self)
+            scene.process_event(event, self)
