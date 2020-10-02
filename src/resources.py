@@ -31,22 +31,7 @@ def load_images():
         image = pygame.image.load(os.path.join("images", filename))
         image = image.convert_alpha()
         name = os.path.splitext(filename)[0]
-        image = white_to_transparent(image)
         images[name] = image
-
-
-def white_to_transparent(img):
-    # TODO: This is just a temporary fix until I convert all images to use
-    #  pixel alpha.
-    output = img.copy()
-    pygame.transform.threshold(
-        output,
-        img,
-        (255, 255, 255),
-        set_color=(0, 0, 0, 0),
-        inverse_set=True
-    )
-    return output
 
 
 def load_worlds():
