@@ -18,28 +18,18 @@ import os
 import json
 import pygame
 
-from src import constants
+from src.constants import COLORKEY, DEFAULT_OPTIONS
 
 
 images = {}
 worlds = {}
 options = {}
-default_options = {
-    "controls": {
-        "scroll_left": "left",
-        "scroll_right": "right",
-        "scroll_up": "up",
-        "scroll_down": "down",
-        "mouse_scroll_button_index": 2,
-        "dev": "f1"
-    }
-}
 
 
 def load_images():
     for filename in os.listdir("images"):
         image = pygame.image.load(os.path.join("images", filename)).convert()
-        image.set_colorkey(constants.COLORKEY)
+        image.set_colorkey(COLORKEY)
         name = os.path.splitext(filename)[0]
         images[name] = image
 
@@ -56,19 +46,17 @@ def load_options():
         with open("options.json", "r") as file:
             options.update(json.load(file))
     except FileNotFoundError as e:
-        # TODO: log error
-        save_options(default_options)
-        options.update(default_options)
+        print(e)  # TODO: log error with looging module instead of print()
+        options.update(DEFAULT_OPTIONS)
+        save_options()
+
+
+def save_options():
+    with open("options.json", "w") as file:
+        json.dump(options, file, indent=4, sort_keys=True)
 
 
 def load_all():
     load_options()
     load_images()
     load_worlds()
-
-
-def save_options(opt=None):
-    if opt is None:
-        opt = options
-    with open("options.json", "w") as file:
-        json.dump(opt, file, indent=4, sort_keys=True)

@@ -1,10 +1,10 @@
 {
     "controls": {
         "dev": "f1",
-        "mouse_scroll_button_index": 2,
-        "scroll_down": "down",
-        "scroll_left": "left",
-        "scroll_right": "right",
-        "scroll_up": "up"
+        "mouse scroll button index": 2,
+        "scroll down": "down",
+        "scroll left": "left",
+        "scroll right": "right",
+        "scroll up": "up"
     }
 }

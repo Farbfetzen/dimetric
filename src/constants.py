@@ -14,6 +14,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import pygame
+
+
 MAIN_DISPLAY_WIDTH = 1200
 MAIN_DISPLAY_HEIGHT = 750
 MAIN_DISPLAY_SIZE = (MAIN_DISPLAY_WIDTH, MAIN_DISPLAY_HEIGHT)
@@ -43,3 +46,14 @@ BUTTON_FONT_COLOR = (250, 250, 250)
 BUTTON_OUTLINE_COLOR = BUTTON_FONT_COLOR
 BUTTON_BACKGROUND_COLOR = (0, 0, 0)
 BUTTON_BACKGROUND_COLOR_HOVER = (64, 64, 64)
+
+DEFAULT_OPTIONS = {
+    "controls": {
+        "scroll left": pygame.key.name(pygame.K_LEFT),
+        "scroll right": pygame.key.name(pygame.K_RIGHT),
+        "scroll up": pygame.key.name(pygame.K_UP),
+        "scroll down": pygame.key.name(pygame.K_DOWN),
+        "mouse scroll button index": 2,
+        "dev": pygame.key.name(pygame.K_F1)
+    }
+}
