@@ -77,6 +77,23 @@ Optionsmenü simpel und flach halten. Nur eine Seite. Wie in StardewValley oder 
 Ich sollte vielleicht ein oder zwei fonts mitliefern, wenn möglich.
 
 
+Statt überall if...else zu nutzen vielleicht ein paar getter/setter einbauen.
+Z.B. Statt dass ein enemy in jedem frame testet, ob self.healt <= 0 ist, lieber
+bei einem Treffer dessen health mit einem setter setzen. Dieser setter schaut
+dann auch, ob self.health_ <= 0 ist und initiiert das Löschen. Oder eine normale
+methode nutzen "self.set_health". Die nimmt den Schaden und Schadentyp auf,
+zieht Resistenzen ab, modifiziert die health und schaut am Schluss, ob der
+enemy kaputt ist.
+
+
+Vielleicht es irgendwann so einrichten, dass mehrere Scenes gleichzeitig aktiv
+sein können. Zum Beispiel im main game das HUD als eigene scene?
+Für events die scenes von vorne nach hinten iterieren. Dann kann eine Scene im
+Vordergrund ggf. den Input abfangen, damit z.B. die Maus nicht durch Menüs
+hindurchklickt. Muss aber auch manche Events durchlassen können. Aber für draw()
+muss von hinten nach vorne iteriert werden, mit reversed(self.active_scenes).
+
+
 TODO:
 * Probiere mal das logging Modul aus. Logge z.B. die Namen und Details der
   geladenen Levels. Ersetze print() dadurch beim debuggen.
