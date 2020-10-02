@@ -55,6 +55,7 @@ class Button:
             border_radius=self.radius
         )
         self.image = self.idle_image
+        self.mask = pygame.mask.from_surface(self.image)
         self.font = pygame.freetype.SysFont("sans", 15, bold=True)
         self.font.fgcolor = constants.BUTTON_FONT_COLOR
         self.text_rect = pygame.Rect(0, 0, 0, 0)
@@ -78,14 +79,10 @@ class Button:
         self.idle_image.blit(text_surf, self.text_rect)
         self.hover_image.blit(text_surf, self.text_rect)
 
-    def collidepoint(self, pos):
-        if self.rect.collidepoint(pos):
+    def collidepoint(self, x, y):
+        if self.rect.collidepoint(x, y):
             # Don't collide if the mouse is outside the rounded corners:
-            # TODO: Check if it would be better to use mask.get_at()
-            #  instead of surface.get_at().
-            pos = (pos[0] - self.rect.x,
-                   pos[1] - self.rect.y)
-            if self.image.get_at(pos) != (0, 0, 0, 0):
+            if self.mask.get_at((x - self.rect.x, y - self.rect.y)):
                 self.image = self.hover_image
                 return True
         self.image = self.idle_image

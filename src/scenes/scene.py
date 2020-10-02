@@ -35,9 +35,9 @@ class Scene:
         # Make sure button image == hover image when starting the scene without
         # moving the mouse. This is necessary because in most scenes the mouse
         # position is only updated during the event loop:
-        mouse_pos_int = main_to_small_display_int(*pygame.mouse.get_pos())
+        mouse_x, mouse_y = main_to_small_display_int(*pygame.mouse.get_pos())
         for b in self. buttons:
-            if b.collidepoint(mouse_pos_int):
+            if b.collidepoint(mouse_x, mouse_y):
                 break
 
     def close(self, new_scene_name=None, remove_self=True, remove_all=False):
@@ -65,9 +65,9 @@ class Scene:
         elif ((event.type == pygame.MOUSEMOTION
                or event.type == pygame.MOUSEBUTTONDOWN)
               and self.buttons):
-            mouse_pos = main_to_small_display_int(*event.pos)
+            mouse_x, mouse_y = main_to_small_display_int(*event.pos)
             for b in self.buttons:
-                if (b.collidepoint(mouse_pos)
+                if (b.collidepoint(mouse_x, mouse_y)
                         and event.type == pygame.MOUSEBUTTONDOWN
                         and event.button == 1):
                     b.action()
