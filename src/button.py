@@ -24,9 +24,7 @@ class Button:
         self.action = action
         self.rect = pygame.Rect((0, 0), size)
         self.rect.center = position
-        self.idle_image = pygame.Surface(size)
-        self.idle_image.fill(constants.COLORKEY)
-        self.idle_image.set_colorkey(constants.COLORKEY)
+        self.idle_image = pygame.Surface(size, pygame.SRCALPHA)
         self.hover_image = self.idle_image.copy()
         self.image_rect = self.idle_image.get_rect()
         self.radius = 7
@@ -87,7 +85,7 @@ class Button:
             #  instead of surface.get_at().
             pos = (pos[0] - self.rect.x,
                    pos[1] - self.rect.y)
-            if self.image.get_at(pos) != constants.COLORKEY:
+            if self.image.get_at(pos) != (0, 0, 0, 0):
                 self.image = self.hover_image
                 return True
         self.image = self.idle_image

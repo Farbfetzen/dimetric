@@ -104,6 +104,3 @@ TODO:
 * Optionsmenü zum Ändern der Keybindings.
 * Die Debug-Info im Main Game hüpft. Scheint als hätte ich nicht die ganze Höhe
   ausgenutzt? Oder das Zentrieren ist schuld.
-* Colorkey Pink setzen, damit es nicht Gefahr läuft Teile des antialiased
-  Bereichs der Schrift transparent zu machen. Danach die Schrift wieder auf
-  (255, 255, 255) setzen.
