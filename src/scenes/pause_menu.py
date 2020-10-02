@@ -63,10 +63,10 @@ class PauseMenu(Scene):
             if event.key == event_manager.k_escape:
                 self.resume_game()
 
-    def draw(self, target_surface):
+    def draw(self):
         for b in self.buttons:
             self.surface.blit(b.image, b.rect)
-        target_surface.blit(self.surface, (0, 0))
+        self.target_surface.blit(self.surface, (0, 0))
 
     def resume_game(self):
         self.close("main game")

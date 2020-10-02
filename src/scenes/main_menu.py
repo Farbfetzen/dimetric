@@ -52,10 +52,10 @@ class MainMenu(Scene):
             if event.key == event_manager.k_escape:
                 self.close()
 
-    def draw(self, target_surface):
-        target_surface.fill((100, 100, 100))  # DEBUG: red to check if rounded buttons work
+    def draw(self):
+        self.target_surface.fill((100, 100, 100))  # DEBUG: red to check if rounded buttons work
         for b in self.buttons:
-            target_surface.blit(b.image, b.rect)
+            self.target_surface.blit(b.image, b.rect)
 
     def new_game(self):
         self.persistent_scene_data["world name"] = "test"

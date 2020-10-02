@@ -76,7 +76,7 @@ class Game:
             event_manager.process_events(self.scene)
             self.scene.update(dt)
 
-            self.scene.draw(self.small_display)
+            self.scene.draw()
             pygame.transform.scale(
                 self.small_display,
                 constants.MAIN_DISPLAY_SIZE,
@@ -84,7 +84,7 @@ class Game:
             )
             if self.scene.dev_overlay.is_visible:
                 self.scene.dev_overlay.update(clock)
-                self.scene.dev_overlay.draw(self.main_display)
+                self.scene.dev_overlay.draw()
             pygame.display.flip()
 
 

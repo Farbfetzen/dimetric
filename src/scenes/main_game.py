@@ -76,9 +76,9 @@ class MainGame(Scene):
         # for e in self.enemies:
         #     e.update(dt)
 
-    def draw(self, target_surface):
-        target_surface.fill((0, 0, 0))
-        self.world.draw(target_surface)
+    def draw(self):
+        self.target_surface.fill((0, 0, 0))
+        self.world.draw(self.target_surface)
 
         # for e in self.enemies:
         #     target_surface.blit(
@@ -163,14 +163,14 @@ class MainGameDevOverlay(DevOverlay):
             )
             self.mouse_pos_rect.topleft = (self.dev_margin.x, self.dev_margin.y * 5)
 
-    def draw(self, target_surface):
-        super().draw(target_surface)
+    def draw(self):
+        super().draw()
 
-        target_surface.blit(self.tile_info_surf, self.tile_info_rect)
-        target_surface.blit(self.mouse_pos_surf, self.mouse_pos_rect)
+        self.target_surface.blit(self.tile_info_surf, self.tile_info_rect)
+        self.target_surface.blit(self.mouse_pos_surf, self.mouse_pos_rect)
 
         pygame.draw.rect(
-            target_surface,
+            self.target_surface,
             self.dev_color,
             pygame.Rect([r * constants.MAGNIFICATION for r in self.scene.world.rect]),
             1

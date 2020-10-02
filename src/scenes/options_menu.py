@@ -33,7 +33,7 @@ class OptionsMenu(Scene):
             if event.key == event_manager.k_escape:
                 self.close("main menu")
 
-    def draw(self, target_surface):
-        target_surface.fill((0, 0, 0))
+    def draw(self):
+        self.target_surface.fill((0, 0, 0))
         for b in self.buttons:
-            target_surface.blit(b.image, b.rect)
+            self.target_surface.blit(b.image, b.rect)

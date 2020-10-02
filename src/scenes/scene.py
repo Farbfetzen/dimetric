@@ -23,6 +23,7 @@ from src.helpers import main_to_small_display_int
 class Scene:
     def __init__(self, game, dev_overlay=None):
         self.game = game
+        self.target_surface = game.small_display
         if dev_overlay is None:
             self.dev_overlay = DevOverlay(self)
         else:
@@ -78,13 +79,14 @@ class Scene:
     def update(self, dt):
         pass
 
-    def draw(self, target_surface):
+    def draw(self):
         raise NotImplementedError
 
 
 class DevOverlay:
     def __init__(self, scene):
         self.scene = scene
+        self.target_surface = scene.game.main_display
         self.is_visible = True
         self.dev_font = pygame.freetype.SysFont(
             "inconsolata, consolas, monospace",
@@ -106,5 +108,5 @@ class DevOverlay:
             self.fps_text, self.fps_rect = self.dev_font.render(self.fps_text)
             self.fps_rect.topleft = self.dev_margin
 
-    def draw(self, target_surface):
-        target_surface.blit(self.fps_text, self.fps_rect)
+    def draw(self):
+        self.target_surface.blit(self.fps_text, self.fps_rect)
