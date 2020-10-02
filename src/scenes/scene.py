@@ -29,17 +29,9 @@ class Scene:
         else:
             self.dev_overlay = dev_overlay(self)
         self.mouse_pos = pygame.Vector2()
-        self.persistent_scene_data = {}
         self.buttons = ()
 
-    def start(self, persistent_scene_data):
-        """Resume an already instantiated scene.
-        Use the information provided by the previous scene to modify
-        this scene.
-        """
-        self.persistent_scene_data = persistent_scene_data
-        self.dev_overlay.is_visible = persistent_scene_data["dev_overlay_visible"]
-
+    def start(self):
         # Make sure button image == hover image when starting the scene without
         # moving the mouse. This is necessary because in most scenes the mouse
         # position is only updated during the event loop:
@@ -48,23 +40,28 @@ class Scene:
             if b.collidepoint(mouse_pos_int):
                 break
 
-    def close(self, next_scene_name=None):
-        """Quit or suspend a scene.
-        Use this for cleanup. Save relevant data in persistent_scene_data to
-        pass it to the next scene.
-        """
-        if next_scene_name is None:
+    def close(self, new_scene_name=None, remove_self=True, remove_all=False):
+        """Quit or suspend a scene. Use this for cleanup."""
+        if new_scene_name == "quit":
             self.game.quit()
             return
-        self.persistent_scene_data["dev_overlay_visible"] = self.dev_overlay.is_visible
-        self.game.change_scenes(next_scene_name)
+        if remove_all:
+            remove = self.game.active_scenes.copy()
+        elif remove_self:
+            remove = [self]
+        else:
+            remove = []
+        self.game.change_scenes(remove, new_scene_name)
 
     def process_event(self, event, event_manager):
+        # Return True to prevent the scenes below from receiving this event.
         if event.type == pygame.QUIT:
-            self.close()
+            self.close("quit")
+            return True
         elif event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_dev:
-                self.dev_overlay.is_visible = not self.dev_overlay.is_visible
+                self.game.dev_overlay_visible = not self.game.dev_overlay_visible
+                return True
         elif ((event.type == pygame.MOUSEMOTION
                or event.type == pygame.MOUSEBUTTONDOWN)
               and self.buttons):
@@ -74,10 +71,13 @@ class Scene:
                         and event.type == pygame.MOUSEBUTTONDOWN
                         and event.button == 1):
                     b.action()
-                    break
+                    return True
 
     def update(self, dt):
-        pass
+        # Return True to block updates in scenes below this one.
+        self.mouse_pos.update(
+            main_to_small_display_int(*pygame.mouse.get_pos())
+        )
 
     def draw(self):
         raise NotImplementedError
@@ -87,7 +87,6 @@ class DevOverlay:
     def __init__(self, scene):
         self.scene = scene
         self.target_surface = scene.game.main_display
-        self.is_visible = True
         self.dev_font = pygame.freetype.SysFont(
             "inconsolata, consolas, monospace",
             19

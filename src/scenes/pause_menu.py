@@ -28,7 +28,7 @@ class PauseMenu(Scene):
 
         # Copy the small display so that the main game is visible
         # in the background:
-        self.surface = self.game.small_display.copy()
+        self.surface = pygame.Surface(constants.SMALL_DISPLAY_SIZE, pygame.SRCALPHA)
 
         self.rect = pygame.Rect(
             0,
@@ -58,10 +58,17 @@ class PauseMenu(Scene):
         )
 
     def process_event(self, event, event_manager):
-        super().process_event(event, event_manager)
+        block = super().process_event(event, event_manager)
+        if block:
+            return True
         if event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_escape:
                 self.resume_game()
+                return True
+
+    def update(self, dt):
+        super().update(dt)
+        return True
 
     def draw(self):
         for b in self.buttons:
@@ -69,9 +76,9 @@ class PauseMenu(Scene):
         self.target_surface.blit(self.surface, (0, 0))
 
     def resume_game(self):
-        self.close("main game")
+        self.close()
 
     def goto_main_menu(self):
         # TODO: Warn that unsaved changes will be lost. Ask if user wants to
         #  save them.
-        self.close("main menu")
+        self.close("main menu", remove_all=True)

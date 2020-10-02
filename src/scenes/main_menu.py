@@ -42,15 +42,18 @@ class MainMenu(Scene):
                 "Quit",
                 (100, 50),
                 (constants.SMALL_DISPLAY_WIDTH // 2, 200),
-                self.close
+                self.game.quit
             )
         )
 
     def process_event(self, event, event_manager):
-        super().process_event(event, event_manager)
+        block = super().process_event(event, event_manager)
+        if block:
+            return True
         if event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_escape:
                 self.close()
+                return True
 
     def draw(self):
         self.target_surface.fill((100, 100, 100))  # DEBUG: red to check if rounded buttons work
@@ -58,10 +61,8 @@ class MainMenu(Scene):
             self.target_surface.blit(b.image, b.rect)
 
     def new_game(self):
-        self.persistent_scene_data["world name"] = "test"
-        # Make sure the main game is a fresh instance:
-        self.persistent_scene_data.pop("main game cache", None)
+        self.game.persistent_scene_data["world name"] = "test"
         self.close("main game")
 
     def goto_options(self):
-        self.close("options menu")
+        self.close("options menu", remove_self=False)

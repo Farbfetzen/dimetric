@@ -26,7 +26,7 @@ import pygame.freetype
 
 from src import constants
 from src import resources
-from src import scenes
+from src.scenes import SCENES
 from src.event_manager import EventManager
 
 
@@ -37,25 +37,33 @@ class Game:
         self.small_display = pygame.Surface(constants.SMALL_DISPLAY_SIZE)
         resources.load_all()
         self.running = True
-        self.scenes = {
-            "main menu": scenes.MainMenu,
-            "options menu": scenes.OptionsMenu,
-            "main game": scenes.MainGame,
-            "pause menu": scenes.PauseMenu
-        }
-        self.scene = self.scenes[initial_scene_name](self)
+        self.active_scenes = []
+        self.active_scenes.append(SCENES[initial_scene_name](self))
+        self.active_scenes_reversed = list(reversed(self.active_scenes))
+        # Only the dev overlay of the front scene may be active and visible.
+        self.active_dev_overlay = self.active_scenes[-1].dev_overlay
+        self.dev_overlay_visible = True
+        self.persistent_scene_data = {}
 
-    def change_scenes(self, next_scene_name):
-        persistent_scene_data = self.scene.persistent_scene_data
-        if next_scene_name == "main game":
-            if "main game cache" in persistent_scene_data:
-                self.scene = persistent_scene_data["main game cache"]
-            else:
-                world_name = persistent_scene_data["world name"]
-                self.scene = self.scenes[next_scene_name](self, world_name)
+    def change_scenes(self, remove, new_scene_name=None):
+        for r in remove:
+            self.active_scenes.remove(r)
+        if new_scene_name is None:
+            if not self.active_scenes:
+                self.quit()
         else:
-            self.scene = self.scenes[next_scene_name](self)
-        self.scene.start(persistent_scene_data)
+            if new_scene_name == "main game":
+                world_name = self.persistent_scene_data["world name"]
+                new_scene = SCENES[new_scene_name](self, world_name)
+                self.active_scenes.append(new_scene)
+            else:
+                new_scene = SCENES[new_scene_name](self)
+                self.active_scenes.append(new_scene)
+            new_scene.start()
+        if self.active_scenes:
+            self.active_scenes_reversed = list(reversed(self.active_scenes))
+            self.active_dev_overlay = self.active_scenes[-1].dev_overlay
+        # print(self.active_scenes)
 
     def quit(self):
         # TODO: If there are unsaved changes, ask if they should be
@@ -73,18 +81,29 @@ class Game:
             # by limiting to 100 milliseconds.
             dt = min(clock.tick(constants.FPS), 100) / 1000
 
-            event_manager.process_events(self.scene)
-            self.scene.update(dt)
+            for event in pygame.event.get():
+                # process events front to back
+                for scene in self.active_scenes_reversed:
+                    if scene.process_event(event, event_manager) is not None:
+                        break
 
-            self.scene.draw()
+            # update front to back
+            for scene in self.active_scenes_reversed:
+                if scene.update(dt) is not None:
+                    break
+
+            # draw back to front
+            for scene in self.active_scenes:
+                scene.draw()
+
             pygame.transform.scale(
                 self.small_display,
                 constants.MAIN_DISPLAY_SIZE,
                 self.main_display
             )
-            if self.scene.dev_overlay.is_visible:
-                self.scene.dev_overlay.update(clock)
-                self.scene.dev_overlay.draw()
+            if self.dev_overlay_visible:
+                self.active_dev_overlay.update(clock)
+                self.active_dev_overlay.draw()
             pygame.display.flip()
 
 

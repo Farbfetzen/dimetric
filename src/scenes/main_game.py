@@ -33,15 +33,17 @@ class MainGame(Scene):
         self.mouse_dy = tuple(enumerate((constants.PLATFORM_HEIGHT, 0)))
         self.tile_at_mouse = None
 
-    def start(self, persistent_scene_data):
-        super().start(persistent_scene_data)
-        self.persistent_scene_data.pop("main game cache", None)
+    def start(self):
+        super().start()
 
     def process_event(self, event, event_manager):
-        super().process_event(event, event_manager)
+        block = super().process_event(event, event_manager)
+        if block:
+            return True
         if event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_escape:
                 self.pause()
+                return True
             # elif event.key == self.event_manager.k_next_wave:
             #     self.next_wave()
             elif event.key == event_manager.k_scroll_left:
@@ -67,6 +69,7 @@ class MainGame(Scene):
             self.world.scroll(self.mouse_rel)
 
     def update(self, dt):
+        super().update(dt)
         self.mouse_pos_world.update(
             self.world.small_display_to_world_pos(*self.mouse_pos)
         )
@@ -117,8 +120,7 @@ class MainGame(Scene):
         self.world.highlight.surface_pos.update(self.tile_at_mouse.surface_pos)
 
     def pause(self):
-        self.persistent_scene_data["main game cache"] = self
-        self.close("pause menu")
+        self.close("pause menu",remove_self=False)
 
     # def next_wave(self):
     #     self.enemies.append(Enemy("cube", self.world.path))

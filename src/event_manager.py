@@ -17,10 +17,11 @@
 import pygame
 
 from src import resources
-from src import helpers
 
 
 class EventManager:
+    # TODO: This class was once a bit more useful. Either make it more useful
+    #  or handle the controls differently.
     def __init__(self):
         controls = resources.options["controls"]
         self.k_escape = pygame.K_ESCAPE
@@ -30,15 +31,3 @@ class EventManager:
         self.k_scroll_down = pygame.key.key_code(controls["scroll down"])
         self.mouse_map_scroll_button_index = controls["mouse scroll button index"]
         self.k_dev = pygame.key.key_code(controls["dev"])
-
-    def process_events(self, scene):
-        # Looping through the events here and sending them to the game scenes
-        # may make it easier to implement multiple concurrently active scenes
-        # in the future. In that case this method would accept a list of scenes
-        # and send each event to all scenes. If one scene found it useful then
-        # the other scenes should not get the event.
-        scene.mouse_pos.update(
-            helpers.main_to_small_display_int(*pygame.mouse.get_pos())
-        )
-        for event in pygame.event.get():
-            scene.process_event(event, self)

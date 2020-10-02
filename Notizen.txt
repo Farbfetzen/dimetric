@@ -6,12 +6,6 @@ Gifs und Videos: obs?
 Programme empfohlen von DaFluffyPotato: https://www.youtube.com/watch?v=ung_U17kxDI
 
 
-Wie mit pygame.QUIT umgehen? In den meisten Menüs einfach das Spiel beenden.
-In den Optionsmenüs fragen, ob Einstellungen gespeichert werden sollen, falls
-ungespeicherte existieren. Während des Spielens fragen, ob der Spielstand
-gespeichert werden soll.
-
-
 typing:
 Type hinting war ein interessantes Experiment. Aber in diesem Projekt bringt
 es mir nichts. Es macht den Code nur schwerer lesbar und verkompliziert alles.
@@ -84,14 +78,6 @@ dann auch, ob self.health_ <= 0 ist und initiiert das Löschen. Oder eine normal
 methode nutzen "self.set_health". Die nimmt den Schaden und Schadentyp auf,
 zieht Resistenzen ab, modifiziert die health und schaut am Schluss, ob der
 enemy kaputt ist.
-
-
-Vielleicht es irgendwann so einrichten, dass mehrere Scenes gleichzeitig aktiv
-sein können. Zum Beispiel im main game das HUD als eigene scene?
-Für events die scenes von vorne nach hinten iterieren. Dann kann eine Scene im
-Vordergrund ggf. den Input abfangen, damit z.B. die Maus nicht durch Menüs
-hindurchklickt. Muss aber auch manche Events durchlassen können. Aber für draw()
-muss von hinten nach vorne iteriert werden, mit reversed(self.active_scenes).
 
 
 TODO:

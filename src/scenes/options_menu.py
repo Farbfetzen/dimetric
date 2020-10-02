@@ -28,10 +28,13 @@ class OptionsMenu(Scene):
         #  modify keybindings.
 
     def process_event(self, event, event_manager):
-        super().process_event(event, event_manager)
+        block = super().process_event(event, event_manager)
+        if block:
+            return True
         if event.type == pygame.KEYDOWN:
             if event.key == event_manager.k_escape:
-                self.close("main menu")
+                self.close()
+                return True
 
     def draw(self):
         self.target_surface.fill((0, 0, 0))
