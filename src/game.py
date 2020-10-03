@@ -14,6 +14,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import logging
+
 import pygame
 import pygame.freetype
 
@@ -38,6 +40,7 @@ class Game:
         self.dev_overlay_visible = True
         self.persistent_scene_data = {}
         self.active_scenes[-1].start()
+        logging.debug(f"Active scenes at game start: {self.active_scenes}")
 
     def change_scenes(self, remove, new_scene_name=""):
         for r in remove:
@@ -58,7 +61,7 @@ class Game:
         if self.active_scenes:
             self.active_scenes_reversed = list(reversed(self.active_scenes))
             self.active_dev_overlay = self.active_scenes[-1].dev_overlay
-        # print(self.active_scenes)
+        logging.debug(f"Scenes have changed: {self.active_scenes}")
 
     def quit(self):
         # TODO: If there are unsaved changes, ask if they should be

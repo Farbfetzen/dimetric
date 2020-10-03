@@ -14,11 +14,19 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-# Must be done before importing Pygame:
 import os
+import logging
+
+
+logging.basicConfig(
+    filename='.last_run.log',
+    filemode='w',
+    level=logging.DEBUG
+)
+
+# Must be done before importing Pygame:
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 os.environ["SDL_VIDEO_CENTERED"] = "1"
-
 
 from src.game import Game
 
