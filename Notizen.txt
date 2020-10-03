@@ -68,9 +68,6 @@ einer größeren Skala aufziehen. Die Tiles wären dann z.B. an (100, 200) statt
 Optionsmenü simpel und flach halten. Nur eine Seite. Wie in StardewValley oder der R gui.
 
 
-Ich sollte vielleicht ein oder zwei fonts mitliefern, wenn möglich.
-
-
 Statt überall if...else zu nutzen vielleicht ein paar getter/setter einbauen.
 Z.B. Statt dass ein enemy in jedem frame testet, ob self.healt <= 0 ist, lieber
 bei einem Treffer dessen health mit einem setter setzen. Dieser setter schaut
@@ -88,5 +85,3 @@ TODO:
 * Übergänge zwischen Menü und main game: ausblenden und einblenden, vllt. jeweils
   halbe Sekunde. Aber zwischen den Menüs keine Übergänge.
 * Optionsmenü zum Ändern der Keybindings.
-* Die Debug-Info im Main Game hüpft. Scheint als hätte ich nicht die ganze Höhe
-  ausgenutzt? Oder das Zentrieren ist schuld.

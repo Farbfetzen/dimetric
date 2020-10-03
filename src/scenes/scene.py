@@ -14,10 +14,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import os
+
 import pygame
 
-
 from src.helpers import main_to_small_display_int
+from src import constants
 
 
 class Scene:
@@ -87,13 +89,12 @@ class DevOverlay:
     def __init__(self, scene):
         self.scene = scene
         self.target_surface = scene.game.main_display
-        self.dev_font = pygame.freetype.SysFont(
-            "inconsolata, consolas, monospace",
-            19
+        self.dev_font = pygame.freetype.Font(
+            constants.DEV_FONT_PATH,
+            constants.DEV_FONT_SIZE
         )
-        self.dev_line_hight = self.dev_font.get_sized_height()
-        self.dev_color = (250, 250, 250)
-        self.dev_font.fgcolor = self.dev_color
+        self.dev_font.pad = True
+        self.dev_font.fgcolor = constants.DEV_COLOR
         self.dev_margin = pygame.Vector2(10, 10)
 
         self.fps_text = ""

@@ -56,7 +56,11 @@ class Button:
         )
         self.image = self.idle_image
         self.mask = pygame.mask.from_surface(self.image)
-        self.font = pygame.freetype.SysFont("sans", 15, bold=True)
+        self.font = pygame.freetype.Font(
+            constants.BUTTON_FONT_PATH,
+            constants.BUTTON_FONT_SIZE
+        )
+        self.font.pad = True
         self.font.fgcolor = constants.BUTTON_FONT_COLOR
         self.text_rect = pygame.Rect(0, 0, 0, 0)
         self.update_text(text)

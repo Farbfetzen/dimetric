@@ -173,7 +173,7 @@ class MainGameDevOverlay(DevOverlay):
 
         pygame.draw.rect(
             self.target_surface,
-            self.dev_color,
+            constants.DEV_COLOR,
             pygame.Rect([r * constants.MAGNIFICATION for r in self.scene.world.rect]),
             1
         )

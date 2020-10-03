@@ -14,6 +14,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import os
+
 import pygame
 
 
@@ -32,6 +34,7 @@ FPS = 60
 
 OUTLINE_COLOR = (60, 60, 60)
 HIGHLIGHT_COLOR = (255, 128, 0)
+DEV_COLOR = (255, 255, 255)
 
 TILE_WIDTH = 32
 TILE_HEIGHT = 16
@@ -41,7 +44,7 @@ PLATFORM_HEIGHT = 8
 
 WORLD_SCROLL_SPEED = (TILE_WIDTH * 7, TILE_HEIGHT * 7)
 
-BUTTON_FONT_COLOR = (250, 250, 250)
+BUTTON_FONT_COLOR = (255, 255, 255)
 BUTTON_OUTLINE_COLOR = BUTTON_FONT_COLOR
 BUTTON_BACKGROUND_COLOR = (0, 0, 0)
 BUTTON_BACKGROUND_COLOR_HOVER = (64, 64, 64)
@@ -56,3 +59,8 @@ DEFAULT_OPTIONS = {
         "dev": pygame.key.name(pygame.K_F1)
     }
 }
+
+DEV_FONT_PATH = os.path.join("fonts", "Inconsolata-VariableFont.ttf")
+DEV_FONT_SIZE = 18
+BUTTON_FONT_PATH = os.path.join("fonts", "OpenSans-Bold.ttf")
+BUTTON_FONT_SIZE = 15

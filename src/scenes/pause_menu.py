@@ -38,26 +38,37 @@ class PauseMenu(Scene):
         )
         self.rect.center = self.surface.get_rect().center
         radius = 10
-        pygame.draw.rect(self.surface, (0, 0, 0), self.rect, border_radius=radius)
-        pygame.draw.rect(self.surface, (250, 250, 250), self.rect, 1, border_radius=radius)
+        pygame.draw.rect(
+            self.surface,
+            (0, 0, 0),
+            self.rect,
+            border_radius=radius
+        )
+        pygame.draw.rect(
+            self.surface,
+            constants.BUTTON_OUTLINE_COLOR,
+            self.rect,
+            1,
+            border_radius=radius
+        )
 
         self.buttons = (
             Button(
                 "Resume",
-                (50, 25),
+                (75, 25),
                 (self.rect.centerx, self.rect.y + 25),
                 self.resume_game
             ),
             Button(
                 "Options",
-                (50, 25),
+                (75, 25),
                 (self.rect.centerx, self.rect.centery),
                 self.goto_options
             ),
 
             Button(
                 "Quit",
-                (50, 25),
+                (75, 25),
                 (self.rect.centerx, self.rect.bottom - 25),
                 self.goto_main_menu
             )
