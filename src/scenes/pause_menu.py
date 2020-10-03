@@ -49,6 +49,13 @@ class PauseMenu(Scene):
                 self.resume_game
             ),
             Button(
+                "Options",
+                (50, 25),
+                (self.rect.centerx, self.rect.centery),
+                self.goto_options
+            ),
+
+            Button(
                 "Quit",
                 (50, 25),
                 (self.rect.centerx, self.rect.bottom - 25),
@@ -82,3 +89,6 @@ class PauseMenu(Scene):
         # TODO: Warn that unsaved changes will be lost. Ask if user wants to
         #  save them.
         self.close("main menu", remove_all=True)
+
+    def goto_options(self):
+        self.close("options menu", remove_self=False)
