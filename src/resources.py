@@ -16,6 +16,8 @@
 
 import os
 import json
+import logging
+
 import pygame
 
 from src.constants import DEFAULT_OPTIONS
@@ -45,8 +47,8 @@ def load_options():
     try:
         with open("options.json", "r") as file:
             options.update(json.load(file))
-    except FileNotFoundError as e:
-        print(e)  # TODO: log error with looging module instead of print()
+    except FileNotFoundError:
+        logging.exception("Options file not found, using default options.")
         options.update(DEFAULT_OPTIONS)
         save_options()
 
