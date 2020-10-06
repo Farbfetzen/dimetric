@@ -33,16 +33,19 @@ class Game:
         resources.load_all()
         self.running = True
         self.active_scenes = []
-        self.active_scenes.append(SCENES[initial_scene_name](self))
-        self.active_scenes_reversed = list(reversed(self.active_scenes))
+        self.active_scenes_reversed = []
         # Only the dev overlay of the front scene may be active and visible.
-        self.active_dev_overlay = self.active_scenes[-1].dev_overlay
+        self.active_dev_overlay = None
         self.dev_overlay_visible = True
         self.persistent_scene_data = {}
-        self.active_scenes[-1].start()
-        logging.debug(f"Active scenes at game start: {self.active_scenes}")
+        self.change_scenes([], new_scene_name=initial_scene_name)
 
     def change_scenes(self, remove, new_scene_name=""):
+        logging.debug(
+            "Scene change. new = \"%s\", remove = %s.",
+            new_scene_name,
+            remove
+        )
         for r in remove:
             self.active_scenes.remove(r)
         if not new_scene_name:
@@ -61,7 +64,7 @@ class Game:
         if self.active_scenes:
             self.active_scenes_reversed = list(reversed(self.active_scenes))
             self.active_dev_overlay = self.active_scenes[-1].dev_overlay
-        logging.debug(f"Scenes have changed: {self.active_scenes}")
+        logging.debug("New active scenes: %s", self.active_scenes)
 
     def quit(self):
         # TODO: If there are unsaved changes, ask if they should be
@@ -72,7 +75,7 @@ class Game:
     def run(self):
         event_manager = EventManager()
         clock = pygame.time.Clock()
-
+        logging.info("Begin main loop.")
         while self.running:
             # delta time of previous tick in seconds.
             # Protect against hiccups (e.g. from moving the pygame window)
@@ -103,3 +106,4 @@ class Game:
                 self.active_dev_overlay.update(clock)
                 self.active_dev_overlay.draw()
             pygame.display.flip()
+        logging.info("End main loop.")

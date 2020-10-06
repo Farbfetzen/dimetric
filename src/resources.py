@@ -48,7 +48,7 @@ def load_options():
         with open("options.json", "r") as file:
             options.update(json.load(file))
     except FileNotFoundError:
-        logging.exception("Options file not found, using default options.")
+        logging.error("Options file not found, using default options.")
         options.update(DEFAULT_OPTIONS)
         save_options()
 

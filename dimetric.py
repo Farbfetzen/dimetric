@@ -19,8 +19,10 @@ import logging
 
 
 logging.basicConfig(
-    filename='.last_run.log',
-    filemode='w',
+    filename=".last_run.log",
+    filemode="w",
+    format="%(asctime)s %(levelname)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
     level=logging.DEBUG
 )
 
@@ -32,5 +34,7 @@ from src.game import Game
 
 
 if __name__ == "__main__":
+    logging.info("Initialize new game.")
     game = Game("main menu")
     game.run()
+    logging.info("Game ended.")

@@ -15,6 +15,7 @@
 
 
 from math import floor
+import logging
 
 import pygame
 
@@ -25,13 +26,16 @@ from src.world_object import WorldObject
 
 class World:
     def __init__(self, name):
+        logging.info("Load map \"%s\".", name)
         self.name = name
         world_data = resources.worlds[self.name]
         self.sidelength = len(world_data["map"])
 
         # Check if map is square:
         for row in world_data["map"]:
-            assert len(row) == self.sidelength, f"Map '{self.name}' is not square."
+            if len(row) != self.sidelength:
+                logging.error("Map \"%s\" is not square.", self.name)
+                raise ValueError
 
         # Overly long init split into multiple methods.
         self.margin = pygame.Vector2()
@@ -98,7 +102,14 @@ class World:
         for world_y, row in enumerate(world_data["map"]):
             self.map_tiles.append([])
             for world_x, symbol in enumerate(row):
-                tile_type = world_data["palette"][symbol]
+                try:
+                    tile_type = world_data["palette"][symbol]
+                except KeyError:
+                    logging.exception(
+                        "Unknown symbol in map \"%s\".",
+                        self.name,
+                    )
+                    raise
                 world_pos = pygame.Vector2(world_x, world_y)
                 image = images[tile_type]
                 x, y = self.world_pos_to_world_surf(world_x, world_y)
@@ -128,7 +139,8 @@ class World:
                     elif symbol == "E":
                         path_end = world_pos
         if path_start is None or path_end is None:
-            raise ValueError(f"Missing path start or end in map '{self.name}'.")
+            logging.error("Missing start or end of path in map \"%s\".", self.name)
+            raise ValueError
 
         self.path.append(path_start)
         while path_raw:
@@ -140,9 +152,17 @@ class World:
                     path_raw.remove(neighbor_)
                     break
             else:
-                raise ValueError(f"Malformed path in map '{self.name}': Neighbor not found.")
+                logging.error(
+                    "Malformed path in map \"%s\": Neighbor not found.",
+                    self.name
+                )
+                raise ValueError
         if self.path[-1] != path_end:
-            raise ValueError(f"Malformed path in map '{self.name}': Ends at wrong position.")
+            logging.error(
+                "Malformed path in map \"%s\": Last position not at end tile.",
+                self.name
+            )
+            raise ValueError
 
     def world_pos_to_world_surf(self, world_x, world_y):
         # ATTENTION: Remember to account for the width and height of a sprite
