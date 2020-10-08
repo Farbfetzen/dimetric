@@ -85,7 +85,7 @@ class Button:
 
     def collidepoint(self, x, y):
         if self.rect.collidepoint(x, y):
-            # Don't collide if the mouse is outside the rounded corners:
+            # Only collide if the point is inside the rounded corners:
             if self.mask.get_at((x - self.rect.x, y - self.rect.y)):
                 self.image = self.hover_image
                 return True
