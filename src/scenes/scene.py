@@ -1,5 +1,3 @@
-import os
-
 import pygame
 
 from src.helpers import main_to_small_display_int
@@ -89,8 +87,8 @@ class DevOverlay:
         new_fps_text = f"FPS: {int(clock.get_fps())}"
         if new_fps_text != self.fps_text:
             self.fps_text = new_fps_text
-            self.fps_text, self.fps_rect = self.dev_font.render(self.fps_text)
+            self.fps_surf, self.fps_rect = self.dev_font.render(self.fps_text)
             self.fps_rect.topleft = self.dev_margin
 
     def draw(self):
-        self.target_surface.blit(self.fps_text, self.fps_rect)
+        self.target_surface.blit(self.fps_surf, self.fps_rect)
